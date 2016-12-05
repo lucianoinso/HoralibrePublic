@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div id="content">
+  <div class="section-title"><h1>Pacientes</h1></div>
+
+    <div class="patient-entries">
+
+
+      {% if record_list %}
+        {% for record in record_list %}
+          <div class="patient-entry">
+            <div class="patient-name">
+              <a href="{% url 'records:record_list' record.professional record.patient.id %}"> {{ record.patient.get_full_name }} (DNI: {{ record.patient.dni }})</a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+          <i> No posee registros de pacientes </i>
+      {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

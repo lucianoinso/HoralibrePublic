@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+        <div id="content">
+          <div class="section-title"><h1>Editar sesión: 
+
+          {{ record.patient.get_full_name }} - 
+          {{ record.session_datetime|date:"d/m/y" }}</h1></div>
+          <div class="patient-entries">
+            <div class="patient-entry">
+              <div class="patient-name"> </div>
+            </div>
+          </div>
+
+
+
+          <form action="{% url 'records:edit_record' record.professional record.patient.id record.id %}" id="edit-record-form" method="post">{% csrf_token %}
+            <div class="form-inputs-container">
+              <div class="date-input">Fecha de la sesión:
+              <input type="text" name="session_datetime" value="{{ record.session_datetime|date:"Y-m-d H:i" }}">
+              </div>
+              <div class="sess-duration-input">Duración de la sesión (en minutos): <input type="number" name ="session_duration" min="15" max="360" value="{{ record.session_duration }}">
+              </div>
+            </div>
+            <div class = "record-text">
+              <div class = "edit-record-text">
+                <textarea id = "edit-record-textarea" name="session_resume">{{ record.session_resume }} </textarea>
+              </div>
+            <input type="submit" value="Guardar">
+            </div>
+          </form>
+        </div>
+
+<!--            <select name="session-length">
+              <option value="45mins">45</option>
+              <option value="1hour">60</option>
+              <option value="2hours">2 horas</option>
+              <option value="2hourshalf">2 horas y media</option>
+              <option value="3hours">3 horas</option>
+            </select> -->
+{% endblock %}

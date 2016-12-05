@@ -19,7 +19,6 @@ from django.contrib import admin
 # project views
 from login import views as login_views
 
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', include('login.urls')),
@@ -28,4 +27,5 @@ urlpatterns = [
     url(r'^new_user$', login_views.new_user, name='new_user'),
     url(r'^home/(?P<username>[\w.@+-]+)/$', login_views.home, name='home'),
     url(r'^home/$', login_views.home, name='home'),
+    url(r'^home/(?P<username>[\w.@+-]+)/patients/', include('records.urls', namespace='records')),
 ]

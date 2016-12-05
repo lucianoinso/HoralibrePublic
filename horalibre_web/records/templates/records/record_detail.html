@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="content">
+    <div class="section-title"><h1>{{ record.patient.get_full_name }} - {{ record.session_datetime|date:"d/m/y" }}</h1></div>
+    <div class="patient-entries">
+      <div class="patient-entry">
+        <div class="patient-name">Fecha y hora de la sesión: {{ record.session_datetime }}</div>
+        <div class="patient-name">Duración de la sesión: {{ record.session_duration }} minutos</div>
+        <br/>
+        <div class="patient-name" style="font-size:12px;">Fecha y hora de creación del registro: {{ record.creation_datetime }}</div>
+        <div class="patient-name" style="font-size:12px;">Ultima fecha de modificación: {{ record.last_modified|date:"d/m/y" }}</div>
+        
+      </div>
+    </div>
+    <div class = "record-log">
+        {{ record.session_resume }}
+    </div>
+
+    <div class = "button-record-inside-user-link" style="width:100px; float:right; text-align:left; margin-top:10px;">
+      <a class="button-record-link" href ="{% url 'records:edit_record' record.professional record.patient.id record.id %}" >Editar registro</a></div>
+
+    <div class = "button-record-inside-user-link" style="width:52px; margin-top:10px">
+      <a class="button-record-link" href ="{% url 'records:record_list' record.professional record.patient.id %}" >Volver</a></div>
+
+
+  </div>
+
+{% endblock %}

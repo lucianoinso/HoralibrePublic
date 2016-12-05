@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="content">
+    <div class="section-title"><h1>{{ record_list.0.patient.get_full_name }}</h1></div>
+      
+      <div class="patient-entries">
+        <div class="patient-entry">
+          <div class="patient-name">Edad: {{ record_list.0.patient.birthdate|timesince }}</div>
+
+          {% if record_list.0.patient.phone_number %}
+            <div class="patient-name">Tel: {{ record_list.0.patient.phone_number }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+
+      <div class = "records-list">
+        {% if record_list %}
+          {% for record in record_list %}
+            <div class = "record">
+              <a href="{% url 'records:record_detail' record.professional record.patient.id record.id %}">{{ record.session_datetime |date:"d-m-Y"}} ({{ record.session_datetime |date:"d-M-Y"}}) :  
+              {{ record.session_resume |truncatechars:40}} </a>
+            </div>
+          {% endfor %}
+        {% else %}
+            <i> No posee registros de este paciente </i>
+        {% endif %}
+      </div>
+
+      <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left; margin-top:10px;">
+      <a class="button-record-link" href ="{% url 'records:create_record' username patient_id %}">Crear registro nuevo para este paciente</a></div>
+
+      <div class = "button-record-inside-user-link" style="width:52px; margin-top:10px">
+      <a class="button-record-link" href ="{% url 'records:patient_list' username %}" >Volver</a></div>
+  </div>
+{% endblock %}
