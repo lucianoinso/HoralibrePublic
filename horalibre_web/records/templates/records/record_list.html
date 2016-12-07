@@ -3,31 +3,48 @@
 {% block content %}
 
   <div id="content">
-    <div class="section-title"><h1>{{ record_list.0.patient.get_full_name }}</h1></div>
+    <div class="section-title"><h1>{{ page_records.0.patient.get_full_name }}</h1></div>
       
       <div class="patient-entries">
         <div class="patient-entry">
-          <div class="patient-name">Edad: {{ record_list.0.patient.birthdate|timesince }}</div>
+          <div class="patient-name">Edad: {{ page_records.0.patient.birthdate|timesince }}</div>
 
-          {% if record_list.0.patient.phone_number %}
-            <div class="patient-name">Tel: {{ record_list.0.patient.phone_number }}</div>
+          {% if page_records.0.patient.phone_number %}
+            <div class="patient-name">Tel: {{ page_records.0.patient.phone_number }}</div>
           {% endif %}
         </div>
       </div>
 
 
       <div class = "records-list">
-        {% if record_list %}
-          {% for record in record_list %}
+        {% if page_records %}
+          {% for record in page_records %}
             <div class = "record">
               <a href="{% url 'records:record_detail' record.professional record.patient.id record.id %}">{{ record.session_datetime |date:"d-m-Y"}} ({{ record.session_datetime |date:"d-M-Y"}}) :  
               {{ record.session_resume |truncatechars:40}} </a>
             </div>
           {% endfor %}
+      </div>
+        <div class="pagination">
+          <span class="step-links">
+            {% if page_records.has_previous %}
+                <a href="?page={{ page_records.previous_page_number }}">&larr;</a>
+            {% endif %}
+
+            <span class="current">
+                Pag. {{ page_records.number }} de {{ page_records.paginator.num_pages }}
+            </span>
+
+            {% if page_records.has_next %}
+                <a href="?page={{ page_records.next_page_number }}">&rarr;</a>
+            {% endif %}
+          </span>
+        </div>
         {% else %}
             <i> No posee registros de este paciente </i>
-        {% endif %}
       </div>
+        {% endif %}
+
 
       <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left;">
       <a class="button-record-link" href ="{% url 'records:create_record_from_patient' username patient_id %}">Crear registro nuevo para este paciente</a></div>

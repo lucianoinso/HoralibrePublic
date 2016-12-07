@@ -1,10 +1,15 @@
+# Django Imports
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+# Project Imports
 from login.views import redirect_home
 from .models import Patient, Record, Professional
 from commentary.models import Comment
+
 
 
 def patient_list(request, username="Anonymous"):
@@ -32,12 +37,24 @@ def record_list(request, username, patient_id):
             try:
                 user = User.objects.get(username=username)
                 patient = Patient.objects.get(pk=patient_id)
-                record_list = Record.objects.filter(professional=user).filter(patient=patient)
+                record_list = Record.objects.filter(professional=user).filter(patient=patient).order_by('-session_datetime')
             except Exception as e:
                 return HttpResponse("Hubo un problema")
 
+            paginator = Paginator(record_list, 15) # Show 25 records per page
+            page = request.GET.get('page')
+
+            try:
+                page_records = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                page_records = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                page_records = paginator.page(paginator.num_pages)
+
             return render(request, 'records/record_list.html', {
-                'record_list': record_list,
+                'page_records': page_records,
                 'username': username,
                 'patient_id': patient_id,
                 })

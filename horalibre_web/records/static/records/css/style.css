@@ -397,3 +397,7 @@ input[type=submit]:hover {
     clear: both;
     margin-bottom: 10px;
 }
+
+.pagination .step-links .current{
+  font-size: 12px;
+}
