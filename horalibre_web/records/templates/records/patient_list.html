@@ -4,9 +4,7 @@
 
 <div id="content">
   <div class="section-title"><h1>Pacientes</h1></div>
-
     <div class="patient-entries">
-
 
       {% if record_list %}
         {% for record in record_list %}
@@ -20,6 +18,11 @@
           <i> No posee registros de pacientes </i>
       {% endif %}
     </div>
+
+    <div class = "button-record-inside-user-link" style="width:146px; margin-top:40px">
+      <a class="button-record-link" href ="{% url 'records:create_record' username %}">Crear registro nuevo</a>
+    </div>
+
 </div>
 
 

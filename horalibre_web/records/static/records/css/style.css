@@ -1,11 +1,28 @@
+html{
+    height:100%;
+}
+
+body{
+  min-height: 100%;
+  background-color: white;
+  /*background-image:url('../imagenes/background.jpg');
+  */
+}
 * {
   font-family: 'Raleway', sans-serif;
   font-weight: 400;
 }
 
+a:visited{
+  color: #808080;
+}
+
 #container {
-  width:100%;
-  margin:0px;
+  width: 100%;
+  min-width: 1000px;
+  margin:0 auto;
+  padding: 0;
+  position: relative;
 }
 
 header, footer {
@@ -13,6 +30,8 @@ header, footer {
   color:white;
   clear:both;
   margin: 0px 50px;
+  min-width: 850px;
+  width: 70%;
 }
 
 header {
@@ -55,20 +74,15 @@ h1.header {
 }
 
 footer {
-  padding-top:0px;
+  margin-top: 80px;
   text-align: center;
   font-size: 0.8em;
-/*  border-top: 1px solid #F2E2A7; */
+  padding-top: 0;
+
 }
 
 footer h5 {
   color:#808080;
-}
-
-body {
-  /*background-image:url('../imagenes/background.jpg');
-  */
-  background-color:white;
 }
 
 p {
@@ -85,7 +99,7 @@ a:link{
   outline: none;
 }
 a:visited{
-  color: #00FF00
+  color: #808080;
   outline: none;
 }
 a:hover{
@@ -137,8 +151,6 @@ li a {
   width: 60%;
   padding-top:40px;
   margin-left:280px;
-  position: relative;
-  
 }
 
 .section-title h1{
@@ -281,7 +293,7 @@ span.article-author {
 }
 
 .form-inputs-container{
-  width: 560px;
+  width: 500px;
 }
 
 .record-text .edit-record-text #edit-record-textarea{
@@ -290,18 +302,26 @@ span.article-author {
   height: 350px;
 }
 
-.date-input input, .sess-duration-input input{
+.record-text{
+  padding-top: 20px;
+}
+
+.date-input input, .sess-duration-input input, .patient-droplist select{
   width: 200px;
   float: right;
   height: 30px;
   /* border-radius: 3px;*/
 }
 
+.patient-droplist{
+  height: 30px;
+}
+
 .sess-duration-input input{
   width: 70px;
 }
 
-.date-input, .sess-duration-input{
+.date-input, .sess-duration-input .patient-droplist{
   height: 30px;
   margin: 2px 0 2px 0;
 }
@@ -315,7 +335,7 @@ span.article-author {
   /* border-radius: 5px;*/
 }
 
-.button-record-inside-user-link{
+.button-record-inside-user-link, .button-record-inside-user-link-delete{
   font-size: 14px;
   border: 1px solid #999999;
   border-radius: 4px;
@@ -323,9 +343,16 @@ span.article-author {
   -moz-border-radius:4px;
   width: 270px;
   height: 25px;
+  margin-top: 10px;
+  text-align:left;
 }
 
-
+.button-record-inside-user-link-delete{
+  width: 115px;
+  float: right;
+  border-color: red;
+  margin-right: 10px;
+}
 
 .button-record-link{
   display: block;
@@ -334,6 +361,39 @@ span.article-author {
   padding: 4px;
 }
 
+.button-record-inside-user-link-delete .button-record-link{
+  color: red;
+  font-weight: 100;
+}
+
 .button-record-inside-user-link a:hover{
   color: #CCCCCC;
+}
+
+.button-record-inside-user-link-delete a:hover{
+  color: #FF7777;
+}
+
+input[type=submit] {
+  color: #808080;
+  background-color: white;
+  font-size: 14px;
+  border: 1px solid #999999;
+  border-radius: 4px;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  width: 70px;
+  height: 25px;
+  margin-top: 10px;
+  text-align:left;
+}
+
+input[type=submit]:hover {
+  color: #CCCCCC;
+  outline: none;
+}
+
+.clearfix {
+    clear: both;
+    margin-bottom: 10px;
 }

@@ -7,12 +7,6 @@ from .models import Patient, Record, Professional
 from commentary.models import Comment
 
 
-# username, patient_id - record_list
-# username, patient_id - new_record
-# username, patient_id, record_id - record_detail
-# username, patient_id, record_id - edit_record
-# username, patient_id, record_id - delete_record
-
 def patient_list(request, username="Anonymous"):
     if request.user.is_authenticated:
         if request.user.username == username:
@@ -24,6 +18,7 @@ def patient_list(request, username="Anonymous"):
 
             return render(request, 'records/patient_list.html', {
                 'record_list': record_list,
+                'username': username,
                 })
         else:
             return redirect_home(request.user.username)
@@ -68,7 +63,8 @@ def record_detail(request, username, patient_id, record_id):
     else:
         return HttpResponseRedirect("/login")
 
-def create_record(request, username, patient_id):
+
+def create_record_from_patient(request, username, patient_id):
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
         if request.user == user:
@@ -82,15 +78,36 @@ def create_record(request, username, patient_id):
                 # check why username is the id, request.user.username is the user
                 return redirect_patient_records(request.user.username, patient_id)
             else:
-                return render(request, 'records/create_record.html', {'user': user, 'patient': patient })
+                return render(request, 'records/create_record_from_patient.html', {'user': user, 'patient': patient })
     else:
         return HttpResponseRedirect("/login")
 
 
+def create_record(request, username):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        patient_list = Patient.objects.all()
+
+        if request.user == user:
+            if request.method == "POST":
+                patient = Patient.objects.get(pk=request.POST.get("patient_from_list"))
+                record = Record(session_datetime=request.POST.get("session_datetime"),
+                                session_resume=request.POST.get("session_resume"),
+                                professional=user, patient=patient,
+                                session_duration = request.POST.get("session_duration"))
+                record.save()
+                return redirect_patient_list(request.user.username)
+            else:
+                return render(request, 'records/create_record.html', {'user': user, 'patient_list': patient_list })
+        else:
+            return redirect_patient_records(request.user.username, patient_id)
+    else:
+        return HttpResponseRedirect("/login")
+
 
 def edit_record(request, username, patient_id, record_id):
-    record = get_object_or_404(Record, pk=record_id)
     if request.user.is_authenticated:
+        record = get_object_or_404(Record, pk=record_id)
         if request.user == record.professional:
             if request.method == "POST":
                 if request.POST.get("session_datetime"):
@@ -107,10 +124,18 @@ def edit_record(request, username, patient_id, record_id):
         return HttpResponseRedirect("/login")
 
 
-
 def delete_record(request, username, patient_id, record_id):
-    return HttpResponse("delete_record")
-
+    if request.user.is_authenticated:
+        record = get_object_or_404(Record, pk=record_id)
+        if request.user == record.professional:
+            amount_records = (Record.objects.all().filter(patient=patient_id).filter(professional=record.professional).count())
+            record.delete()
+            if amount_records == 1:
+                return redirect_patient_list(username)
+            else:
+                return redirect_patient_records(request.user.username, patient_id)
+    else:
+        return HttpResponseRedirect("/login")
 
 
 """
@@ -150,17 +175,6 @@ def new_record(request):
     else:
         return HttpResponseRedirect("/login")
 
-def delete_record(request, record_id):
-    record = get_object_or_404(record, pk=record_id)
-    if request.user.is_authenticated:
-        if request.user == record.owner:
-            if request.method == "POST":
-                record.delete()
-                return redirect_home(request.user.username)
-            else:
-                return render(request, 'record/delete.html', {'record': record})
-    else:
-        return HttpResponseRedirect("/login")
 
 
 def detail_record(request, record_id):
@@ -173,6 +187,10 @@ def detail_record(request, record_id):
                           {'record': record, 'comments': comments})
     return redirect_home(request.user)
 """
+
+def redirect_patient_list(username):
+    return HttpResponseRedirect("/home/{}/patients/".format(username))
+
 
 def redirect_record(username, patient_id, record_id):
     return HttpResponseRedirect("/home/{}/patients/{}/record/{}".

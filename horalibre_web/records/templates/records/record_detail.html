@@ -9,7 +9,7 @@
         <div class="patient-name">Fecha y hora de la sesión: {{ record.session_datetime }}</div>
         <div class="patient-name">Duración de la sesión: {{ record.session_duration }} minutos</div>
         <br/>
-        <div class="patient-name" style="font-size:12px;">Fecha y hora de creación del registro: {{ record.creation_datetime }}</div>
+        <div class="patient-name" style="font-size:12px;">Fecha y hora de creación: {{ record.creation_datetime }}</div>
         <div class="patient-name" style="font-size:12px;">Ultima fecha de modificación: {{ record.last_modified|date:"d/m/y" }}</div>
         
       </div>
@@ -18,11 +18,17 @@
         {{ record.session_resume }}
     </div>
 
-    <div class = "button-record-inside-user-link" style="width:100px; float:right; text-align:left; margin-top:10px;">
-      <a class="button-record-link" href ="{% url 'records:edit_record' record.professional record.patient.id record.id %}" >Editar registro</a></div>
+    <div class="button-record-inside-user-link" style="width:100px; float:right;">
+      <a class="button-record-link" href ="{% url 'records:edit_record' record.professional record.patient.id record.id %}">Editar registro</a>
+    </div>
 
-    <div class = "button-record-inside-user-link" style="width:52px; margin-top:10px">
-      <a class="button-record-link" href ="{% url 'records:record_list' record.professional record.patient.id %}" >Volver</a></div>
+    <div class="button-record-inside-user-link-delete">
+      <a class="button-record-link" href ="{% url 'records:delete_record' record.professional record.patient.id record.id %}" onclick="return confirm('Esta seguro que quiere eliminar definitivamente el registro?');">Eliminar registro</a>
+    </div>
+
+    <div class = "button-record-inside-user-link" style="width:52px;">
+      <a class="button-record-link" href ="{% url 'records:record_list' record.professional record.patient.id %}">Volver</a>
+    </div>
 
 
   </div>

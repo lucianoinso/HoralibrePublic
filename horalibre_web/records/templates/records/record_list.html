@@ -29,10 +29,10 @@
         {% endif %}
       </div>
 
-      <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left; margin-top:10px;">
-      <a class="button-record-link" href ="{% url 'records:create_record' username patient_id %}">Crear registro nuevo para este paciente</a></div>
+      <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left;">
+      <a class="button-record-link" href ="{% url 'records:create_record_from_patient' username patient_id %}">Crear registro nuevo para este paciente</a></div>
 
-      <div class = "button-record-inside-user-link" style="width:52px; margin-top:10px">
+      <div class = "button-record-inside-user-link" style="width:52px;">
       <a class="button-record-link" href ="{% url 'records:patient_list' username %}" >Volver</a></div>
   </div>
 {% endblock %}
