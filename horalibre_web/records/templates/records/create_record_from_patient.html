@@ -13,14 +13,14 @@
           <form action="{% url 'records:create_record_from_patient' user.id patient.id %}" id="create-record-form" method="post">{% csrf_token %}
             <div class="form-inputs-container">
               <div class="date-input">Fecha de la sesión:
-              <input type="text" name="session_datetime" value="YYYY-MM-DD HH:MM">
+              <input type="text" name="session_datetime" value="YYYY-MM-DD HH:MM" required>
               </div>
-              <div class="sess-duration-input">Duración de la sesión (en minutos): <input type="number" name ="session_duration" min="15" max="360" value="">
+              <div class="sess-duration-input">Duración de la sesión (en minutos): <input type="number" name ="session_duration" min="15" max="360" value="" step="15" required>
               </div>
             </div>
             <div class = "record-text">
               <div class = "edit-record-text">
-                <textarea id = "edit-record-textarea" name="session_resume"></textarea>
+                <textarea id = "edit-record-textarea" name="session_resume" required></textarea>
               </div>
             <input type="submit" value="Guardar">
             </div>
