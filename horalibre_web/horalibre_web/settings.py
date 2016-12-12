@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.conf.global_settings import DATETIME_INPUT_FORMATS, DATE_INPUT_FORMATS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,3 +134,24 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# DATE_INPUT_FORMATS += (
+#     '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y', # '2006-10-25', '10/25/2006', '10/25/06'
+#     '%d %b %Y', '%d %b, %Y',            # '25 Oct 2006', '25 Oct, 2006'
+#     '%d %B %Y', '%d %B, %Y',            # '25 October 2006', '25 October, 2006'
+# )
+
+# DATETIME_INPUT_FORMATS += (
+#     '%d-%m-%Y %H:%M:%S',     # '2006-10-25 14:30:59'
+#     '%d-%m-%Y %H:%M:%S.%f',  # '2006-10-25 14:30:59.000200'
+#     '%d-%m-%Y %H:%M',        # '2006-10-25 14:30'
+#     '%d-%m-%Y',              # '2006-10-25'
+#     '%d/%m/%Y %H:%M:%S',     # '10/25/2006 14:30:59'
+#     '%d/%m/%Y %H:%M:%S.%f',  # '10/25/2006 14:30:59.000200'
+#     '%d/%m/%Y %H:%M',        # '10/25/2006 14:30'
+#     '%d/%m/%Y',              # '10/25/2006'
+#     '%d/%m/%y %H:%M:%S',     # '10/25/06 14:30:59'
+#     '%d/%m/%y %H:%M:%S.%f',  # '10/25/06 14:30:59.000200'
+#     '%d/%m/%y %H:%M',        # '10/25/06 14:30'
+#     '%d/%m/%y',              # '10/25/06']
+# )

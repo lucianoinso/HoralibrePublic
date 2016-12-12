@@ -27,5 +27,5 @@ urlpatterns = [
     url(r'^new_user$', login_views.new_user, name='new_user'),
     url(r'^home/(?P<username>[\w.@+-]+)/$', login_views.home, name='home'),
     url(r'^home/$', login_views.home, name='home'),
-    url(r'^home/(?P<username>[\w.@+-]+)/patients/', include('records.urls', namespace='records')),
+    url(r'^home/(?P<username>[\w.@+-]+)/records/', include('records.urls', namespace='records')),
 ]

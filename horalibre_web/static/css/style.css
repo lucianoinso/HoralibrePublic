@@ -263,3 +263,7 @@ span.article-author {
 .record a:hover {
   color:#70cbce;
 }
+
+.filter-radio-button{
+  font-size:34px;
+}

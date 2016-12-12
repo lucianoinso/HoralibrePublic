@@ -11,6 +11,17 @@ from .models import Patient, Record, Professional
 from commentary.models import Comment
 
 
+def select_records(request, username, patient_id):
+    if request.user.is_authenticated:
+        if request.user.username == username:
+            return render(request, 'records/select_records.html', {
+                'username': username,
+                })
+        else:
+            return redirect_home(request.user.username)
+    else:
+        return HttpResponseRedirect("/login")
+
 
 def patient_list(request, username="Anonymous"):
     if request.user.is_authenticated:
@@ -34,30 +45,49 @@ def patient_list(request, username="Anonymous"):
 def record_list(request, username, patient_id):
     if request.user.is_authenticated:
         if request.user.username == username:
-            try:
-                user = User.objects.get(username=username)
-                patient = Patient.objects.get(pk=patient_id)
-                record_list = Record.objects.filter(professional=user).filter(patient=patient).order_by('-session_datetime')
-            except Exception as e:
-                return HttpResponse("Hubo un problema")
+ #           if request.method == "POST" or :
+ #               selected_records = request.POST.get('select_records')
+                try:
+                    user = User.objects.get(username=username)
+                    patient = Patient.objects.get(pk=patient_id)
+ #                   record_list = Record.objects.filter(patient=patient).order_by('-session_datetime')
+ #                   if selected_records == "Mis registros":
+ #                       record_list = record_list.filter(professional=user)
+                    record_list = Record.objects.filter(professional=user).filter(patient=patient).order_by('-session_datetime')
+                except Exception as e:
+                    return HttpResponse("Hubo un problema")
 
-            paginator = Paginator(record_list, 15) # Show 25 records per page
-            page = request.GET.get('page')
+                paginator = Paginator(record_list, 15) # Show 25 records per page
+                page = request.GET.get('page')
 
-            try:
-                page_records = paginator.page(page)
-            except PageNotAnInteger:
-                # If page is not an integer, deliver first page.
-                page_records = paginator.page(1)
-            except EmptyPage:
-                # If page is out of range (e.g. 9999), deliver last page of results.
-                page_records = paginator.page(paginator.num_pages)
+                try:
+                    page_records = paginator.page(page)
+                except PageNotAnInteger:
+                    # If page is not an integer, deliver first page.
+                    page_records = paginator.page(1)
+                except EmptyPage:
+                    # If page is out of range (e.g. 9999), deliver last page of results.
+                    page_records = paginator.page(paginator.num_pages)
 
-            return render(request, 'records/record_list.html', {
-                'page_records': page_records,
-                'username': username,
-                'patient_id': patient_id,
-                })
+                return render(request, 'records/record_list.html', {
+                    'page_records': page_records,
+                    'username': username,
+                    'patient': None,
+                    })
+            #else if request.method =="GET":
+            #    try:
+            #        user = User.objects.get(username=username)
+            #        patient = Patient.objects.get(pk=patient_id)
+            #    except Exception as e:
+            #        return HttpResponse("Hubo un problema")
+#
+#                return render(request, 'records/record_list.html', {
+#                    'page_records': {},
+#                    'username': username,
+#                    'patient': patient,
+#                    })
+#            else:
+#                return redirect_home(request.user.username)
         else:
             return redirect_home(request.user.username)
     else:
@@ -206,12 +236,12 @@ def detail_record(request, record_id):
 """
 
 def redirect_patient_list(username):
-    return HttpResponseRedirect("/home/{}/patients/".format(username))
+    return HttpResponseRedirect("/home/{}/records/".format(username))
 
 
 def redirect_record(username, patient_id, record_id):
-    return HttpResponseRedirect("/home/{}/patients/{}/record/{}".
+    return HttpResponseRedirect("/home/{}/records/{}/record/{}".
                                 format(username, patient_id, record_id))
 
 def redirect_patient_records(username, patient_id):
-    return HttpResponseRedirect("/home/{}/patients/{}".format(username, patient_id))
+    return HttpResponseRedirect("/home/{}/records/{}".format(username, patient_id))

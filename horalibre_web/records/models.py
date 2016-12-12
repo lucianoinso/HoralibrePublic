@@ -43,15 +43,24 @@ class Patient(models.Model):
         return ((timezone.now().date()) - self.birthdate)
 
 
+class Case(models.Model):
+    professional = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
+    coordinator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+
 class Record(models.Model):
     creation_datetime = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     session_datetime = models.DateTimeField()
     session_resume = models.CharField(max_length=1000)
-    professional = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
     session_duration = models.IntegerField()
+    case = models.ForeignKey(Case, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return (self.professional.get_full_name() + " - " + 
-                self.patient.__str__() + " - Fecha de la sesion: " + str(self.session_datetime.date()))
+        return (self.case.professional.get_full_name() + " - " + 
+                self.case.patient.__str__() + " - Fecha de la sesion: " +
+                str(self.session_datetime.date()))
+
+
+

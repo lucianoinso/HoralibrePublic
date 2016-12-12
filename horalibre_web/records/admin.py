@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
 # Project imports
-from .models import Record, Patient, Professional
+from .models import Record, Patient, Professional, Case
 
 # Define an inline admin descriptor for Employee model
 # which acts a bit like a singleton
@@ -25,3 +25,4 @@ admin.site.register(User, UserAdmin)
 
 admin.site.register(Record)
 admin.site.register(Patient)
+admin.site.register(Case)
