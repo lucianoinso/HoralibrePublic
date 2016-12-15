@@ -1,3 +1,7 @@
+# Django imports
 from django.contrib import admin
 
-# Register your models here.
+# Project imports
+from .models import Comment
+
+admin.site.register(Comment)

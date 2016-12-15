@@ -44,9 +44,18 @@ class Patient(models.Model):
 
 
 class Case(models.Model):
-    professional = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    professional = models.ForeignKey(User, related_name='case_prof', 
+                   on_delete=models.SET_NULL, null=True)
     patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
-    coordinator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    coordinator = models.ForeignKey(User, related_name='case_coord',
+                  on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return ("Coordinador - Profesional - Paciente: \"" +
+                self.coordinator.get_full_name() + 
+                " - " + self.professional.get_full_name() + " - " + 
+                self.patient.get_full_name() + "\"")
+
 
 
 class Record(models.Model):

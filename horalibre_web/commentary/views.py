@@ -7,24 +7,26 @@ from django.utils import timezone
 
 # Project libs
 from login.views import redirect_home
+from records.models import Patient, Record, Professional, Case
 from .models import Comment
-from records.models import Record
 from records.views import redirect_record
 
 
-def new_comment(request, record_id):
+def new_comment(request, username, patient_id, record_id):
     record = get_object_or_404(Record, pk=record_id)
 
     if request.user.is_authenticated:
-        if (request.user == record.professional):
-            user = User.objects.get(username=request.user.username)
+        user = User.objects.get(username=request.user.username)
+        patient = Patient.objects.get(pk=patient_id)
+        case = Case.objects.all().filter(professional=user, patient=patient)
 
+        if (case):
             if request.method == "POST":
                 if request.POST.get("comment_text"):
-                    comment = Comment(professional=user, record=record, text=request.POST.get("comment_text"))
-                comment.save()
-
-                return redirect_record(record_id)
+                    comment = Comment(owner=user, record=record, text=request.POST.get("comment_text"))
+                    comment.save()
+                return redirect_record(record.case.professional.id, patient.id ,
+                                       record.id)
             else:
                 return render(request, 'commentary/new_comment.html', {'record': record})
         else:
@@ -32,36 +34,39 @@ def new_comment(request, record_id):
     else:
         return HttpResponseRedirect("/login")
 
-def modify_comment(request, record_id, comment_id):
+
+def edit_comment(request, username, patient_id, record_id, comment_id):
     record = get_object_or_404(Record, pk=record_id)
-    
-    comment = get_object_or_404(Comment, pk=comment_id)
+
     if request.user.is_authenticated:
-        if (request.user == record.professional):
+        comment = get_object_or_404(Comment, pk=comment_id)
+        if (request.user == comment.owner):
             if request.method == "POST":
                 if request.POST.get("comment_text"):
                     comment.text = request.POST.get("comment_text")
                 comment.save()
 
-                return redirect_record(record_id)
+                return redirect_record(record.case.professional.id, patient_id ,
+                                       record.id)
             else:
-                return render(request, 'commentary/modify_comment.html',
+                return render(request, 'commentary/edit_comment.html',
                               {'record': record, 'comment': comment })
         else:
             return redirect_home(request.user.username)
     else:
         return HttpResponseRedirect("/login")
 
-def delete_comment(request, record_id, comment_id):
+
+def delete_comment(request, username, patient_id, record_id, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     record = get_object_or_404(Record, pk=record_id)
     if request.user.is_authenticated:
-        if (request.user == record.professional):
+        if (request.user == comment.owner):
             if request.method == "GET":
                 comment.delete()
-            return redirect_record(record_id)
+            return redirect_record(record.case.professional.id, patient_id ,
+                                   record.id)
         else:
             return redirect_home(request.user.username)
     else:
         return HttpResponseRedirect("/login")
-

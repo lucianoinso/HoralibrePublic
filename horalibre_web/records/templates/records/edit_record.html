@@ -4,10 +4,10 @@
 
         <div id="content">
           <div class="section-title"><h1>Editar registro: 
-          {{ record.patient.get_full_name }} - 
+          {{ record.case.patient.get_full_name }} - 
           {{ record.session_datetime|date:"d/m/y" }}</h1></div>
 
-          <form action="{% url 'records:edit_record' record.professional record.patient.id record.id %}" id="edit-record-form" method="post">{% csrf_token %}
+          <form action="{% url 'records:edit_record' record.case.professional record.case.patient.id record.id %}" id="edit-record-form" method="post">{% csrf_token %}
             <div class="form-inputs-container">
               <div class="date-input">Fecha y hora de la sesión:
               <input type="text" id="session_datetime" name="session_datetime" value="{{ record.session_datetime|date:"Y-m-d H:i" }}">

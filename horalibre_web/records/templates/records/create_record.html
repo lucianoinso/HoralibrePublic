@@ -5,15 +5,15 @@
         <div id="content">
           <div class="section-title"><h1>Crear registro</h1></div>
 
-          {% if patient_list %}
+          {% if case_list %}
             <form action="{% url 'records:create_record' user.id %}" id="create-record-form" method="post">{% csrf_token %}
               <div class="form-inputs-container">
                 <div class="patient-droplist">
                   Paciente:
                   <select name="patient_from_list" id="patient_from_list" required>
                   <option value="">Elegir un paciente</option>
-                  {% for patient in patient_list %}
-                    <option value="{{ patient.pk }}">{{ patient.get_full_name }}</option>
+                  {% for case in case_list %}
+                    <option value="{{ case.patient.pk }}">{{ case.patient.get_full_name }}</option>
                   {% endfor %}
                   </select>
                 </div>
@@ -31,7 +31,7 @@
               </div>
             </form>
           {% else %}
-            <i> No existen pacientes en el sistema </i>
+            <i> No tiene pacientes asignados </i>
           {% endif %}
         </div>
 {% endblock %}

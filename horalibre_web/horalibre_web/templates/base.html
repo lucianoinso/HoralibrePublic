@@ -24,7 +24,7 @@
 
         <h4>Servicio de Integración Escolar y Acompañamiento Terapéutico</h4>
         
-        <a class="logout-button" href="{% url 'logout' %}"><u>Desloguearse</u></a>
+        <div class="logout-menu"><span class="logout-button">Usuario: {{ user.username }}  <a class="logout-button" href="{% url 'logout' %}">[desloguearse]</a></div>
       </header>
 
       <div id="center">

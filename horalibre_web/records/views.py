@@ -7,15 +7,17 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Project Imports
 from login.views import redirect_home
-from .models import Patient, Record, Professional
+from .models import Patient, Record, Professional, Case
 from commentary.models import Comment
 
 
 def select_records(request, username, patient_id):
     if request.user.is_authenticated:
         if request.user.username == username:
+            patient = Patient.objects.get(pk=patient_id)
             return render(request, 'records/select_records.html', {
                 'username': username,
+                'patient': patient,
                 })
         else:
             return redirect_home(request.user.username)
@@ -28,12 +30,13 @@ def patient_list(request, username="Anonymous"):
         if request.user.username == username:
             try:
                 user = User.objects.get(username=username)
-                record_list = Record.objects.filter(professional=user).distinct('patient')
+                case_list = Case.objects.all().filter(professional=user)
+#                record_list = Record.objects.filter(professional=user).distinct('patient')
             except Exception as e:
-                return HttpResponse("Hubo un problema")
+                return HttpResponse(e)
 
             return render(request, 'records/patient_list.html', {
-                'record_list': record_list,
+                'case_list': case_list,
                 'username': username,
                 })
         else:
@@ -42,26 +45,18 @@ def patient_list(request, username="Anonymous"):
         return HttpResponseRedirect("/login")
 
 
-def record_list(request, username, patient_id):
+def my_records_list(request, username, patient_id):
     if request.user.is_authenticated:
         if request.user.username == username:
- #           if request.method == "POST" or :
- #               selected_records = request.POST.get('select_records')
                 try:
                     user = User.objects.get(username=username)
                     patient = Patient.objects.get(pk=patient_id)
- #                   record_list = Record.objects.filter(patient=patient).order_by('-session_datetime')
- #                   if selected_records == "Mis registros":
- #                       record_list = record_list.filter(professional=user)
-                    record_list = Record.objects.filter(professional=user).filter(patient=patient).order_by('-session_datetime')
-                except Exception as e:
-                    return HttpResponse("Hubo un problema")
-
-                paginator = Paginator(record_list, 15) # Show 25 records per page
-                page = request.GET.get('page')
-
-                try:
+                    case = Case.objects.filter(professional=user).filter(patient=patient)
+                    record_list = (Record.objects.all().filter(case=case).order_by('-session_datetime'))
+                    paginator = Paginator(record_list, 15) # Show 15 records per page
+                    page = request.GET.get('page')
                     page_records = paginator.page(page)
+
                 except PageNotAnInteger:
                     # If page is not an integer, deliver first page.
                     page_records = paginator.page(1)
@@ -69,25 +64,51 @@ def record_list(request, username, patient_id):
                     # If page is out of range (e.g. 9999), deliver last page of results.
                     page_records = paginator.page(paginator.num_pages)
 
+                except Exception as e:
+                    return HttpResponse(e)
+
                 return render(request, 'records/record_list.html', {
                     'page_records': page_records,
                     'username': username,
-                    'patient': None,
+                    'patient': patient,
+                    'case': case,
                     })
-            #else if request.method =="GET":
-            #    try:
-            #        user = User.objects.get(username=username)
-            #        patient = Patient.objects.get(pk=patient_id)
-            #    except Exception as e:
-            #        return HttpResponse("Hubo un problema")
-#
-#                return render(request, 'records/record_list.html', {
-#                    'page_records': {},
-#                    'username': username,
-#                    'patient': patient,
-#                    })
-#            else:
-#                return redirect_home(request.user.username)
+        else:
+            return redirect_home(request.user.username)
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def all_records_list(request, username, patient_id):
+    if request.user.is_authenticated:
+        if request.user.username == username:
+            try:
+                user = User.objects.get(username=username)
+                patient = Patient.objects.get(pk=patient_id)
+                case = Case.objects.filter(patient=patient)
+                record_list = (Record.objects.all().filter(case_id__in=case).order_by('-session_datetime'))
+
+                paginator = Paginator(record_list, 15) # Show 15 records per page
+                page = request.GET.get('page')
+                page_records = paginator.page(page)
+
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                page_records = paginator.page(1)
+
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                page_records = paginator.page(paginator.num_pages)
+
+            except Exception as e:
+                return HttpResponse(e)
+
+            return render(request, 'records/record_list.html', {
+                'page_records': page_records,
+                'username': username,
+                'patient': patient,
+                'case': case,
+                })
         else:
             return redirect_home(request.user.username)
     else:
@@ -96,14 +117,21 @@ def record_list(request, username, patient_id):
 
 def record_detail(request, username, patient_id, record_id):
     if request.user.is_authenticated:
-        if request.user.username == username:
+        user = User.objects.get(username=request.user.username)
+        patient = Patient.objects.get(pk=patient_id)
+        case = Case.objects.all().filter(professional=user, patient=patient)
+
+        if case:
             try:
                 record = Record.objects.get(pk=record_id)
+                comments = (Comment.objects.all().filter(record=record)
+                               .order_by('create_date'))
             except Exception as e:
-                return HttpResponse("Hubo un problema")
+                return HttpResponse(e)
 
             return render(request, 'records/record_detail.html', {
                 'record': record,
+                'comments': comments,
                 })
         else:
             return redirect_home(request.user.username)
@@ -117,13 +145,14 @@ def create_record_from_patient(request, username, patient_id):
         if request.user == user:
             patient = Patient.objects.get(pk=patient_id)
             if request.method == "POST":
+                case = Case.objects.get(professional=user, patient=patient)
                 record = Record(session_datetime=request.POST.get("session_datetime"),
                                 session_resume=request.POST.get("session_resume"),
-                                professional=user, patient=patient,
+                                case=case,
                                 session_duration = request.POST.get("session_duration"))
                 record.save()
                 # check why username is the id, request.user.username is the user
-                return redirect_patient_records(request.user.username, patient_id)
+                return redirect_my_patient_records(request.user.username, patient_id)
             else:
                 return render(request, 'records/create_record_from_patient.html', {'user': user, 'patient': patient })
     else:
@@ -133,21 +162,22 @@ def create_record_from_patient(request, username, patient_id):
 def create_record(request, username):
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
-        patient_list = Patient.objects.all()
+        case_list = Case.objects.all().filter(professional=user)
 
         if request.user == user:
             if request.method == "POST":
                 patient = Patient.objects.get(pk=request.POST.get("patient_from_list"))
+                case = Case.objects.get(professional=user, patient=patient)
                 record = Record(session_datetime=request.POST.get("session_datetime"),
                                 session_resume=request.POST.get("session_resume"),
-                                professional=user, patient=patient,
+                                case=case,
                                 session_duration = request.POST.get("session_duration"))
                 record.save()
                 return redirect_patient_list(request.user.username)
             else:
-                return render(request, 'records/create_record.html', {'user': user, 'patient_list': patient_list })
+                return render(request, 'records/create_record.html', {'user': user, 'case_list': case_list })
         else:
-            return redirect_patient_records(request.user.username, patient_id)
+            return redirect_my_patient_records(request.user.username, patient_id)
     else:
         return HttpResponseRedirect("/login")
 
@@ -155,7 +185,7 @@ def create_record(request, username):
 def edit_record(request, username, patient_id, record_id):
     if request.user.is_authenticated:
         record = get_object_or_404(Record, pk=record_id)
-        if request.user == record.professional:
+        if request.user == record.case.professional:
             if request.method == "POST":
                 if request.POST.get("session_datetime"):
                     record.session_datetime = request.POST.get("session_datetime")
@@ -167,6 +197,8 @@ def edit_record(request, username, patient_id, record_id):
                 return redirect_record(username, patient_id, record_id)
             else:
                 return render(request, 'records/edit_record.html', {'record': record})
+        else:
+            return redirect_home(request.user.username)
     else:
         return HttpResponseRedirect("/login")
 
@@ -174,13 +206,11 @@ def edit_record(request, username, patient_id, record_id):
 def delete_record(request, username, patient_id, record_id):
     if request.user.is_authenticated:
         record = get_object_or_404(Record, pk=record_id)
-        if request.user == record.professional:
-            amount_records = (Record.objects.all().filter(patient=patient_id).filter(professional=record.professional).count())
+        if request.user == record.case.professional:
             record.delete()
-            if amount_records == 1:
-                return redirect_patient_list(username)
-            else:
-                return redirect_patient_records(request.user.username, patient_id)
+            return redirect_my_patient_records(request.user.username, patient_id)
+        else:
+            return redirect_home(request.user.username)
     else:
         return HttpResponseRedirect("/login")
 
@@ -223,7 +253,6 @@ def new_record(request):
         return HttpResponseRedirect("/login")
 
 
-
 def detail_record(request, record_id):
     if request.user.is_authenticated:
         record = get_object_or_404(record, pk=record_id)
@@ -236,12 +265,15 @@ def detail_record(request, record_id):
 """
 
 def redirect_patient_list(username):
-    return HttpResponseRedirect("/home/{}/records/".format(username))
+    return HttpResponseRedirect("/home/{}/patient_list/".format(username))
 
 
 def redirect_record(username, patient_id, record_id):
-    return HttpResponseRedirect("/home/{}/records/{}/record/{}".
+    return HttpResponseRedirect("/home/{}/records/patient/{}/record/{}".
                                 format(username, patient_id, record_id))
 
-def redirect_patient_records(username, patient_id):
+def redirect_my_patient_records(username, patient_id):
+    return HttpResponseRedirect("/home/{}/records/patient/{}/my_records".format(username, patient_id))
+
+def redirect_all_patient_records(username, patient_id):
     return HttpResponseRedirect("/home/{}/records/{}".format(username, patient_id))

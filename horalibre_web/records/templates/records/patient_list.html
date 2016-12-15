@@ -6,16 +6,16 @@
   <div class="section-title"><h1>Pacientes</h1></div>
     <div class="patient-entries">
 
-      {% if record_list %}
-        {% for record in record_list %}
+      {% if case_list %}
+        {% for case in case_list %}
           <div class="patient-entry">
             <div class="patient-name">
-              <a href="{% url 'records:record_list' record.professional record.patient.id %}"> {{ record.patient.get_full_name }} (DNI: {{ record.patient.dni }})</a>
+              <a href="{% url 'records:select_records' case.professional case.patient.id %}"> {{ case.patient.get_full_name }} (DNI: {{ case.patient.dni }})</a>
             </div>
           </div>
         {% endfor %}
       {% else %}
-          <i> No posee registros de pacientes </i>
+          <i> No posee pacientes </i>
       {% endif %}
     </div>
 

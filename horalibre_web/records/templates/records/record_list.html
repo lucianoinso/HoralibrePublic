@@ -3,8 +3,15 @@
 {% block content %}
 
   <div id="content">
-    {% if patient %}
-    <div class="section-title"><h1>{{ patient.get_full_name }}</h1></div>
+    <div class="section-title"><h1>{{ patient.get_full_name }} - 
+
+
+    {% if 'my_records' in request.path %}
+      Mis registros</h1>
+    {% else %}
+      Todos los registros</h1>
+    {% endif %}
+    </div>
       
       <div class="patient-entries">
         <div class="patient-entry" style="float:left">
@@ -14,45 +21,25 @@
             <div class="patient-name">Tel: {{ patient.phone_number }}</div>
           {% endif %}
         </div>
-
-        <div class="records-filter">
-          <form action="{% url 'records:record_list' username patient.id %}" id="record-filter-form" method="post">{% csrf_token %}
-            <div class="filter-radio-button"><input type="radio" id="my-records-radio-button" name="select_records" value="Mis registros" checked><span class="radio-button-text">Mis registros</span></div>
-            <div class="filter-radio-button"><input type="radio" id="all-records-radio-button" name="select_records" value="Todos los registros" ><span class="radio-button-text">Todos los registros</span></div>
-
-            <input type="submit" name="filter-submit" class="filter-submit" value="Filtrar" style="">
-          </form> 
-        </div>
       </div>
 
-    {% else %}
-
-    <div class="section-title"><h1>{{ page_records.0.patient.get_full_name }}</h1></div>
-      
-      <div class="patient-entries">
-        <div class="patient-entry" style="float:left">
-          <div class="patient-name">Edad: {{ page_records.0.patient.birthdate|timesince }}</div>
-
-          {% if page_records.0.patient.phone_number %}
-            <div class="patient-name">Tel: {{ page_records.0.patient.phone_number }}</div>
-          {% endif %}
-        </div>
-
-        <div class="records-filter">
-          <form action="{% url 'records:record_list' username page_records.0.patient.id %}" id="record-filter-form" method="post">{% csrf_token %}
-            <div class="filter-radio-button"><input type="radio" id="my-records-radio-button" name="select_records" value="Mis registros" checked><span class="radio-button-text">Mis registros</span></div>
-            <div class="filter-radio-button"><input type="radio" id="all-records-radio-button" name="select_records" value="Todos los registros" ><span class="radio-button-text">Todos los registros</span></div>
-
-            <input type="submit" name="filter-submit" class="filter-submit" value="Filtrar" style="">
-          </form> 
-        </div>
-      </div>
       <div class = "records-list">
         {% if page_records %}
           {% for record in page_records %}
             <div class = "record">
-              <a href="{% url 'records:record_detail' record.professional record.patient.id record.id %}">{{ record.session_datetime |date:"d-m-Y"}} ({{ record.session_datetime |date:"d-M-Y"}}) :  
-              {{ record.session_resume |truncatechars:40}} </a>
+              {% if 'my_records' in request.path %}
+                <a href="{% url 'records:record_detail' record.case.professional record.case.patient.id record.id %}"
+                   title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}}</a>
+              {% else %}
+                <a href="{% url 'records:record_detail' record.case.professional record.case.patient.id record.id %}"
+                   title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}} - Creado por 
+                {% if record.case.professional.username == user.username %}
+                  ud.
+                {% else %}
+                  {{ record.case.professional.get_full_name }}.
+                {% endif %}
+                </a>
+              {% endif %}
             </div>
           {% endfor %}
       </div>
@@ -80,12 +67,9 @@
 
 
       <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left;">
-      <a class="button-record-link" href ="{% url 'records:create_record_from_patient' username page_records.0.patient.id %}">Crear registro nuevo para este paciente</a></div>
-    {% endif %}
-
-
+      <a class="button-record-link" href ="{% url 'records:create_record_from_patient' username patient.id %}">Crear registro nuevo para este paciente</a></div>
 
       <div class = "button-record-inside-user-link" style="width:52px;">
-      <a class="button-record-link" href ="{% url 'records:patient_list' username %}" >Volver</a></div>
+      <a class="button-record-link" href ="{% url 'records:select_records' username patient.id %}" >Volver</a></div>
   </div>
 {% endblock %}

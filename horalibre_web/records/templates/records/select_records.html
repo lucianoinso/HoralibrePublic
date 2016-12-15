@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="content">
+    <div class="section-title"><h1>{{ patient.get_full_name }}</h1>
+    </div>
+      
+      <div class="patient-entries">
+        <div class="patient-entry" style="float:left">
+          <div class="patient-name">Edad: {{ patient.birthdate|timesince }}</div>
+
+          {% if patient.phone_number %}
+            <div class="patient-name">Tel: {{ patient.phone_number }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+
+      <div class="patient-entries" style="padding-top:0;margin-top:-20px;">
+        <div class="patient-entry" style="float:left">
+          <div class="patient-name"><a href="{% url 'records:my_records_list' username patient.id %}">&#10148; Ver mis registros</a></div>
+	      <div class="patient-name"><a href="{% url 'records:all_records_list' username patient.id %}">&#10148; Ver todos los registros</a></div>
+        </div>
+      </div>
+
+      <div class = "button-record-inside-user-link" style="width:52px;">
+      <a class="button-record-link" href ="{% url 'records:patient_list' username %}" >Volver</a></div>
+  </div>
+
+{% endblock %}
