@@ -7,20 +7,18 @@
     </div>
       
       <div class="patient-entries">
-        <div class="patient-entry" style="float:left">
-          <div class="patient-name">Edad: {{ patient.birthdate|timesince }}</div>
+        <div class="patient-entry">
+          <div class="patient-data">Edad: {{ patient.birthdate|timesince }}</div>
 
           {% if patient.phone_number %}
-            <div class="patient-name">Tel: {{ patient.phone_number }}</div>
+            <div class="patient-data">Tel: {{ patient.phone_number }}</div>
           {% endif %}
         </div>
       </div>
-
-
-      <div class="patient-entries" style="padding-top:0;margin-top:-20px;">
-        <div class="patient-entry" style="float:left">
-          <div class="patient-name"><a href="{% url 'records:my_records_list' username patient.id %}">&#10148; Ver mis registros</a></div>
-	      <div class="patient-name"><a href="{% url 'records:all_records_list' username patient.id %}">&#10148; Ver todos los registros</a></div>
+      <div class="patient-entries">
+        <div class="patient-entry">
+          <div class="patient-data"><a href="{% url 'records:my_records_list' username patient.id %}">&#10148; Ver mis registros</a></div>
+          <div class="patient-data"><a href="{% url 'records:all_records_list' username patient.id %}">&#10148; Ver todos los registros</a></div>
         </div>
       </div>
 

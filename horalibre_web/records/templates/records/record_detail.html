@@ -6,16 +6,15 @@
     <div class="section-title"><h1>{{ record.case.patient.get_full_name }} - {{ record.session_datetime|date:"d/m/y" }}</h1></div>
     <div class="patient-entries">
       <div class="patient-entry">
-        <div class="patient-name">Fecha y hora de la sesión: {{ record.session_datetime }}</div>
-        <div class="patient-name">Duración de la sesión: {{ record.session_duration }} minutos</div>
-        <div class="patient-name" style="font-size:13px;">Autor: {{ record.case.professional.get_full_name }}</div>
-        <br/>
-
-        <div class="patient-name" style="font-size:12px;">Fecha y hora de creación: {{ record.creation_datetime }}</div>
-        <div class="patient-name" style="font-size:12px;">Ultima modificación: {{ record.last_modified }}</div>
-        
+        <div class="patient-data">Fecha y hora de la sesión: {{ record.session_datetime }}</div>
+        <div class="patient-data">Duración de la sesión: {{ record.session_duration }} minutos</div>
+        <div class="patient-data" style="font-size:13px;">Autor: {{ record.case.professional.get_full_name }}</div>
+        <div class="patient-data" style="font-size:13px; margin-bottom:14px;">Coordinador del caso: {{ record.case.coordinator.get_full_name }}</div>
+        <div class="patient-data" style="font-size:12px;">Fecha y hora de creación: {{ record.creation_datetime }}</div>
+        <div class="patient-data" style="font-size:12px;">Ultima modificación: {{ record.last_modified }}</div>
       </div>
     </div>
+
     <div class = "record-log">
         {{ record.session_resume }}
     </div>
@@ -38,42 +37,39 @@
       </div>
 
     {% endif %}
+    <div id="comment-section">
+      <h3>Comentarios</h3>
+      {% if comments %}
+        <div class="comment_list">
+        {% for comment in comments %}
+          <div class="comment">
+          <p>{{ comment.text }}</p>
+          <span class="comment-subtext">
+          {{ comment.owner }} - {{ comment.create_date }}
+          
+          {% if comment.owner == user %}
 
-    <h3>Commentarios</h3>
-    {% if comments %}
-      <div class="comment list" style="background-color:white; width:55%;">
-      {% for comment in comments %}
-        <div class="comment" style="border: 1px solid #777777; border-radius: 5px; padding: 0 10px 0 10px; margin:10px 0px; word-wrap: break-word; width:100%">
-        <p>{{ comment.text }}</p>
-        
-        <span class="comment-subtext" style="font-size: 11px;">
-        {{ comment.owner }} - {{ comment.create_date }}
-        
-        
-        {% if comment.owner == user %}
+          <div class="comment-edit-delete" >
+            <a href="{% url 'records:edit_comment' record.case.professional record.case.patient.id record.id comment.id %}">[editar]</a>
+            <a href="{% url 'records:delete_comment' record.case.professional record.case.patient.id record.id comment.id %}" 
+             onclick="return confirm('¿Estas seguro que queres eliminar el comentario?')">[eliminar]</a>
+          </div>
+          {% endif %}
 
-        <div class="comment-edit-delete" >
-          <a href="{% url 'records:edit_comment' record.case.professional record.case.patient.id record.id comment.id %}" style="text-decoration: none !important;">[editar]</a>
-          <a href="{% url 'records:delete_comment' record.case.professional record.case.patient.id record.id comment.id %}" 
-           onclick="return confirm('¿Estas seguro que queres eliminar el comentario?')"
-           style="text-decoration: none !important;">[eliminar]</a>
+          </span>
+          </div>
+        {% endfor %}
         </div>
-        {% endif %}
-
-        </span>
-        </div>
-      {% endfor %}
-      </div>
-    {% else %}
-      <span class="empty-message">Este registro no posee comentarios</span>
-    {% endif %}
-    <br>
-    <form action="{% url 'records:new_comment' user.username record.case.patient.id record.id %}" method="post" id="post_comment">{% csrf_token %}
-      <i><h4>Comentar</h4></i>
-      <textarea id="comment_text" name="comment_text" maxlength=500 style="width:auto; resize: none;" rows="5" cols="34" required></textarea>
-      <p><input type="submit" value="Comentar" style="width:80px;"></p>
-    </form>
-
+      {% else %}
+        <span class="empty-message">Este registro no posee comentarios</span>
+      {% endif %}
+      <br>
+      <form action="{% url 'records:new_comment' user.username record.case.patient.id record.id %}" method="post" id="post_comment">{% csrf_token %}
+        <span class="add-comment"><h4>Agregar comentario:</h4></span>
+        <textarea id="comment_text" name="comment_text" maxlength=500 style="width:auto; resize: none;" rows="5" cols="36" required></textarea>
+        <p><input type="submit" value="Comentar" style="width:80px;"></p>
+      </form>
+    </div>
   </div> <!-- end content div -->
 
 {% endblock %}

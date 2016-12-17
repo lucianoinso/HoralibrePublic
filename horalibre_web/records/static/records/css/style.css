@@ -80,11 +80,10 @@ h1.header {
 }
 
 footer {
-  margin-top: 80px;
   text-align: center;
   font-size: 0.8em;
   padding-top: 0;
-
+  margin-top: 70px;
 }
 
 footer h5 {
@@ -134,7 +133,6 @@ li a {
 
 #center {
     margin: 0px 50px;
-    height:550px;
     width:1150px;
 }
 
@@ -181,7 +179,6 @@ li a {
 
 .patient-entries{
   padding-top: 10px;
-  height: 80px;
 }
 
 .patient-entry{
@@ -196,7 +193,7 @@ li a {
   color:#70cbce;
 }
 
-.patient-name{
+.patient-data{
   font-weight: 400;
 }
 
@@ -258,9 +255,11 @@ span.article-author {
 }
 
 .records-list {
+  margin-top:30px;
   padding: 8px;
   border: 1px solid #cccccc;
   border-radius: 5px;
+  margin-top: 15px;
 }
 
 .record-log {
@@ -429,7 +428,7 @@ input[type=submit]:hover {
 }
 
 .records-filter input[type=submit]:hover {
-  color:#70cbce;;
+  color:#70cbce;
 }
 
 .filter-radio-button{
@@ -458,4 +457,39 @@ input[type="radio"] {
   border-radius: 5px;
   padding: 10px 10px;
   word-wrap: break-word;
+}
+
+#comment-section{
+
+}
+
+span.add-comment h4{
+  font-style: italic;
+  margin: 0 0 10px 0;
+}
+
+#comment-section{
+
+}
+
+.comment_list{
+  background-color:white;
+  width:56%;
+}
+
+.comment{
+  border: 1px solid #777777;
+  border-radius: 5px;
+  padding: 0 10px 0 10px;
+  margin:10px 0px;
+  word-wrap: break-word;
+  width:100%;
+}
+
+span.comment-subtext{
+  font-size: 11px;
+}
+
+.comment-edit-delete{
+  text-decoration: none !important;
 }

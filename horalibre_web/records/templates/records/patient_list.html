@@ -9,7 +9,7 @@
       {% if case_list %}
         {% for case in case_list %}
           <div class="patient-entry">
-            <div class="patient-name">
+            <div class="patient-data">
               <a href="{% url 'records:select_records' case.professional case.patient.id %}"> {{ case.patient.get_full_name }} (DNI: {{ case.patient.dni }})</a>
             </div>
           </div>

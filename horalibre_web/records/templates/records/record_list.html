@@ -4,21 +4,18 @@
 
   <div id="content">
     <div class="section-title"><h1>{{ patient.get_full_name }} - 
-
-
-    {% if 'my_records' in request.path %}
-      Mis registros</h1>
-    {% else %}
-      Todos los registros</h1>
-    {% endif %}
+      {% if 'my_records' in request.path %}
+        Mis registros</h1>
+      {% else %}
+        Todos los registros</h1>
+      {% endif %}
     </div>
-      
       <div class="patient-entries">
-        <div class="patient-entry" style="float:left">
-          <div class="patient-name">Edad: {{ patient.birthdate|timesince }}</div>
+        <div class="patient-entry">
+          <div class="patient-data">Edad: {{ patient.birthdate|timesince }}</div>
 
           {% if patient.phone_number %}
-            <div class="patient-name">Tel: {{ patient.phone_number }}</div>
+            <div class="patient-data">Tel: {{ patient.phone_number }}</div>
           {% endif %}
         </div>
       </div>
