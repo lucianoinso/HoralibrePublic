@@ -1,0 +1,29 @@
+Postgress installation:
+-----------------------
+sudo apt-get update
+sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib
+
+
+Database creation:
+------------------
+sudo su - postgres
+psql
+
+CREATE DATABASE horalibre_db_11479;
+CREATE USER hl_admin WITH PASSWORD 'h@r$l1br3@119f4';
+ALTER ROLE hl_admin SET client_encoding TO 'utf8';
+ALTER ROLE hl_admin SET default_transaction_isolation TO 'read committed';
+ALTER ROLE hl_admin SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE horalibre_db_11479 TO hl_admin;
+
+
+Virtual env
+-----------
+pip install django psycopg2
+
+
+DB data
+-------
+name: horalibre_db_11479
+user: hl_admin
+password: h@r$l1br3@119f4
