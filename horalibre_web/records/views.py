@@ -265,7 +265,7 @@ def detail_record(request, record_id):
 """
 
 def redirect_patient_list(username):
-    return HttpResponseRedirect("/home/{}/patient_list/".format(username))
+    return HttpResponseRedirect("/home/{}/records/patient_list".format(username))
 
 
 def redirect_record(username, patient_id, record_id):
