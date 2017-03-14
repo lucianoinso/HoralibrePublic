@@ -1,16 +1,19 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Modify Comment</title>
-</head>
-    <h1>Modify Comment</h1>
-  <body>
-    <form action="{% url 'records:edit_comment' record.case.professional record.case.patient.id record.id comment.id%}" method="post" id="edit_comment">{% csrf_token %}
-      <h3>Comment</h3>
-      <textarea id="comment_text" name="comment_text" maxlength=500 
-                style="width:auto; resize: none;" rows="5" cols="50" required>{{ comment.text }}</textarea>
-      <p><input type="submit" value="Submit"></p>
-    </form>
-  </body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+  <div id="content">
+    <div class="section-title"><h1>Modificar Comentario</h1></div>
+    
+    <div class="form-inputs-container" style="width:575px;">
+      <form action="{% url 'records:edit_comment' record.case.professional record.case.patient.id record.id comment.id%}" method="post" id="edit_comment">{% csrf_token %}
+        <h3>Comentario</h3>
+        <textarea id="comment_text" name="comment_text" maxlength=500 
+                  style="width:553px; resize: none;" rows="5" cols="50" required>{{ comment.text }}</textarea>
+        <input type="submit" value="Guardar">
+        <div class = "button-record-inside-user-link" style="text-align:left; width:128px; float:right; height:23px; font-size:14px;">
+          <a class="button-record-link" href ="{% url 'records:record_detail' user.username record.case.patient.id record.id %}">Volver sin guardar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -19,9 +19,14 @@
               <div class = "edit-record-text">
                 <textarea id = "edit-record-textarea" name="session_resume">{{ record.session_resume }} </textarea>
               </div>
-            <input type="submit" value="Guardar">
+              <input type="submit" value="Guardar">
+              <div class = "button-record-inside-user-link" style="text-align:left; width:128px; float:right; height:23px; font-size:14px; margin-right:-12px;">
+              <a class="button-record-link" href ="{% url 'records:record_detail' user.username record.case.patient.id record.id %}">Volver sin guardar</a>
+              </div>
             </div>
           </form>
+
+          
         </div>
 
 <!--            <select name="session-length">

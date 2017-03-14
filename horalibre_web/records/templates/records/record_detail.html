@@ -16,7 +16,7 @@
     </div>
 
     <div class = "record-log">
-        {{ record.session_resume }}
+        {{ record.session_resume|linebreaksbr }}
     </div>
 
     {% if record.case.professional.username == user.username %}
@@ -43,7 +43,7 @@
         <div class="comment_list">
         {% for comment in comments %}
           <div class="comment">
-          <p>{{ comment.text }}</p>
+          <p>{{ comment.text|linebreaksbr }}</p>
           <span class="comment-subtext">
           {{ comment.owner }} - {{ comment.create_date }}
           

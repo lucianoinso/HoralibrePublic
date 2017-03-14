@@ -282,6 +282,10 @@ span.article-author {
   border-radius: 5px;
 }
 
+.record-log p {
+  margin-top:0px;
+}
+
 .record-log-date {
   
 }
@@ -500,10 +504,14 @@ span.add-comment h4{
 .comment{
   border: 1px solid #777777;
   border-radius: 5px;
-  padding: 0 10px 0 10px;
-  margin:10px 0px;
+  padding: 0 8px 0 8px;
+  margin: 15px 0px;
   word-wrap: break-word;
-  width:100%;
+  width: 100%;
+}
+
+.comment p{
+  margin-top:7px;
 }
 
 span.comment-subtext{
