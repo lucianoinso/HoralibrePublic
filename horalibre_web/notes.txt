@@ -34,3 +34,8 @@ DB data
 name: horalibre_db_11479
 user: hl_admin
 password: h@r$l1br3@119f4
+
+PSQL Notes
+----------
+\connect DBNAME
+\dt  #  shows tables

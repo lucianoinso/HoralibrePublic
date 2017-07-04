@@ -9,11 +9,16 @@ from django.utils import timezone
 
 class Professional(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    dni = models.IntegerField(default='0')
-    phone_number = models.CharField(max_length=15, default='0')
-    profession = models.CharField(max_length=100, default='')
+    dni = models.IntegerField()
+    phone_number = models.CharField(max_length=15)
+    profession = models.CharField(max_length=100)
+    is_coordinator = models.BooleanField(default=False)
+
+    def get_full_name(self):
+        return (self.user.first_name + " " + self.user.last_name)
+
     def __str__(self):
-        return str(self.dni)
+        return str(self.user.last_name + ", " + self.user.first_name + ' (DNI:' + str(self.dni) + ')')
 
 
 #@receiver(post_save, sender=User)
@@ -24,6 +29,18 @@ class Professional(models.Model):
 #@receiver(post_save, sender=User)
 #def save_user_profile(sender, instance, **kwargs):
 #    instance.professional.save()
+
+class Secretary(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    dni = models.IntegerField()
+    phone_number = models.CharField(max_length=15)
+    
+    def get_full_name(self):
+        return (self.first_name + " " + self.last_name)
+
+    def __str__(self):
+        return str(self.user.last_name + ", " + self.user.first_name + ' (DNI:' + str(self.dni) + ')')
+
 
 class Patient(models.Model):
     first_name = models.CharField(max_length=50)
@@ -36,18 +53,19 @@ class Patient(models.Model):
     def get_full_name(self):
         return (self.first_name + " " + self.last_name)
 
-    def __str__(self):
-        return self.get_full_name()
-
     def get_age(self):
         return ((timezone.now().date()) - self.birthdate)
 
+    def __str__(self):
+        return str(self.last_name + ", " + self.first_name + ' (DNI:' + str(self.dni) + ')')
 
+
+# CHANGE ON_DELETE to default user
 class Case(models.Model):
-    professional = models.ForeignKey(User, related_name='case_prof', 
+    professional = models.ForeignKey(Professional, related_name='case_prof', 
                    on_delete=models.SET_NULL, null=True)
     patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
-    coordinator = models.ForeignKey(User, related_name='case_coord',
+    coordinator = models.ForeignKey(Professional, related_name='case_coord',
                   on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -55,7 +73,6 @@ class Case(models.Model):
                 self.coordinator.get_full_name() + 
                 " - " + self.professional.get_full_name() + " - " + 
                 self.patient.get_full_name() + "\"")
-
 
 
 class Record(models.Model):
@@ -70,6 +87,3 @@ class Record(models.Model):
         return (self.case.professional.get_full_name() + " - " + 
                 self.case.patient.__str__() + " - Fecha de la sesion: " +
                 str(self.session_datetime.date()))
-
-
-

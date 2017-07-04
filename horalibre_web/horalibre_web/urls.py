@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^home/(?P<username>[\w.@+-]+)/$', login_views.home, name='home'),
     url(r'^home/$', login_views.home, name='home'),
     url(r'^home/(?P<username>[\w.@+-]+)/records/', include('records.urls', namespace='records')),
+    url(r'^administration/', include('administration.urls', namespace='administration')),
 ]

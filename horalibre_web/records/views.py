@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 
 # Project Imports
 from login.views import redirect_home
@@ -24,20 +25,21 @@ def select_records(request, username, patient_id):
     else:
         return HttpResponseRedirect("/login")
 
-
+# CHECK THIS SHIT
 def patient_list(request, username="Anonymous"):
     if request.user.is_authenticated:
         if request.user.username == username:
             try:
-                user = User.objects.get(username=username)
-                case_list = Case.objects.all().filter(professional=user)
+                professional = Professional.objects.get(user__username=username)
+                print professional
+                case_list = Case.objects.all().filter(Q(professional=professional) | Q(coordinator=professional))
 #                record_list = Record.objects.filter(professional=user).distinct('patient')
             except Exception as e:
                 return HttpResponse(e)
 
             return render(request, 'records/patient_list.html', {
                 'case_list': case_list,
-                'username': username,
+                'username': professional.user.id,
                 })
         else:
             return redirect_home(request.user.username)

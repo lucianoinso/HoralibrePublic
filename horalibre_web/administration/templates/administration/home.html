@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div id="content">
+      <div class="section-title" style="font-style:italic"><h1>Menú de administrador</h1></div>
+        <div class="menu-section">
+            <div class="sub-menu-section">
+                <div class="sub-menu-section-title">Profesionales</div>
+                <div class="menu-items" stlye="margin-top:0px">
+                  <a href="{% url 'administration:create_professional' %}">Crear profesional</a><br />
+                  <a href="{% url 'administration:modify_proff_menu' %}">Modificar profesional</a><br />
+                  <a href="{% url 'administration:delete_professional' %}">Eliminar profesional</a>
+                </div>
+            </div>
+            <div class="sub-menu-section">
+                <div class="sub-menu-section-title">Secretaría</div>
+                <div class="menu-items">
+                  <a href="{% url 'administration:create_secretary' %}">Crear profesional de secretaría</a><br />
+                  <a href="{% url 'administration:modify_secretary' %}">Modificar profesional de secretaría</a><br />
+                  <a href="{% url 'administration:delete_secretary' %}">Eliminar profesional de secretaría</a>
+                </div>
+            </div>
+            <div class="sub-menu-section">
+                <div class="sub-menu-section-title">Pacientes</div>
+                <div class="menu-items">
+                  <a href="{% url 'administration:create_patient' %}">Crear paciente</a><br />
+                  <a href="{% url 'administration:modify_patient' %}">Modificar paciente</a><br />
+                  <a href="{% url 'administration:delete_patient' %}">Eliminar paciente</a>
+                </div>
+            </div>
+            <div class="sub-menu-section">
+                <div class="sub-menu-section-title">Casos</div>
+                <div class="menu-items">
+                  <a href="{% url 'administration:create_case' %}">Crear caso</a><br />
+                  <a href="{% url 'administration:modify_case' %}">Modificar caso</a><br />
+                  <a href="{% url 'administration:delete_case' %}">Eliminar caso</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
