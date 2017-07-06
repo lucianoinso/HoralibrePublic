@@ -39,7 +39,8 @@ class Secretary(models.Model):
         return (self.first_name + " " + self.last_name)
 
     def __str__(self):
-        return str(self.user.last_name + ", " + self.user.first_name + ' (DNI:' + str(self.dni) + ')')
+        return str(self.user.last_name + ", " + self.user.first_name +
+                  ' (DNI:' + str(self.dni) + ')')
 
 
 class Patient(models.Model):
@@ -57,7 +58,8 @@ class Patient(models.Model):
         return ((timezone.now().date()) - self.birthdate)
 
     def __str__(self):
-        return str(self.last_name + ", " + self.first_name + ' (DNI:' + str(self.dni) + ')')
+        return str(self.last_name + ", " + self.first_name +
+                   ' (DNI:' + str(self.dni) + ')')
 
 
 # CHANGE ON_DELETE to default user
@@ -69,10 +71,24 @@ class Case(models.Model):
                   on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return ("Coordinador - Profesional - Paciente: \"" +
-                self.coordinator.get_full_name() + 
-                " - " + self.professional.get_full_name() + " - " + 
-                self.patient.get_full_name() + "\"")
+        prof_name = patient_name = coord_name = ""
+        if self.professional is None:
+            prof_name = "Profesional eliminado"
+        else:
+            prof_name = self.professional.get_full_name()
+        
+        if self.patient is None:
+            patient_name = "Paciente eliminado"
+        else:
+            patient_name = self.patient.get_full_name()
+        
+        if self.coordinator is None:
+            coord_name = "Coordinador eliminado"
+        else:
+            coord_name = self.coordinator.get_full_name()
+
+        return ("Coordinador - Profesional - Paciente: \"" + coord_name + " - "
+                 + prof_name + " - " + patient_name + "\"")
 
 
 class Record(models.Model):
@@ -84,6 +100,9 @@ class Record(models.Model):
     case = models.ForeignKey(Case, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return (self.case.professional.get_full_name() + " - " + 
-                self.case.patient.__str__() + " - Fecha de la sesion: " +
-                str(self.session_datetime.date()))
+        if case is None:
+            return "Deleted Case, resume:" + session_resume[:40] + "..."
+        else:
+            return (self.case.professional.get_full_name() + " - " + 
+                    self.case.patient.__str__() + " - Fecha de la sesion: " +
+                    str(self.session_datetime.date()))
