@@ -2,21 +2,21 @@
 
 {% block content %}
         <div id="content">
-            <div class="section-title"><h1>Crear Profesional</h1></div>
+            <div class="section-title"><h1>Modificar profesional</h1></div>
             <div id="create-user-form" style="margin-top:10px;">
                 {% if error_message %}
                 <div class="error-message" style="color:red;font-size:13px;">
                     {{ error_message }}
                 </div>
                 {% endif %}
-                <form action="{% url 'administration:create_proff' %}" method="post"
+                <form action="{% url 'administration:modify_professional' prof_id %}" method="post"
                 id="create-record-form">
                 <!-- input has class: 'administration-input' -->
                     {% csrf_token %}
                     <div class="form-inputs-container">
-                        {{ form.as_p }}
+                    {{ form.as_p }}
                     </div>
-                    <input type="submit" value="Crear" />
+                    <input type="submit" value="Modificar" />
                 </form>
             </div>
         </div>

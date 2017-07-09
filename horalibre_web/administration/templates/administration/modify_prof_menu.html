@@ -5,9 +5,9 @@
             <div class="section-title"><h1>Modificar profesional</h1></div>
             <div id="create-user-form" style="margin-top:10px;">
             {% comment %}
-                <!-- {% url 'administration:modify_proff' form.professional.id_for_label %}-->
+                <!-- {% url 'administration:modify_professional_menu' form.professional.id_for_label %}-->
             {% endcomment %}
-                <form action="{% url 'administration:modify_proff_menu' %}" method="post"
+                <form action="{% url 'administration:modify_professional_menu' %}" method="post"
                 id="create-record-form">
                 <!-- input has class: 'administration-input' -->
                     {% csrf_token %}

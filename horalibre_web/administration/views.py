@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 # Django Imports
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -12,8 +12,9 @@ from datetime import datetime
 # Project Imports
 from login.views import redirect_home
 from records.models import Professional, Secretary, Patient, Record, Case
-from .forms import (ProfessionalForm, ProfessionalListForm, SecretaryForm,
-                    PatientForm, CaseForm, PatientListForm, SecretaryListForm,
+from .forms import (ProfessionalForm, ProfessionalListForm,
+                    ProfessionalEditForm, SecretaryForm, PatientForm, CaseForm,
+                    PatientListForm, SecretaryListForm, SecretaryEditForm,
                     CaseListForm)
 
 
@@ -83,54 +84,77 @@ def create_professional(request):
 
 
 @csrf_protect
-def modify_proff_menu(request):
+def modify_professional_menu(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
-            form = ProfessionalForm(request.POST)
+            form = ProfessionalListForm(request.POST)
             # Check whether is valid:
-        #    if form.is_valid():
-        #        professional = form.cleaned_data['professional']
-            return render(request, 'administration/modify_proff_menu.html',
-                          {'form': form})
+            if form.is_valid():
+                professional = form.cleaned_data['professional']
+                print professional.id
+                return redirect('administration:modify_professional', prof_id=professional.id)
+#                return HttpResponseRedirect('/my_url/' + get_string)
+#                return render(request, 'administration/modify_prof_menu.html',
+#                              {'form': form})
+            else:
+                return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create a blank form
         else:
             form = ProfessionalListForm()
-            return render(request, 'administration/modify_proff_menu.html',
+            return render(request, 'administration/modify_prof_menu.html',
                           {'form': form})
     else:
         return render(request, 'login/login.html')
 
 
 @csrf_protect
-def modify_proff(request, proff_id):
+def modify_professional(request, prof_id):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            print "POSTT"
-            proff = Professional.objects.get(id=proff_id)
-            # Create a form instance and populate it with data from the request
-            pre_data = {'email': proff.user.email, 'dni': proff.dni,
-                        'first_name': proff.user.first_name,
-                        'last_name': proff.user.last_name,
-                        'phone_number': proff.phone_number,
-                        'profession': proff.profession,
-                        'is_coordinator': proff.is_coordinator}
-            form = ProfessionalForm(initial=pre_data)
-            return render(request, 'administration/modify_proff.html',
-                          {'form': form, 'proff_id': proff.id})
-        # if a GET (or any other method) we'll create a blank form
+            prof = Professional.objects.get(id=prof_id)
+            form = ProfessionalEditForm(request.POST)
+
+            if form.is_valid():
+                # CHECK IF USERNAME IS AVAILABLE
+                new_username = form.cleaned_data['username']
+                username_user = Professional.objects.filter(user__username=new_username).first()
+
+                if ((username_user is None) or
+                    (username_user.user.id == prof.user.id)):
+
+                    prof.user.username = new_username
+                    prof.user.email = form.cleaned_data['email']
+                    prof.user.first_name = form.cleaned_data['first_name']
+                    prof.user.last_name = form.cleaned_data['last_name']
+                    prof.dni = form.cleaned_data['dni']
+                    prof.phone_number = form.cleaned_data['phone_number']
+                    prof.profession = form.cleaned_data['profession']
+                    prof.is_coordinator = form.cleaned_data['is_coordinator']
+                    prof.user.save()
+                    prof.save()
+                    return HttpResponseRedirect('/administration/')
+                else:
+                    error_message = "El nombre de usuario ya existe, elija otro"
+                    return render(request, 'administration/modify_professional.html',
+                          {'form': form, 'prof_id': prof_id,
+                            'error_message': error_message})
+
+        # if a GET (or any other method) we'll create the populated form
         else:
-            proff = Professional.objects.get(id=proff_id)
+            prof = Professional.objects.get(id=prof_id)
             # Create a form instance and populate it with data from the request
-            pre_data = {'email': proff.user.email,
-                        'first_name': proff.user.first_name,
-                        'last_name': proff.user.last_name, 'dni': proff.dni,
-                        'phone_number': proff.phone_number,
-                        'profession': proff.profession,
-                        'is_coordinator': proff.is_coordinator}
-            form = ProfessionalForm(initial=pre_data)
-            return render(request, 'administration/modify_proff.html',
-                          {'form': form, 'proff_id': proff.id})
+            pre_data = {'username': prof.user.username,
+                        'email': prof.user.email,
+                        'first_name': prof.user.first_name,
+                        'last_name': prof.user.last_name,
+                        'dni': prof.dni,
+                        'phone_number': prof.phone_number,
+                        'profession': prof.profession,
+                        'is_coordinator': prof.is_coordinator}
+            form = ProfessionalEditForm(initial=pre_data)
+            return render(request, 'administration/modify_professional.html',
+                          {'form': form, 'prof_id': prof.id})
     else:
         return render(request, 'login/login.html')
 
@@ -209,8 +233,59 @@ def create_secretary(request):
         return render(request, 'login/login.html')
 
 
-def modify_secretary(request):
+def modify_secretary_menu(request):
     pass
+
+
+def modify_secretary(request, secretary_id):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            secr = Secretary.objects.get(id=secretary_id)
+            form = SecretaryEditForm(request.POST)
+            if form.is_valid():
+                # CHECK IF USERNAME IS AVAILABLE
+                new_username = form.cleaned_data['username']
+                username_user = Secretary.objects.filter(user__username=new_username).first()
+
+                if ((username_user is None) or
+                    (username_user.user.id == secr.user.id)):
+
+                    secr.user.username = new_username
+                    secr.user.email = form.cleaned_data['email']
+                    secr.user.first_name = form.cleaned_data['first_name']
+                    secr.user.last_name = form.cleaned_data['last_name']
+                    secr.dni = form.cleaned_data['dni']
+                    secr.phone_number = form.cleaned_data['phone_number']
+                    secr.user.save()
+                    secr.save()
+                else:
+                    error_message = "El nombre de usuario ya existe, elija otro"
+                    return render(request, 'administration/modify_secretary.html',
+                          {'form': form, 'secretary_id': secretary_id,
+                            'error_message': error_message})
+            else:
+                error_message = "Entrada(s) invalida(s)"
+                return render(request, 'administration/modify_secretary.html',
+                          {'form': form, 'secretary_id': secretary_id,
+                            'error_message': error_message})
+            return HttpResponseRedirect('/administration/')
+        # if a GET (or any other method) we'll create the populated form
+        else:
+            secr = Secretary.objects.get(id=secretary_id)
+            # Create a form instance and populate it with data from the request
+            pre_data = {'username': secr.user.username,
+                        'email': secr.user.email,
+                        'first_name': secr.user.first_name,
+                        'last_name': secr.user.last_name,
+                        'dni': secr.dni,
+                        'phone_number': secr.phone_number,
+                        }
+            form = SecretaryEditForm(initial=pre_data)
+            return render(request, 'administration/modify_secretary.html',
+                          {'form': form, 'secretary_id': secretary_id})
+    else:
+        return render(request, 'login/login.html')
+
 
 
 def delete_secretary(request):
@@ -285,6 +360,10 @@ def create_patient(request):
         return render(request, 'login/login.html')
 
 
+def modify_patient_menu(request):
+    pass
+
+
 def modify_patient(request):
     pass
 
@@ -348,6 +427,9 @@ def create_case(request):
     else:
         return render(request, 'login/login.html')
 
+def modify_case_menu(request):
+    pass
+
 
 def modify_case(request):
     pass
@@ -363,7 +445,6 @@ def delete_case(request):
                 case = form.cleaned_data['case']
                 case.delete()
             return HttpResponseRedirect('/administration/')
-
         # if a GET (or any other method) we'll create a blank form
         else:
             form = CaseListForm()

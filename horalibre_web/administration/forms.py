@@ -47,8 +47,36 @@ class ProfessionalForm(ModelForm):
             "profession": "Profesión",
             "is_coordinator": "Es coordinador?",
         }
-        widgets = {}
+        error_messages = {
+            'dni': {
+                'max_value': "El numero ingresado es demasiado largo.",
+                'invalid': "El numero ingresado es invalido.",
+            },
+        }
 
+
+class ProfessionalEditForm(ModelForm):
+    username = forms.CharField(max_length = 150, label='Nombre de usuario')
+    first_name = forms.CharField(max_length = 30, label='Nombre')
+    last_name = forms.CharField(max_length = 30, label='Apellido')
+    email = forms.EmailField()
+    class Meta:
+        model = Professional
+        fields = ['username', 'first_name', 'last_name', 'email',
+                  'dni', 'phone_number', 'profession', 'is_coordinator',
+                 ]
+        labels = {
+            "dni": "Número de documento",
+            "phone_number": "Número de teléfono",
+            "profession": "Profesión",
+            "is_coordinator": "Es coordinador?",
+        }
+        error_messages = {
+            'dni': {
+                'max_value': "El numero ingresado es demasiado largo.",
+                'invalid': "El numero ingresado es invalido.",
+            },
+        }
 
 class SecretaryForm(ModelForm):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
@@ -66,6 +94,33 @@ class SecretaryForm(ModelForm):
         labels = {
             "dni": "Número de documento",
             "phone_number": "Número de teléfono",
+        }
+        error_messages = {
+            'dni': {
+                'max_value': "El numero ingresado es demasiado largo.",
+                'invalid': "El numero ingresado es invalido.",
+            },
+        }
+
+class SecretaryEditForm(ModelForm):
+    username = forms.CharField(max_length = 150, label='Nombre de usuario')
+    first_name = forms.CharField(max_length = 30, label='Nombre')
+    last_name = forms.CharField(max_length = 30, label='Apellido')
+    email = forms.EmailField()
+    class Meta:
+        model = Secretary
+        fields = ['username', 'first_name', 'last_name', 'email', 
+                  'dni', 'phone_number',
+                 ]
+        labels = {
+            "dni": "Número de documento",
+            "phone_number": "Número de teléfono",
+        }
+        error_messages = {
+            'dni': {
+                'max_value': "El numero ingresado es demasiado largo.",
+                'invalid': "El numero ingresado es invalido.",
+            },
         }
 
 class SecretaryListForm(forms.Form):
