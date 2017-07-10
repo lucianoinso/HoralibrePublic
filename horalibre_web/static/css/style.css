@@ -3,6 +3,8 @@
   font-weight: 400;
 }
 
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}
 
 #container {
   width:100%;
