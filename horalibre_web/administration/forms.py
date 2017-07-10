@@ -155,10 +155,15 @@ class PatientListForm(forms.Form):
 
 
 class CaseForm(ModelForm):
-    coordinator = forms.ModelChoiceField(queryset=Professional.objects.filter(is_coordinator=True).order_by('user__last_name'))
+    coordinator = forms.ModelChoiceField(queryset=Professional.objects.filter(is_coordinator=True).order_by('user__last_name'),
+                                         label='Coordinador')
     class Meta:
         model = Case
         fields = ['patient','professional','coordinator']
+        labels = {
+            'patient': "Paciente",
+            'professional': "Profesional",
+        }
 
 class CaseListForm(forms.Form):
-    case = forms.ModelChoiceField(queryset=Case.objects.all().order_by('coordinator__user__last_name'))
+    case = forms.ModelChoiceField(queryset=Case.objects.all().order_by('patient__last_name'))

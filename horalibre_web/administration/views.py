@@ -94,9 +94,6 @@ def modify_professional_menu(request):
                 professional = form.cleaned_data['professional']
                 print professional.id
                 return redirect('administration:modify_professional', prof_id=professional.id)
-#                return HttpResponseRedirect('/my_url/' + get_string)
-#                return render(request, 'administration/modify_prof_menu.html',
-#                              {'form': form})
             else:
                 return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create a blank form
@@ -111,18 +108,17 @@ def modify_professional_menu(request):
 @csrf_protect
 def modify_professional(request, prof_id):
     if request.user.is_authenticated:
+        prof = Professional.objects.get(id=prof_id)
         if request.method == 'POST':
-            prof = Professional.objects.get(id=prof_id)
             form = ProfessionalEditForm(request.POST)
 
             if form.is_valid():
-                # CHECK IF USERNAME IS AVAILABLE
+                # Check if username is available
                 new_username = form.cleaned_data['username']
-                username_user = Professional.objects.filter(user__username=new_username).first()
+                username_user = Professional.objects.filter(user__username=new_username).exclude(id=prof_id).first()
+                # Exclude the professional from the querylist
 
-                if ((username_user is None) or
-                    (username_user.user.id == prof.user.id)):
-
+                if username_user is None:
                     prof.user.username = new_username
                     prof.user.email = form.cleaned_data['email']
                     prof.user.first_name = form.cleaned_data['first_name']
@@ -142,7 +138,6 @@ def modify_professional(request, prof_id):
 
         # if a GET (or any other method) we'll create the populated form
         else:
-            prof = Professional.objects.get(id=prof_id)
             # Create a form instance and populate it with data from the request
             pre_data = {'username': prof.user.username,
                         'email': prof.user.email,
@@ -233,23 +228,41 @@ def create_secretary(request):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def modify_secretary_menu(request):
-    pass
-
-
-def modify_secretary(request, secretary_id):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            secr = Secretary.objects.get(id=secretary_id)
+            # Create a form instance and populate it with data from the request
+            form = SecretaryListForm(request.POST)
+            # Check whether is valid:
+            if form.is_valid():
+                secretary = form.cleaned_data['secretary']
+                return redirect('administration:modify_secretary', secretary_id=secretary.id)
+            else:
+                return HttpResponseRedirect('/administration/')
+        # if a GET (or any other method) we'll create a blank form
+        else:
+            form = SecretaryListForm()
+            return render(request, 'administration/modify_secr_menu.html',
+                          {'form': form})
+    else:
+        return render(request, 'login/login.html')
+
+
+@csrf_protect
+def modify_secretary(request, secretary_id):
+    if request.user.is_authenticated:
+        secr = Secretary.objects.get(id=secretary_id)
+        if request.method == 'POST':
             form = SecretaryEditForm(request.POST)
             if form.is_valid():
-                # CHECK IF USERNAME IS AVAILABLE
+                # Check if username is available
+                # remove the current secretary from the querylist
+
                 new_username = form.cleaned_data['username']
-                username_user = Secretary.objects.filter(user__username=new_username).first()
+                username_user = Secretary.objects.filter(user__username=new_username).exclude(id=secretary_id).first()
 
-                if ((username_user is None) or
-                    (username_user.user.id == secr.user.id)):
-
+                if username_user is None:
                     secr.user.username = new_username
                     secr.user.email = form.cleaned_data['email']
                     secr.user.first_name = form.cleaned_data['first_name']
@@ -271,7 +284,6 @@ def modify_secretary(request, secretary_id):
             return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create the populated form
         else:
-            secr = Secretary.objects.get(id=secretary_id)
             # Create a form instance and populate it with data from the request
             pre_data = {'username': secr.user.username,
                         'email': secr.user.email,
@@ -287,7 +299,6 @@ def modify_secretary(request, secretary_id):
         return render(request, 'login/login.html')
 
 
-
 def delete_secretary(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -296,6 +307,7 @@ def delete_secretary(request):
             # Check whether is valid:
             if form.is_valid():
                 secretary = form.cleaned_data['secretary']
+                secretary.user.delete()
                 secretary.delete()
             return HttpResponseRedirect('/administration/')
 
@@ -360,12 +372,71 @@ def create_patient(request):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def modify_patient_menu(request):
-    pass
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            # Create a form instance and populate it with data from the request
+            form = PatientListForm(request.POST)
+            # Check whether is valid:
+            if form.is_valid():
+                patient = form.cleaned_data['patient']
+                return redirect('administration:modify_patient', patient_id=patient.id)
+            else:
+                return HttpResponseRedirect('/administration/')
+        else:
+            form = PatientListForm()
+            return render(request, 'administration/modify_patient_menu.html',
+                          {'form': form})
+    else:
+        return render(request, 'login/login.html')
 
 
-def modify_patient(request):
-    pass
+def modify_patient(request, patient_id):
+    if request.user.is_authenticated:
+        patient = Patient.objects.get(id=patient_id)
+        if request.method == 'POST':
+            form = PatientForm(request.POST)
+            if form.is_valid():
+                # CHECK IF DNI IS AVAILABLE
+                dni = form.cleaned_data['dni']
+                dni_patient = Patient.objects.filter(dni=dni).exclude(id=patient_id).first()
+                # We remove the current dni from the queryset so it doesn't
+                # take it as if it is already in the database
+                if dni_patient is None:
+                    patient.dni = dni
+                    patient.first_name = form.cleaned_data['first_name']
+                    patient.last_name = form.cleaned_data['last_name']
+                    patient.birthdate = form.cleaned_data['birthdate']
+                    patient.health_insurance = form.cleaned_data['health_insurance']
+                    patient.phone_number = form.cleaned_data['phone_number']
+                    patient.save()
+                else:
+                    error_message = "El DNI del paciente ya existe, elija otro"
+                    return render(request, 'administration/modify_patient.html',
+                          {'form': form, 'patient_id': patient_id,
+                            'error_message': error_message})
+            else:
+                error_message = "Entrada(s) invalida(s)"
+                return render(request, 'administration/modify_patient.html',
+                          {'form': form, 'patient_id': patient_id,
+                            'error_message': error_message})
+            return HttpResponseRedirect('/administration/')
+        # if a GET (or any other method) we'll create the populated form
+        else:
+            # Create a form instance and populate it with data from the request
+            pre_data = {'first_name': patient.first_name,
+                        'last_name': patient.last_name,
+                        'birthdate': patient.birthdate,
+                        'health_insurance': patient.health_insurance,
+                        'phone_number': patient.phone_number,
+                        'dni': patient.dni}
+
+            form = PatientForm(initial=pre_data)
+            return render(request, 'administration/modify_patient.html',
+                          {'form': form, 'patient_id': patient_id})
+    else:
+        return render(request, 'login/login.html')
 
 
 def delete_patient(request):
@@ -412,14 +483,11 @@ def create_case(request):
                     new_case.save()
                     return HttpResponseRedirect('/administration/')
                 else:
-                    # We prepopulate the form with the previous values
-                    # except the DNI, and return an error message
-                    form = CaseForm()
+                    form = CaseForm(request.POST)
                     error_message = "El caso ya existe."
                     return render(request, 'administration/create_case.html',
                                   {'form': form,
                                    'error_message': error_message})
-        # if a GET (or any other method) we'll create a blank form
         else:
             form = CaseForm()
         return render(request, 'administration/create_case.html',
@@ -427,12 +495,69 @@ def create_case(request):
     else:
         return render(request, 'login/login.html')
 
+
 def modify_case_menu(request):
-    pass
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            # Create a form instance and populate it with data from the request
+            form = CaseListForm(request.POST)
+            # Check whether is valid:
+            if form.is_valid():
+                case = form.cleaned_data['case']
+                return redirect('administration:modify_case', case_id=case.id)
+            else:
+                return HttpResponseRedirect('/administration/')
+        else:
+            form = CaseListForm()
+            return render(request, 'administration/modify_case_menu.html',
+                          {'form': form})
+    else:
+        return render(request, 'login/login.html')
 
 
-def modify_case(request):
-    pass
+def modify_case(request, case_id):
+    if request.user.is_authenticated:
+        case = Case.objects.get(id=case_id)
+
+        if request.method == 'POST':
+            form = CaseForm(request.POST)
+            if form.is_valid():
+                # Check if the case is already in the database
+                patient = form.cleaned_data['patient']
+                professional = form.cleaned_data['professional']
+                coordinator = form.cleaned_data['coordinator']
+                new_case = Case.objects.filter(patient=patient).filter(professional=professional).filter(coordinator=coordinator).exclude(id=case_id).first()
+                print new_case
+                # We remove the current dni from the queryset so it doesn't
+                # take it as if it is already in the database
+                if new_case is None:
+                    case.patient = patient
+                    case.professional = professional
+                    case.coordinator = coordinator
+                    case.save()
+                else:
+                    error_message = "El caso ya existe, elija otra combinación"
+                    return render(request, 'administration/modify_case.html',
+                          {'form': form, 'case_id': case_id,
+                            'error_message': error_message})
+            else:
+                error_message = "Entrada(s) invalida(s)"
+                return render(request, 'administration/modify_case.html',
+                          {'form': form, 'case_id': case_id,
+                            'error_message': error_message})
+            return HttpResponseRedirect('/administration/')
+        # if a GET, we'll create the populated form
+        else:
+            # Create a form instance and populate it with data from the request
+            pre_data = {'patient': case.patient,
+                        'professional': case.professional,
+                        'coordinator': case.coordinator}
+
+            form = CaseForm(initial=pre_data)
+            return render(request, 'administration/modify_case.html',
+                          {'form': form, 'case_id': case_id})
+    else:
+        return render(request, 'login/login.html')    
 
 
 def delete_case(request):

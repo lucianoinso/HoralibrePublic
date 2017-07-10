@@ -87,8 +87,7 @@ class Case(models.Model):
         else:
             coord_name = self.coordinator.get_full_name()
 
-        return ("Coordinador - Profesional - Paciente: \"" + coord_name + " - "
-                 + prof_name + " - " + patient_name + "\"")
+        return ("Paciente: \"" + patient_name + "\" ~ Profesional: \"" + prof_name + "\" ~ Coordinador: \"" + coord_name + "\"")
 
 
 class Record(models.Model):
