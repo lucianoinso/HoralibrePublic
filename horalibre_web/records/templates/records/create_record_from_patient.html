@@ -6,7 +6,7 @@
           <div class="section-title"><h1>Crear registro para : {{ patient.get_full_name }}</h1></div>
 
 
-          <form action="{% url 'records:create_record_from_patient' user.id patient.id %}" id="create-record-form" method="post">{% csrf_token %}
+          <form action="{% url 'records:create_record_from_patient' patient.id %}" id="create-record-form" method="post">{% csrf_token %}
             <div class="form-inputs-container">
               <div class="date-input">Fecha y hora de la sesión:
               <input type="text" id="session_datetime" name="session_datetime" value="Haga click para elegir" required>

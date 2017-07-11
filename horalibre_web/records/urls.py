@@ -5,7 +5,7 @@ from commentary import views as comment_views
 
 urlpatterns = [
     url(r'^patient_list$', views.patient_list, name='patient_list'),
-    url(r'^create_record$', views.create_record, name='create_record'),
+#    url(r'^create_record$', views.create_record, name='create_record'),
     url(r'^patient/(?P<patient_id>[0-9]+)/select_records$',views.select_records,name='select_records'),
     url(r'^patient/(?P<patient_id>[0-9]+)/all_records$',views.all_records_list,name='all_records_list'),
     url(r'^patient/(?P<patient_id>[0-9]+)/my_records$',views.my_records_list,name='my_records_list'),

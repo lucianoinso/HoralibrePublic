@@ -12,6 +12,8 @@ update_models:
 	python manage.py makemigrations "login" "records" "commentary" "administration"
 	python manage.py migrate
 
+create_su:
+	python manage.py createsuperuser
 # Para crear un nuevo proyecto:
 # django-admin startproject project_name
 

@@ -96,6 +96,8 @@ class Record(models.Model):
     session_datetime = models.DateTimeField()
     session_resume = models.CharField(max_length=1000)
     session_duration = models.IntegerField()
+    author = models.ForeignKey(Professional, related_name='record_author', 
+                   on_delete=models.SET_NULL, null=True)
     case = models.ForeignKey(Case, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

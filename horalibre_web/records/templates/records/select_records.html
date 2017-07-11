@@ -17,13 +17,13 @@
       </div>
       <div class="patient-entries">
         <div class="patient-entry">
-          <div class="patient-data"><a href="{% url 'records:my_records_list' username patient.id %}">&#10148; Ver mis registros</a></div>
-          <div class="patient-data"><a href="{% url 'records:all_records_list' username patient.id %}">&#10148; Ver todos los registros</a></div>
+          <div class="patient-data"><a href="{% url 'records:my_records_list' patient.id %}">&#10148; Ver mis registros</a></div>
+          <div class="patient-data"><a href="{% url 'records:all_records_list' patient.id %}">&#10148; Ver todos los registros</a></div>
         </div>
       </div>
 
       <div class = "button-record-inside-user-link" style="width:52px;">
-      <a class="button-record-link" href ="{% url 'records:patient_list' username %}" >Volver</a></div>
+      <a class="button-record-link" href ="{% url 'records:patient_list' %}" >Volver</a></div>
   </div>
 
 {% endblock %}

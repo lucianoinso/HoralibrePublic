@@ -10,14 +10,20 @@
         {% for case in case_list %}
           <div class="patient-entry">
             <div class="patient-data">
-              <a href="{% url 'records:select_records' case.professional case.patient.id %}"> {{ case.patient.get_full_name }} (DNI: {{ case.patient.dni }})</a>
+              <a href="{% url 'records:select_records' case.patient.id %}"> {{ case.patient.get_full_name }} (DNI: {{ case.patient.dni }})</a>
             </div>
           </div>
         {% endfor %}
     </div>
+
+    {% comment %}
+    <!--
     <div class = "button-record-inside-user-link" style="width:146px; margin-top:40px">
-      <a class="button-record-link" href ="{% url 'records:create_record' username %}">Crear registro nuevo</a>
+      <a class="button-record-link" href ="{% url 'records:create_record' %}">Crear registro nuevo</a>
     </div>
+    -->
+    {% endcomment %}
+
       {% else %}
           <i> No posee pacientes </i>
     </div>

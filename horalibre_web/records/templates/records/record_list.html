@@ -25,15 +25,15 @@
           {% for record in page_records %}
             <div class = "record">
               {% if 'my_records' in request.path %}
-                <a href="{% url 'records:record_detail' record.case.professional record.case.patient.id record.id %}"
+                <a href="{% url 'records:record_detail' record.case.patient.id record.id %}"
                    title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}}</a>
               {% else %}
-                <a href="{% url 'records:record_detail' record.case.professional record.case.patient.id record.id %}"
+                <a href="{% url 'records:record_detail' record.case.patient.id record.id %}"
                    title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}} - Creado por 
-                {% if record.case.professional.username == user.username %}
+                {% if record.author.user == request.user %}
                   ud.
                 {% else %}
-                  {{ record.case.professional.get_full_name }}.
+                  {{ record.author.get_full_name }}.
                 {% endif %}
                 </a>
               {% endif %}
@@ -64,9 +64,9 @@
 
 
       <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left;">
-      <a class="button-record-link" href ="{% url 'records:create_record_from_patient' username patient.id %}">Crear registro nuevo para este paciente</a></div>
+      <a class="button-record-link" href ="{% url 'records:create_record_from_patient' patient.id %}">Crear registro nuevo para este paciente</a></div>
 
       <div class = "button-record-inside-user-link" style="width:52px;">
-      <a class="button-record-link" href ="{% url 'records:select_records' username patient.id %}" >Volver</a></div>
+      <a class="button-record-link" href ="{% url 'records:select_records' patient.id %}" >Volver</a></div>
   </div>
 {% endblock %}

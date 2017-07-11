@@ -7,7 +7,7 @@
           {{ record.case.patient.get_full_name }} - 
           {{ record.session_datetime|date:"d/m/y" }}</h1></div>
 
-          <form action="{% url 'records:edit_record' record.case.professional record.case.patient.id record.id %}" id="edit-record-form" method="post">{% csrf_token %}
+          <form action="{% url 'records:edit_record' record.case.patient.id record.id %}" id="edit-record-form" method="post">{% csrf_token %}
             <div class="form-inputs-container">
               <div class="date-input">Fecha y hora de la sesión:
               <input type="text" id="session_datetime" name="session_datetime" value="{{ record.session_datetime|date:"Y-m-d H:i" }}">
@@ -21,7 +21,7 @@
               </div>
               <input type="submit" value="Guardar">
               <div class = "button-record-inside-user-link" style="text-align:left; width:128px; float:right; height:23px; font-size:14px; margin-right:-12px;">
-              <a class="button-record-link" href ="{% url 'records:record_detail' user.username record.case.patient.id record.id %}">Volver sin guardar</a>
+              <a class="button-record-link" href ="{% url 'records:record_detail' record.case.patient.id record.id %}">Volver sin guardar</a>
               </div>
             </div>
           </form>

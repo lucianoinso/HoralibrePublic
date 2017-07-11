@@ -6,7 +6,7 @@
 </head>
     <h1>Add Comment</h1>
   <body>
-    <form action="{% url 'records:new_comment' record.case.professional record.case.patient.id record.id %}" method="post" id="post_comment">{% csrf_token %}
+    <form action="{% url 'records:new_comment' record.case.patient.id record.id %}" method="post" id="post_comment">{% csrf_token %}
       <h3>Comment</h3>
       <textarea id="comment_text" name="comment_text" maxlength=500 
                 style="width:auto; resize: none;" rows="5" cols="50" required></textarea>
