@@ -21,16 +21,14 @@ def select_records(request, patient_id):
     else:
         return HttpResponseRedirect("/login")
 
-# CHECK THIS SHIT
+
 def patient_list(request):
     if request.user.is_authenticated:
         try:
             prof = Professional.objects.get(user__username=request.user.username)
             case_list = Case.objects.all().filter(Q(professional=prof) | Q(coordinator=prof))
-#                record_list = Record.objects.filter(professional=user).distinct('patient')
             print case_list
         except Exception as e:
-            print "lcdtm"
             return HttpResponse(e)
 
         return render(request, 'records/patient_list.html', {
@@ -121,7 +119,7 @@ def record_detail(request, patient_id, record_id):
                 'comments': comments,
                 })
         else:
-            return redirect_home(request.user.username)
+            return redirect_home()
     else:
         return HttpResponseRedirect("/login")
 
@@ -188,7 +186,7 @@ def edit_record(request, patient_id, record_id):
             else:
                 return render(request, 'records/edit_record.html', {'record': record})
         else:
-            return redirect_home(request.user.username)
+            return redirect_home()
     else:
         return HttpResponseRedirect("/login")
 
@@ -200,7 +198,7 @@ def delete_record(request, patient_id, record_id):
             record.delete()
             return redirect_my_patient_records(patient_id)
         else:
-            return redirect_home(request.user.username)
+            return redirect_home()
     else:
         return HttpResponseRedirect("/login")
 
@@ -215,7 +213,7 @@ def patient_list(request, username):
                                .order_by('-create_date'))
             return render(request, 'goal/detail.html',
                           {'goal': goal, 'comments': comments})
-    return redirect_home(request.user)
+    return redirect_home()
 
 
 def new_record(request):
@@ -236,7 +234,7 @@ def new_record(request):
                                        owner=user
                                        )
             record.save()
-            return redirect_home(request.user.username)
+            return redirect_home()
         else:
             return render(request, 'record/new_record.html')
     else:
@@ -251,7 +249,7 @@ def detail_record(request, record_id):
                                .order_by('-create_date'))
             return render(request, 'record/detail.html',
                           {'record': record, 'comments': comments})
-    return redirect_home(request.user)
+    return redirect_home()
 """
 
 def redirect_patient_list():

@@ -25,17 +25,25 @@
 
         <h4>Servicio de Integración Escolar y Acompañamiento Terapéutico</h4>
         
+        {% if request.user.is_authenticated %}
         <div class="logout-menu"><span class="logout-button">Usuario: {{ user.username }}  <a class="logout-button" href="{% url 'logout' %}">[desloguearse]</a></div>
+        {% endif %}
       </header>
 
       <div id="center">
+        {% if request.user.is_authenticated %}
         <div id="menu">
           <ul>
             <li><a href="{% url 'home' %}">Novedades</a></li>
+            {% if request.user.is_staff %}
             <li><a href="{% url 'administration:admin_home' %}">Administración</a></li>
+            {% endif %}
+            {% if request.user.groups.all.first.name == "Profesionales" %}
             <li><a href="{% url 'records:patient_list' %}">Pacientes</a></li>
+            {% endif %}
           </ul>
         </div>
+        {% endif %}
 
       {% block content %}
       {% endblock %}

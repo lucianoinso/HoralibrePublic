@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_protect
 def login(request):
     # Si esta logueado lo redirecciono al home.
     if request.user.is_authenticated:
-        return redirect_home(request.user.username)
+        return redirect_home()
     # Si es una solicitud de login, checkeo que este bien.
     if request.method == "POST":
         username = request.POST.get("username")
@@ -23,25 +23,9 @@ def login(request):
                                 password=password)
             if user is not None:
                 login_user(request, user)
-                return redirect_home(username)
+                return redirect_home()
 
     return render(request, 'login/login.html')
-
-
-@csrf_protect
-def new_user(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        email = request.POST.get("email")
-        if is_valid(request):
-            user = User.objects.create_user(username=username,
-                                            password=password)
-            user.save()
-            user = authenticate(username=username, password=password)
-            login_user(request, user)
-            return redirect_home(username)
-    return HttpResponseRedirect('/login')
 
 
 def logout(request):
@@ -54,24 +38,23 @@ def is_valid(request):
             request.POST.get("password")) is not ''
 
 
-def home(request, username="Anonymous"):
+def home(request):
     if request.user.is_authenticated:
-        if request.user.username == username:
-            try:
-                user = User.objects.get(username=username)
-            except Exception as e:
-                return HttpResponse("El usuario no existe")
-            
-            return render(request, 'login/home.html', {
-                'user': user,
-                #'goals': goals,
-                })
-        else:
-            # El usuario quiere ingresar a otro home que no es el suyo.
-            return redirect_home(request.user.username)
+        try:
+            user = User.objects.get(username=request.user.username)
+        except Exception as e:
+            return HttpResponse("El usuario no existe")
+        
+        print user.groups
+        #user.user_permissions = 1
+        #user.save()
+        #print user.user_permissions
+        return render(request, 'login/home.html', {
+            'user': user,
+            })
     else:
         return HttpResponseRedirect("/login")
 
 
-def redirect_home(username):
-    return HttpResponseRedirect("/home/{}".format(username))
+def redirect_home():
+    return HttpResponseRedirect("/home/")

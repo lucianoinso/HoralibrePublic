@@ -1,45 +1,21 @@
-{% load static %}
+{% extends 'base.html' %}
 
-<!DOCTYPE html>
-<html >
-  <head>
-    <meta charset="UTF-8">
-    <title>Login, Register form</title>
-    <link rel="stylesheet" href="{% static 'login/normalize.css' %}">
-    <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
-    <link rel="stylesheet" href="{% static 'login/style.css' %}">
-  </head>
-
-  <body>
-  <div class="login-box">
-      <div class="lb-header">
-          <a href="#" class="active" id="login-box-link">Login</a>
-          <a href="#" id="signup-box-link">Sign Up</a>
-      </div>
+{% block content %}
+<div id="content">
+  <div class="login-form" style="text-align:center; margin-top:5%; ">
+      <h4>Ingrese sus datos</h4>
       <form action="{% url 'login' %}" method="post" class="email-login">{% csrf_token %}
-          <div class="u-form-group">
-              <input type="username" name="username" placeholder="Username" required/>
+          <div class="username-input">
+              <input type="username" name="username" placeholder="Usuario" required/>
           </div>
-          <div class="u-form-group">
-            <input type="password" name="password" placeholder="Password" required/>
+          <div class="password-input">
+              <input type="password" name="password" placeholder="Contraseña" required/>
           </div>
-          <div class="u-form-group">
-            <button type="submit" value="Submit">Log in</button>
+          <div class="submit-button" style="margin-top:15px;">
+            <button type="submit" value="Submit">Ingresar</button>
           </div>
-      </form>
-      <form action="{% url 'new_user' %}" method="post" class="email-signup">{% csrf_token %}
-          <div class="u-form-group">
-              <input type="username"  name="username" placeholder="Username" required/>
-          </div>
-          <div class="u-form-group">
-              <input type="password"  name="password" placeholder="Password" required/>
-          </div>
-            <div class="u-form-group">
-                <button type="submit" value="Submit">Sign Up</button>
-            </div>
       </form>
   </div>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-    <script src="{% static 'login/js/index.js' %}"> </script>
-  </body>
-</html>
+</div>
+
+{% endblock %}

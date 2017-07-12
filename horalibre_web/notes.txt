@@ -39,3 +39,7 @@ PSQL Notes
 ----------
 \connect DBNAME
 \dt  #  shows tables
+
+Fixture Setup
+-------------
+python manage.py loaddata groups.json

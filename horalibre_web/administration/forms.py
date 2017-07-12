@@ -35,17 +35,19 @@ class ProfessionalForm(ModelForm):
                                label='Contraseña')
     first_name = forms.CharField(max_length = 30, label='Nombre')
     last_name = forms.CharField(max_length = 30, label='Apellido')
-    email = forms.EmailField()
+    email = forms.EmailField(error_messages={'invalid':"Ingrese un correo electronico valido."})
+    is_staff = forms.BooleanField(initial=False, required=False, label='Es administradór')
+
     class Meta:
         model = Professional
         fields = ['username', 'password', 'first_name', 'last_name', 'email', 
-                  'dni', 'phone_number', 'profession', 'is_coordinator',
+                  'dni', 'phone_number', 'profession', 'is_coordinator', 'is_staff',
                  ]
         labels = {
             "dni": "Número de documento",
             "phone_number": "Número de teléfono",
             "profession": "Profesión",
-            "is_coordinator": "Es coordinador?",
+            "is_coordinator": "Es coordinador",
         }
         error_messages = {
             'dni': {
@@ -60,10 +62,12 @@ class ProfessionalEditForm(ModelForm):
     first_name = forms.CharField(max_length = 30, label='Nombre')
     last_name = forms.CharField(max_length = 30, label='Apellido')
     email = forms.EmailField()
+    is_staff = forms.BooleanField(required=False, label='Es administradór')
     class Meta:
         model = Professional
         fields = ['username', 'first_name', 'last_name', 'email',
                   'dni', 'phone_number', 'profession', 'is_coordinator',
+                  'is_staff',
                  ]
         labels = {
             "dni": "Número de documento",

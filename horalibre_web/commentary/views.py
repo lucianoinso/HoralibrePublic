@@ -31,7 +31,7 @@ def new_comment(request, patient_id, record_id):
             else:
                 return render(request, 'commentary/new_comment.html', {'record': record})
         else:
-            return redirect_home(request.user.username)
+            return redirect_home()
     else:
         return HttpResponseRedirect("/login")
 
@@ -52,7 +52,7 @@ def edit_comment(request, patient_id, record_id, comment_id):
                 return render(request, 'commentary/edit_comment.html',
                               {'record': record, 'comment': comment })
         else:
-            return redirect_home(request.user.username)
+            return redirect_home()
     else:
         return HttpResponseRedirect("/login")
 
@@ -66,6 +66,6 @@ def delete_comment(request, patient_id, record_id, comment_id):
                 comment.delete()
             return redirect_record(patient_id, record.id)
         else:
-            return redirect_home(request.user.username)
+            return redirect_home()
     else:
         return HttpResponseRedirect("/login")

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.models import Group
 from datetime import datetime
 
 # Project Imports
@@ -19,15 +20,17 @@ from .forms import (ProfessionalForm, ProfessionalListForm,
 
 
 def admin_home(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         return render(request, 'administration/home.html', {})
+    elif request.user.is_authenticated:
+        return redirect_home()
     else:
         return render(request, 'login/login.html')
 
 
 @csrf_protect
 def create_professional(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = ProfessionalForm(request.POST)
@@ -42,6 +45,7 @@ def create_professional(request):
                 phone_number = form.cleaned_data['phone_number']
                 profession = form.cleaned_data['profession']
                 is_coordinator = form.cleaned_data['is_coordinator']
+                is_staff = form.cleaned_data['is_staff']
 
                 entered_username = User.objects.filter(username=username).first()
                 if entered_username is None:
@@ -49,8 +53,12 @@ def create_professional(request):
                                                         email=email,
                                                         password=password,
                                                         first_name=first_name,
-                                                        last_name=last_name)
+                                                        last_name=last_name,
+                                                        is_staff=is_staff,)
+                    proff_group = Group.objects.get(name='Profesionales')
+                    new_user.groups.add(proff_group)
                     new_user.save()
+
                     new_professional = Professional.objects.create(
                         user=new_user,
                         dni=dni,
@@ -85,7 +93,7 @@ def create_professional(request):
 
 @csrf_protect
 def modify_professional_menu(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = ProfessionalListForm(request.POST)
@@ -107,7 +115,7 @@ def modify_professional_menu(request):
 
 @csrf_protect
 def modify_professional(request, prof_id):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         prof = Professional.objects.get(id=prof_id)
         if request.method == 'POST':
             form = ProfessionalEditForm(request.POST)
@@ -127,6 +135,7 @@ def modify_professional(request, prof_id):
                     prof.phone_number = form.cleaned_data['phone_number']
                     prof.profession = form.cleaned_data['profession']
                     prof.is_coordinator = form.cleaned_data['is_coordinator']
+                    prof.user.is_staff = form.cleaned_data['is_staff']
                     prof.user.save()
                     prof.save()
                     return HttpResponseRedirect('/administration/')
@@ -146,7 +155,8 @@ def modify_professional(request, prof_id):
                         'dni': prof.dni,
                         'phone_number': prof.phone_number,
                         'profession': prof.profession,
-                        'is_coordinator': prof.is_coordinator}
+                        'is_coordinator': prof.is_coordinator,
+                        'is_staff': prof.user.is_staff,}
             form = ProfessionalEditForm(initial=pre_data)
             return render(request, 'administration/modify_professional.html',
                           {'form': form, 'prof_id': prof.id})
@@ -154,8 +164,9 @@ def modify_professional(request, prof_id):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def delete_professional(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = ProfessionalListForm(request.POST)
@@ -177,7 +188,7 @@ def delete_professional(request):
 # Secretary
 @csrf_protect
 def create_secretary(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = SecretaryForm(request.POST)
@@ -197,7 +208,11 @@ def create_secretary(request):
                                                         email=email,
                                                         password=password,
                                                         first_name=first_name,
-                                                        last_name=last_name)
+                                                        last_name=last_name,
+                                                        is_staff=True)
+                    secr_group = Group.objects.get(name='Secretarias')
+                    new_user.groups.add(secr_group)
+
                     new_user.save()
                     new_secretary = Secretary.objects.create(
                         user=new_user,
@@ -230,7 +245,7 @@ def create_secretary(request):
 
 @csrf_protect
 def modify_secretary_menu(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = SecretaryListForm(request.POST)
@@ -251,7 +266,7 @@ def modify_secretary_menu(request):
 
 @csrf_protect
 def modify_secretary(request, secretary_id):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         secr = Secretary.objects.get(id=secretary_id)
         if request.method == 'POST':
             form = SecretaryEditForm(request.POST)
@@ -299,8 +314,9 @@ def modify_secretary(request, secretary_id):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def delete_secretary(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = SecretaryListForm(request.POST)
@@ -321,8 +337,9 @@ def delete_secretary(request):
 
 
 # Patients
+@csrf_protect
 def create_patient(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = PatientForm(request.POST)
@@ -374,7 +391,7 @@ def create_patient(request):
 
 @csrf_protect
 def modify_patient_menu(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = PatientListForm(request.POST)
@@ -392,8 +409,9 @@ def modify_patient_menu(request):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def modify_patient(request, patient_id):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         patient = Patient.objects.get(id=patient_id)
         if request.method == 'POST':
             form = PatientForm(request.POST)
@@ -439,8 +457,9 @@ def modify_patient(request, patient_id):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def delete_patient(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = PatientListForm(request.POST)
@@ -460,8 +479,9 @@ def delete_patient(request):
 
 
 # Cases
+@csrf_protect
 def create_case(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = CaseForm(request.POST)
@@ -496,8 +516,9 @@ def create_case(request):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def modify_case_menu(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = CaseListForm(request.POST)
@@ -515,8 +536,9 @@ def modify_case_menu(request):
         return render(request, 'login/login.html')
 
 
+@csrf_protect
 def modify_case(request, case_id):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         case = Case.objects.get(id=case_id)
 
         if request.method == 'POST':
@@ -559,9 +581,9 @@ def modify_case(request, case_id):
     else:
         return render(request, 'login/login.html')    
 
-
+@csrf_protect
 def delete_case(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'POST':
             # Create a form instance and populate it with data from the request
             form = CaseListForm(request.POST)
