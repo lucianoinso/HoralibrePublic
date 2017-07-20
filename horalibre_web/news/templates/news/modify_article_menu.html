@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <div id="content">
+            <div class="section-title"><h1>Modificar novedad</h1></div>
+            <div id="create-user-form" style="margin-top:10px;">
+            {% comment %}
+                <!-- {% url 'administration:modify_professional_menu' form.professional.id_for_label %}-->
+            {% endcomment %}
+                <form action="{% url 'news:modify_article_menu' %}" method="post"
+                id="create-record-form">
+                <!-- input has class: 'administration-input' -->
+                    {% csrf_token %}
+                    <div class="form-inputs-container">
+                    {{ form.article }}
+                    </div>
+                    <div class="modify-template-buttons">
+                        <input type="submit" value="Seleccionar" style="float:left; margin-right:10px; width:auto;" />
+                        <div class = "button-record-inside-user-link" style="text-align:left; width:auto; float:left; height:23px; font-size:14px; margin-right:-12px;">
+                        <a class="button-record-link" href ="{% url 'administration:admin_home' %}">Volver</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}

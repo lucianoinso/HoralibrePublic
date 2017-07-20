@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div id="content">
+  	<div class="section-title"><h1>Novedades</h1></div>
+    <div class="feed-entries">
+
+    {% if article_page %}
+      {% for article in article_page %}
+        <div class="article-entry">
+          <div class="entry-title"><a href="{% url 'news:article_detail' article.id %}">{{ article.title }}</a></div>
+          <span class="article-author">Por <span class="article-author-name">{{ article.author.get_full_name }}</span></span>
+          <span class="entry-date">{{ article.creation_date |date:"d/m/Y" }}</span>
+          <div class="entry-text"><p>{{ article.content|truncatechars:180|linebreaksbr}}</p></div>
+        </div>
+      {% endfor %}
+    
+    <div class="pagination">
+        <span class="step-links">
+          {% if article_page.has_previous %}
+              <a href="?page={{ article_page.previous_page_number }}">&larr;</a>
+          {% endif %}
+
+          {% if article_page.has_previous or article_page.has_next %}
+            <span class="current">
+                Pag. {{ article_page.number }} de {{ article_page.paginator.num_pages }}
+            </span>
+          {% endif %}
+
+          {% if article_page.has_next %}
+              <a href="?page={{ article_page.next_page_number }}">&rarr;</a>
+          {% endif %}
+        </span>
+      </div>
+      {% else %}
+          <i> No existen novedades </i>
+    </div>
+      {% endif %}
+
+
+
+    </div>
+</div>
+
+{% endblock %}

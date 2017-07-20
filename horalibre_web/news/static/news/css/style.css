@@ -1,0 +1,51 @@
+.entry-title a {
+    color: #303030;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.feed-entries{
+    padding-top: 10px;
+    width: 80%;
+}
+
+.article-entry{
+    border-bottom: solid 1px #aaa;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.article-entry .entry-text{
+    color: #333;
+}
+
+.article-content{
+    padding: 20px 20px 20px 0px;
+}
+
+.article-title{
+    font-size: 28px;
+    padding-bottom: 5px;
+}
+
+.article-date{
+    color: #85AD64;
+    font-size: 0.8em;
+}
+.article-author{
+    font-size: 1em;
+    color: #909090;
+    
+}
+
+.article-author .article-author-name{
+
+}
+
+.article-last-modified{
+    color: #909090;
+}
+
+.entry-text{
+    font-size: 14px;
+}

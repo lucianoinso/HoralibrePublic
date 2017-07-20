@@ -37,11 +37,13 @@ class ProfessionalForm(ModelForm):
     last_name = forms.CharField(max_length = 30, label='Apellido')
     email = forms.EmailField(error_messages={'invalid':"Ingrese un correo electronico valido."})
     is_staff = forms.BooleanField(initial=False, required=False, label='Es administradór')
+    is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
 
     class Meta:
         model = Professional
         fields = ['username', 'password', 'first_name', 'last_name', 'email', 
                   'dni', 'phone_number', 'profession', 'is_coordinator', 'is_staff',
+                  'is_active',
                  ]
         labels = {
             "dni": "Número de documento",
@@ -63,11 +65,12 @@ class ProfessionalEditForm(ModelForm):
     last_name = forms.CharField(max_length = 30, label='Apellido')
     email = forms.EmailField()
     is_staff = forms.BooleanField(required=False, label='Es administradór')
+    is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
     class Meta:
         model = Professional
         fields = ['username', 'first_name', 'last_name', 'email',
                   'dni', 'phone_number', 'profession', 'is_coordinator',
-                  'is_staff',
+                  'is_staff', 'is_active',
                  ]
         labels = {
             "dni": "Número de documento",
@@ -90,10 +93,11 @@ class SecretaryForm(ModelForm):
     first_name = forms.CharField(max_length = 30, label='Nombre')
     last_name = forms.CharField(max_length = 30, label='Apellido')
     email = forms.EmailField()
+    is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
     class Meta:
         model = Secretary
         fields = ['username', 'password', 'first_name', 'last_name', 'email', 
-                  'dni', 'phone_number',
+                  'dni', 'phone_number', 'is_active',
                  ]
         labels = {
             "dni": "Número de documento",
@@ -111,10 +115,11 @@ class SecretaryEditForm(ModelForm):
     first_name = forms.CharField(max_length = 30, label='Nombre')
     last_name = forms.CharField(max_length = 30, label='Apellido')
     email = forms.EmailField()
+    is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
     class Meta:
         model = Secretary
         fields = ['username', 'first_name', 'last_name', 'email', 
-                  'dni', 'phone_number',
+                  'dni', 'phone_number', 'is_active',
                  ]
         labels = {
             "dni": "Número de documento",
@@ -128,7 +133,8 @@ class SecretaryEditForm(ModelForm):
         }
 
 class SecretaryListForm(forms.Form):
-    secretary = forms.ModelChoiceField(queryset=Secretary.objects.all().order_by('user__last_name'))
+    secretary = forms.ModelChoiceField(queryset=Secretary.objects.all().order_by('user__last_name')
+                                       ,label='Secretarias')
 
 
 class PatientForm(ModelForm):

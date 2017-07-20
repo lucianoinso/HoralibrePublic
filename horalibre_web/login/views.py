@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_protect
 @csrf_protect
 def login(request):
     # Si esta logueado lo redirecciono al home.
+    error_message = ""
     if request.user.is_authenticated:
         return redirect_home()
     # Si es una solicitud de login, checkeo que este bien.
@@ -23,9 +24,15 @@ def login(request):
                                 password=password)
             if user is not None:
                 login_user(request, user)
+                # Expire on browser close
+                request.session.set_expiry(0)
                 return redirect_home()
+            else:
+                error_message = "Nombre de usuario y/o contraseña invalidos"
+        else:
+            error_message = "Nombre de usuario y/o contraseña invalidos"
 
-    return render(request, 'login/login.html')
+    return render(request, 'login/login.html', {'error_message': error_message, })
 
 
 def logout(request):
@@ -38,23 +45,5 @@ def is_valid(request):
             request.POST.get("password")) is not ''
 
 
-def home(request):
-    if request.user.is_authenticated:
-        try:
-            user = User.objects.get(username=request.user.username)
-        except Exception as e:
-            return HttpResponse("El usuario no existe")
-        
-        print user.groups
-        #user.user_permissions = 1
-        #user.save()
-        #print user.user_permissions
-        return render(request, 'login/home.html', {
-            'user': user,
-            })
-    else:
-        return HttpResponseRedirect("/login")
-
-
 def redirect_home():
-    return HttpResponseRedirect("/home/")
+    return HttpResponseRedirect("/news/")

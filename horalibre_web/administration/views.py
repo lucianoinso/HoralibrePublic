@@ -17,7 +17,22 @@ from .forms import (ProfessionalForm, ProfessionalListForm,
                     ProfessionalEditForm, SecretaryForm, PatientForm, CaseForm,
                     PatientListForm, SecretaryListForm, SecretaryEditForm,
                     CaseListForm)
+"""
+add_log(request.user, "deleted_professional")
+add_log(request.user, "created_professional")
+add_log(request.user, "created_news")
 
+def add_log(user, log_event):
+    if file_of_today_exists:
+        today_logfile = get_logfile()
+    else:
+        today_logfile = create_new_logfile(todays_date())
+
+    append_to_todays_logfile(today_log, 
+                         today_datetime() + " : " +
+                         events_dict['log_event'] + " " +
+                         user.get_full_name() + "\n"
+"""
 
 def admin_home(request):
     if request.user.is_authenticated and request.user.is_staff:
@@ -46,6 +61,7 @@ def create_professional(request):
                 profession = form.cleaned_data['profession']
                 is_coordinator = form.cleaned_data['is_coordinator']
                 is_staff = form.cleaned_data['is_staff']
+                is_active = form.cleaned_data['is_active']
 
                 entered_username = User.objects.filter(username=username).first()
                 if entered_username is None:
@@ -54,7 +70,8 @@ def create_professional(request):
                                                         password=password,
                                                         first_name=first_name,
                                                         last_name=last_name,
-                                                        is_staff=is_staff,)
+                                                        is_staff=is_staff,
+                                                        is_active=is_active,)
                     proff_group = Group.objects.get(name='Profesionales')
                     new_user.groups.add(proff_group)
                     new_user.save()
@@ -75,7 +92,9 @@ def create_professional(request):
                                 'last_name': last_name,
                                 'dni': dni, 'phone_number': phone_number,
                                 'profession': profession,
-                                'is_coordinator': is_coordinator}
+                                'is_coordinator': is_coordinator,
+                                'is_active':is_active,
+                                }
                     form = ProfessionalForm(initial=pre_data)
                     error_message = ("El nombre de usuario ingresado ya " +
                                      "existe, elija otro")
@@ -100,7 +119,6 @@ def modify_professional_menu(request):
             # Check whether is valid:
             if form.is_valid():
                 professional = form.cleaned_data['professional']
-                print professional.id
                 return redirect('administration:modify_professional', prof_id=professional.id)
             else:
                 return HttpResponseRedirect('/administration/')
@@ -136,6 +154,7 @@ def modify_professional(request, prof_id):
                     prof.profession = form.cleaned_data['profession']
                     prof.is_coordinator = form.cleaned_data['is_coordinator']
                     prof.user.is_staff = form.cleaned_data['is_staff']
+                    prof.user.is_active = form.cleaned_data['is_active']
                     prof.user.save()
                     prof.save()
                     return HttpResponseRedirect('/administration/')
@@ -156,7 +175,9 @@ def modify_professional(request, prof_id):
                         'phone_number': prof.phone_number,
                         'profession': prof.profession,
                         'is_coordinator': prof.is_coordinator,
-                        'is_staff': prof.user.is_staff,}
+                        'is_staff': prof.user.is_staff,
+                        'is_active': prof.user.is_active,
+                        }
             form = ProfessionalEditForm(initial=pre_data)
             return render(request, 'administration/modify_professional.html',
                           {'form': form, 'prof_id': prof.id})
@@ -201,6 +222,7 @@ def create_secretary(request):
                 last_name = form.cleaned_data['last_name']
                 dni = form.cleaned_data['dni']
                 phone_number = form.cleaned_data['phone_number']
+                is_active = form.cleaned_data['is_active']
 
                 entered_username = User.objects.filter(username=username).first()
                 if entered_username is None:
@@ -209,7 +231,8 @@ def create_secretary(request):
                                                         password=password,
                                                         first_name=first_name,
                                                         last_name=last_name,
-                                                        is_staff=True)
+                                                        is_staff=True,
+                                                        is_active=is_active,)
                     secr_group = Group.objects.get(name='Secretarias')
                     new_user.groups.add(secr_group)
 
@@ -227,7 +250,9 @@ def create_secretary(request):
                     pre_data = {'email': email,
                                 'first_name': first_name,
                                 'last_name': last_name, 'dni': dni,
-                                'phone_number': phone_number}
+                                'phone_number': phone_number,
+                                'is_active': is_active,
+                               }
                     form = SecretaryForm(initial=pre_data)
                     error_message = ("El nombre de usuario ingresado ya " +
                                      "existe, elija otro")
@@ -282,6 +307,7 @@ def modify_secretary(request, secretary_id):
                     secr.user.email = form.cleaned_data['email']
                     secr.user.first_name = form.cleaned_data['first_name']
                     secr.user.last_name = form.cleaned_data['last_name']
+                    secr.user.is_active = form.cleaned_data['is_active']
                     secr.dni = form.cleaned_data['dni']
                     secr.phone_number = form.cleaned_data['phone_number']
                     secr.user.save()
@@ -306,6 +332,7 @@ def modify_secretary(request, secretary_id):
                         'last_name': secr.user.last_name,
                         'dni': secr.dni,
                         'phone_number': secr.phone_number,
+                        'is_active': secr.user.is_active,
                         }
             form = SecretaryEditForm(initial=pre_data)
             return render(request, 'administration/modify_secretary.html',
@@ -549,7 +576,7 @@ def modify_case(request, case_id):
                 professional = form.cleaned_data['professional']
                 coordinator = form.cleaned_data['coordinator']
                 new_case = Case.objects.filter(patient=patient).filter(professional=professional).filter(coordinator=coordinator).exclude(id=case_id).first()
-                print new_case
+
                 # We remove the current dni from the queryset so it doesn't
                 # take it as if it is already in the database
                 if new_case is None:

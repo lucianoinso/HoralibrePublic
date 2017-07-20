@@ -1,27 +1,29 @@
-{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
     <!-- Google Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Raleway:300,400,500,600' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <!-- End Google Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
     <title>Fundación Hora Libre</title>
     <!-- CSS Style files -->
     <link href="{% static "records/css/style.css" %}" rel="stylesheet">
     <link href="{% static "administration/css/style.css" %}" rel="stylesheet">
+    <link href="{% static "news/css/style.css" %}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'records/js/datetimepicker/jquery.datetimepicker.css' %}">
     <!-- End CSS Style files -->
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-
+    <link rel="icon" href="{% static 'img/favicon-64.png' %}" sizes="64x64">
   </head>
 
   <body>
     <div id="container">
       <header>
-        <div class="logo"><a href ="{% url 'home' %}"><img src={% static "records/img/logohoralibre.jpg" %} alt="Fundación Hora Libre"></a></div>
+        <div class="logo"><a href ="{% url 'news:news_home' %}"><img src={% static "records/img/logohoralibre.jpg" %} alt="Fundación Hora Libre"></a></div>
 
         <h4>Servicio de Integración Escolar y Acompañamiento Terapéutico</h4>
         
@@ -34,7 +36,7 @@
         {% if request.user.is_authenticated %}
         <div id="menu">
           <ul>
-            <li><a href="{% url 'home' %}">Novedades</a></li>
+            <li><a href="{% url 'news:news_home' %}">Novedades</a></li>
             {% if request.user.is_staff %}
             <li><a href="{% url 'administration:admin_home' %}">Administración</a></li>
             {% endif %}

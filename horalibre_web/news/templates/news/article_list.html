@@ -3,12 +3,7 @@
 {% block content %}
 
   <div id="content">
-    <div class="section-title"><h1>{{ patient.get_full_name }} - 
-      {% if 'my_records' in request.path %}
-        Mis registros</h1>
-      {% else %}
-        Todos los registros</h1>
-      {% endif %}
+    <div class="section-title"><h1>{{ Novedades }}
     </div>
       <div class="patient-entries">
         <div class="patient-entry">
@@ -25,21 +20,15 @@
           {% for record in page_records %}
             <div class = "record">
               {% if 'my_records' in request.path %}
-                <a href="{% url 'records:record_detail' record.patient.id record.id %}"
+                <a href="{% url 'records:record_detail' record.case.patient.id record.id %}"
                    title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}}</a>
               {% else %}
-                <a href="{% url 'records:record_detail' record.patient.id record.id %}"
+                <a href="{% url 'records:record_detail' record.case.patient.id record.id %}"
                    title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}} - Creado por 
                 {% if record.author.user == request.user %}
                   ud.
                 {% else %}
-
-                  {% if record.author.get_full_name != None %}
-                    {{ record.author.get_full_name }}
-                  {% else %}
-                    "Profesional Eliminado"
-                  {% endif %}
-
+                  {{ record.author.get_full_name }}.
                 {% endif %}
                 </a>
               {% endif %}

@@ -21,15 +21,6 @@ class Professional(models.Model):
         return str(self.user.last_name + ", " + self.user.first_name + ' (DNI:' + str(self.dni) + ')')
 
 
-#@receiver(post_save, sender=User)
-#def create_user_profile(sender, instance, created, **kwargs):
-#    if created:
-#        Professional.objects.create(user=instance)
-
-#@receiver(post_save, sender=User)
-#def save_user_profile(sender, instance, **kwargs):
-#    instance.professional.save()
-
 class Secretary(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     dni = models.IntegerField()
@@ -94,16 +85,23 @@ class Record(models.Model):
     creation_datetime = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     session_datetime = models.DateTimeField()
-    session_resume = models.CharField(max_length=1000)
+    session_resume = models.CharField(max_length=5000)
     session_duration = models.IntegerField()
     author = models.ForeignKey(Professional, related_name='record_author', 
                    on_delete=models.SET_NULL, null=True)
-    case = models.ForeignKey(Case, on_delete=models.SET_NULL, null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL,
+                                null=True, related_name='record_patient')
+    case = models.ForeignKey(Case, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        if case is None:
-            return "Deleted Case, resume:" + session_resume[:40] + "..."
+        if self.author:
+            author = self.author.get_full_name()
         else:
-            return (self.case.professional.get_full_name() + " - " + 
+            author = "Profesional Eliminado"
+
+        if self.case is None:
+            return "Deleted Case, resume:" + self.session_resume[:40] + "..."
+        else:
+            return (author + " - " + 
                     self.case.patient.__str__() + " - Fecha de la sesion: " +
                     str(self.session_datetime.date()))

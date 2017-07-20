@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'administration.apps.AdministrationConfig',
     'commentary.apps.CommentaryConfig',
     'login.apps.LoginConfig',
+    'news.apps.NewsConfig',
     'records.apps.RecordsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -136,6 +137,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # DATE_INPUT_FORMATS += (
 #     '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y', # '2006-10-25', '10/25/2006', '10/25/06'
 #     '%d %b %Y', '%d %b, %Y',            # '25 Oct 2006', '25 Oct, 2006'
@@ -156,3 +159,4 @@ STATICFILES_DIRS = (
 #     '%d/%m/%y %H:%M',        # '10/25/06 14:30'
 #     '%d/%m/%y',              # '10/25/06']
 # )
+

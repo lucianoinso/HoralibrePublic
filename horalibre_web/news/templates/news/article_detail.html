@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="content">
+    <div class="article-title">{{ article.title }}</div>
+    <div class="article-header">
+        <div class="article-date">Fecha : {{ article.creation_date|date:"d/m/Y" }}</div>
+        <div class="article-author" style="font-size:13px;">Por: {{ article.author.get_full_name }}</div>
+        <div class="article-last-modified" style="font-size:12px;">Ultima modificación: {{ article.last_modified }}</div>
+    </div>
+
+    <div class = "article-content">
+        {{ article.content|linebreaksbr }}
+    </div>
+
+    {% if request.user.is_staff %}
+      <div class="button-record-inside-user-link" style="width:110px; float:right;">
+        <a class="button-record-link" href ="{% url 'news:modify_article' article.id %}">Editar novedad</a>
+      </div>
+
+      {% comment %}
+      <!--
+      <div class="button-record-inside-user-link-delete">
+        <a class="button-record-link" href ="{% url 'news:delete_article' article.id %}" onclick="return confirm('Esta seguro que quiere eliminar definitivamente el registro?');">Eliminar registro</a>
+      </div>
+      -->
+      {% endcomment %}
+    {% endif %}
+      <div class = "button-record-inside-user-link" style="width:52px;">
+        <a class="button-record-link" href ="{% url 'news:news_home' %}">Volver</a>
+      </div>
+
+    {% comment %}
+    <!--
+    <div id="comment-section">
+      <h3>Comentarios</h3>
+      {% if comments %}
+        <div class="comment_list">
+        {% for comment in comments %}
+          <div class="comment">
+          <p>{{ comment.text|linebreaksbr }}</p>
+          <span class="comment-subtext">
+          {{ comment.owner.get_full_name }} - {{ comment.create_date }}
+          
+          {% if comment.owner.user == request.user %}
+
+          <div class="comment-edit-delete" >
+            <a href="{% url 'news:edit_comment' article.id comment.id %}">[editar]</a>
+            <a href="{% url 'news:delete_comment' article.id comment.id %}" 
+             onclick="return confirm('¿Estas seguro que queres eliminar el comentario?')">[eliminar]</a>
+          </div>
+          {% endif %}
+
+          </span>
+          </div>
+        {% endfor %}
+        </div>
+      {% else %}
+        <span class="empty-message">No hay comentarios</span>
+      {% endif %}
+      <br>
+      <form action="{% url 'news:new_comment' article.id %}" method="post" id="post_comment">{% csrf_token %}
+        <span class="add-comment"><h4>Agregar comentario:</h4></span>
+        <textarea id="comment_text" name="comment_text" maxlength=500 style="width:auto; resize: none;" rows="5" cols="36" required></textarea>
+        <p><input type="submit" value="Comentar" style="width:80px;"></p>
+      </form>
+    </div>
+    -->
+    {% endcomment %}
+  </div> <!-- end content div -->
+
+{% endblock %}

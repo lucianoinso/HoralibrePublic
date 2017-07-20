@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^login/', include('login.urls')),
     url(r'^$', login_views.login, name='login'),
     url(r'^logout$', login_views.logout, name='logout'),
-    url(r'^home/$', login_views.home, name='home'),
+    # url(r'^home/$', login_views.home, name='home'),
     url(r'^home/records/', include('records.urls', namespace='records')),
     url(r'^administration/', include('administration.urls', namespace='administration')),
+    url(r'^news/', include('news.urls', namespace='news')),
 ]

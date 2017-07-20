@@ -28,16 +28,25 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.sub-menu-section{
+.menu-section-container{
+  margin-top: 20px;
+  display: inline-block;
+  width: 90%;
+  /*border:1px solid #EEE;*/
+  /*border-radius:10px;*/
+  padding:10px 0px 25px 10px;
+  margin-bottom: 0px;
+}
+
+.menu-section{
+  display: inline-block;
+  width: 24%;
   margin-bottom: 15px;
 }
 
-.sub-menu-section-title {
+.menu-section-title {
   font-size: 20px;
   margin-bottom: 5px;
   color: #333;
 }
 
-.menu-section{
-  margin-top: 15px;
-}

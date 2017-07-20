@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 # Project Imports
 from login.views import redirect_home
@@ -25,26 +26,32 @@ def select_records(request, patient_id):
 def patient_list(request):
     if request.user.is_authenticated:
         try:
-            prof = Professional.objects.get(user__username=request.user.username)
-            case_list = Case.objects.all().filter(Q(professional=prof) | Q(coordinator=prof))
-            print case_list
+            prof = Professional.objects.get(user=request.user)
+            cases = Case.objects.all().filter(Q(professional=prof) | Q(coordinator=prof))\
+                                .distinct('patient').values_list('id', flat=True)
+            case_list = Case.objects.filter(id__in=cases).order_by('patient__last_name')
+
         except Exception as e:
             return HttpResponse(e)
 
         return render(request, 'records/patient_list.html', {
             'case_list': case_list,
             })
-
     else:
         return HttpResponseRedirect("/login")
 
 
+# cambiar de case.patient a patient
 def my_records_list(request, patient_id):
     if request.user.is_authenticated:
         try:
             professional = Professional.objects.get(user=request.user)
             patient = Patient.objects.get(id=patient_id)
-#            case = Case.objects.filter(professional=professional).filter(patient=patient)
+            case = Case.objects.filter(Q(patient=patient),
+                                       Q(professional=professional) | Q(coordinator=professional))
+            if not case:
+                raise ObjectDoesNotExist
+
             record_list = Record.objects.all().filter(author=professional,case__patient=patient).order_by('-session_datetime')
             paginator = Paginator(record_list, 15) # Show 15 records per page
             page = request.GET.get('page')
@@ -57,8 +64,12 @@ def my_records_list(request, patient_id):
             # If page is out of range (e.g. 9999), deliver last page of results.
             page_records = paginator.page(paginator.num_pages)
 
+        except ObjectDoesNotExist:
+            return redirect_home()
+
         except Exception as e:
-            return HttpResponse(e)
+            print e
+            return redirect_home()
 
         return render(request, 'records/record_list.html', {
             'page_records': page_records,
@@ -68,13 +79,22 @@ def my_records_list(request, patient_id):
     else:
         return HttpResponseRedirect("/login")
 
-# CHECK PERMISSIONS
+# CHECK PERMISSIONS X
+# I think it's okay now
 def all_records_list(request, patient_id):
     if request.user.is_authenticated:
         try:
+            prof = Professional.objects.get(user=request.user)
             patient = Patient.objects.get(id=patient_id)
-            case = Case.objects.filter(patient=patient)
-            record_list = (Record.objects.all().filter(case_id__in=case).order_by('-session_datetime'))
+            # Check if the logged user is inside any of the cases of the patient
+            case = Case.objects.filter(Q(patient=patient), Q(professional=prof) | Q(coordinator=prof))
+
+            if not case:
+                # If it's not in any of the cases (it's trying to access a
+                # record from a patient he doesn't have), redirect to homepage
+                raise ObjectDoesNotExist
+
+            record_list = Record.objects.all().filter(patient=patient).order_by('-session_datetime')
 
             paginator = Paginator(record_list, 15) # Show 15 records per page
             page = request.GET.get('page')
@@ -88,13 +108,16 @@ def all_records_list(request, patient_id):
             # If page is out of range (e.g. 9999), deliver last page of results.
             page_records = paginator.page(paginator.num_pages)
 
+        except ObjectDoesNotExist:
+            return redirect_home()
+
         except Exception as e:
-            return HttpResponse(e)
+            print e
+            return redirect_home()
 
         return render(request, 'records/record_list.html', {
             'page_records': page_records,
             'patient': patient,
-            'case': case,
             })
     else:
         return HttpResponseRedirect("/login")
@@ -111,6 +134,10 @@ def record_detail(request, patient_id, record_id):
                 record = Record.objects.get(id=record_id)
                 comments = (Comment.objects.all().filter(record=record)
                                .order_by('create_date'))
+
+            except ObjectDoesNotExist:
+                return redirect_home()
+
             except Exception as e:
                 return HttpResponse(e)
 
@@ -128,19 +155,21 @@ def create_record_from_patient(request, patient_id):
     if request.user.is_authenticated:
         professional = Professional.objects.get(user=request.user)
         patient = Patient.objects.get(id=patient_id)
-        if request.method == "POST":
-            case = Case.objects.filter(Q(patient=patient),
-                                       Q(professional=professional) | Q(coordinator=professional)).first()
-            print case
-            record = Record(session_datetime=request.POST.get("session_datetime"),
-                            session_resume=request.POST.get("session_resume"),
-                            case=case, author=professional,
-                            session_duration=request.POST.get("session_duration"))
-            record.save()
-            # check why username is the id, request.user.username is the user
-            return redirect_my_patient_records(patient_id)
+        case = Case.objects.all().filter(Q(patient=patient),
+                                         Q(professional=professional) | Q(coordinator=professional))
+        if case:
+            if request.method == "POST":
+                record = Record(session_datetime=request.POST.get("session_datetime"),
+                                session_resume=request.POST.get("session_resume"),
+                                case=case.first(), author=professional,
+                                patient=patient,
+                                session_duration=request.POST.get("session_duration"))
+                record.save()
+                return redirect_my_patient_records(patient_id)
+            else:
+                return render(request, 'records/create_record_from_patient.html', {'patient': patient })
         else:
-            return render(request, 'records/create_record_from_patient.html', {'patient': patient })
+            return redirect_home()
     else:
         return HttpResponseRedirect("/login")
 

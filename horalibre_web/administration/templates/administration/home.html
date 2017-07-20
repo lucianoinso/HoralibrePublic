@@ -1,39 +1,113 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% block content %}
     <div id="content">
-      <div class="section-title" style="font-style:italic"><h1>Menú de administrador</h1></div>
-        <div class="menu-section">
-            <div class="sub-menu-section">
-                <div class="sub-menu-section-title">Profesionales</div>
-                <div class="menu-items" stlye="margin-top:0px">
-                  <a href="{% url 'administration:create_professional' %}">Crear profesional</a><br />
-                  <a href="{% url 'administration:modify_professional_menu' %}">Modificar profesional</a><br />
-                  <a href="{% url 'administration:delete_professional' %}">Eliminar profesional</a>
+      <div class="section-title" style=""><h1>Administración</h1></div>
+        <div class="menu-section-container">
+            <div class="menu-section">
+                <div class="menu-section-title">Profesionales</div>
+                <div class="menu-items">
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:create_professional' %}">Agregar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/edit-icon-15px.png" %}" alt="My image" style="vertical-align:middle"/>
+                  <a href="{% url 'administration:modify_professional_menu' %}">Modificar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/delete-icon-15px.png" %}" alt="My image" style="vertical-align:middle"/>
+                  <a href="{% url 'administration:delete_professional' %}">Eliminar</a>
+                  </div>
                 </div>
             </div>
-            <div class="sub-menu-section">
-                <div class="sub-menu-section-title">Secretaría</div>
+            <div class="menu-section">
+                <div class="menu-section-title">Secretaría</div>
                 <div class="menu-items">
-                  <a href="{% url 'administration:create_secretary' %}">Crear profesional de secretaría</a><br />
-                  <a href="{% url 'administration:modify_secretary_menu' %}">Modificar profesional de secretaría</a><br />
-                  <a href="{% url 'administration:delete_secretary' %}">Eliminar profesional de secretaría</a>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:create_secretary' %}">Agregar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/edit-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:modify_secretary_menu' %}">Modificar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/delete-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:delete_secretary' %}">Eliminar</a>
+                  </div>
+
                 </div>
             </div>
-            <div class="sub-menu-section">
-                <div class="sub-menu-section-title">Pacientes</div>
+            <div class="menu-section">
+                <div class="menu-section-title">Pacientes</div>
                 <div class="menu-items">
-                  <a href="{% url 'administration:create_patient' %}">Crear paciente</a><br />
-                  <a href="{% url 'administration:modify_patient_menu' %}">Modificar paciente</a><br />
-                  <a href="{% url 'administration:delete_patient' %}">Eliminar paciente</a>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:create_patient' %}">Agregar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/edit-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:modify_patient_menu' %}">Modificar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/delete-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:delete_patient' %}">Eliminar</a>
+                  </div>
+
                 </div>
             </div>
-            <div class="sub-menu-section">
-                <div class="sub-menu-section-title">Casos</div>
+            <div class="menu-section">
+                <div class="menu-section-title">Casos</div>
                 <div class="menu-items">
-                  <a href="{% url 'administration:create_case' %}">Crear caso</a><br />
-                  <a href="{% url 'administration:modify_case_menu' %}">Modificar caso</a><br />
-                  <a href="{% url 'administration:delete_case' %}">Eliminar caso</a>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:create_case' %}">Agregar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/edit-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:modify_case_menu' %}">Modificar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/delete-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:delete_case' %}">Eliminar</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-section-container" style="width:85%;
+        border-top:1px solid #DDD; margin-top:0px; padding-top:30px">
+            <div class="menu-section" style="width:auto;">
+                <div class="menu-section-title">Novedades</div>
+                <div class="menu-items">
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'news:create_article' %}">Agregar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/edit-icon-15px.png" %}" alt="My image" style="vertical-align:middle"/>
+                  <a href="{% url 'news:modify_article_menu' %}">Modificar</a><br />
+                  </div>
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/delete-icon-15px.png" %}" alt="My image" style="vertical-align:middle"/>
+                  <a href="{% url 'news:delete_article' %}">Eliminar</a>
+                  </div>
+
                 </div>
             </div>
         </div>

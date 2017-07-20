@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <div id="content">
+            <div class="section-title"><h1>Eliminar novedad</h1></div>
+            <div id="create-user-form" style="margin-top:10px;">
+            {% comment %}
+                <!-- {% url 'administration:modify_professional_menu' form.professional.id_for_label %}-->
+            {% endcomment %}
+                <form action="{% url 'news:delete_article' %}" method="post"
+                id="create-record-form">
+                <!-- input has class: 'administration-input' -->
+                    {% csrf_token %}
+                    <div class="form-inputs-container">
+                    {{ form.as_p }}
+                    </div>
+                    <div class="modify-template-buttons">
+                        <input type="submit" value="Eliminar" style="float:left; margin-right:10px; width:auto; color:#ee1111; border-color:red;"/>
+                        <div class = "button-record-inside-user-link" style="text-align:left; width:auto; float:left; height:23px; font-size:14px; margin-right:-12px;">
+                        <a class="button-record-link" href ="{% url 'administration:admin_home' %}">Volver</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+<script type="text/javascript">
+    $(document).on('click', 'input[type="submit"]', function(){
+        if($("#id_article").val()){
+            return confirm('¿Está seguro que desea eliminar la novedad?');
+        }
+    })
+</script>
+
+{% endblock %}

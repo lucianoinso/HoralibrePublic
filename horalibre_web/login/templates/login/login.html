@@ -11,6 +11,11 @@
           <div class="password-input">
               <input type="password" name="password" placeholder="Contraseña" required/>
           </div>
+          {% if error_message %}
+            <div class="error-message" style="color:red;font-size:12px; margin-left:36px; margin-top:4px">
+              {{ error_message }}
+            </div>
+          {% endif %}
           <div class="submit-button" style="margin-top:15px;">
             <button type="submit" value="Submit">Ingresar</button>
           </div>

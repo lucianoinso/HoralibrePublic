@@ -39,6 +39,9 @@ PSQL Notes
 ----------
 \connect DBNAME
 \dt  #  shows tables
+\d+ TABLE; shows table schema
+sudo su - postgres
+psql
 
 Fixture Setup
 -------------
