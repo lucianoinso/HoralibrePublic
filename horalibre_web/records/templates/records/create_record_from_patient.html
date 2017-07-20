@@ -18,7 +18,10 @@
               <div class = "edit-record-text">
                 <textarea id = "edit-record-textarea" name="session_resume" required></textarea>
               </div>
-            <input type="submit" value="Guardar">
+            <input type="submit" value="Guardar" style="float:right">
+            <div class = "button-record-inside-user-link" style="text-align:left; width:52px; float:left; height:23px; font-size:14px; margin-right:-12px;">
+              <a class="button-record-link" href ="{% url 'records:select_records' patient.id %}">Volver</a>
+            </div>
             </div>
           </form>
         </div>
