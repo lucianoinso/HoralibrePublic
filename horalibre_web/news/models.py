@@ -26,5 +26,5 @@ class Article(models.Model):
             return (str(self.creation_date) + " , " + self.title + " - " +
                     "Autor eliminado, resumen: " + self.content[:20] + "...")
         else:
-            return (str(self.creation_date) + " , Titulo:" + self.title + " , Autor:" + 
+            return (str(self.creation_date) + " - Titulo:" + self.title[:30] + "..." +" - Autor:" + 
                     self.author.get_full_name() + draft)

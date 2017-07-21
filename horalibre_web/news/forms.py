@@ -31,6 +31,10 @@ class ArticleForm(ModelForm):
                 'invalid': "El titulo ingresado es invalido.",
             },
         }
+        widgets = {
+            "content":forms.Textarea(attrs={'class':'article-textarea'}),
+            "title":forms.TextInput(attrs={'class':'article-input-title'}),
+        }  
 
 
 class ArticleEditForm(ModelForm):
@@ -53,4 +57,8 @@ class ArticleEditForm(ModelForm):
                 'max_value': "El titulo ingresado es demasiado largo.",
                 'invalid': "El titulo ingresado es invalido.",
             },
+        }
+        widgets = {
+            "content":forms.Textarea(attrs={'class':'article-textarea'}),
+            "title":forms.TextInput(attrs={'class':'article-input-title'}),
         }

@@ -50,3 +50,38 @@ input[type="number"]::-webkit-inner-spin-button {
   color: #333;
 }
 
+.modify-template-buttons{
+  width: 200px;
+}
+
+.modify-template-buttons input {
+    float:left;
+    margin-left:10px;
+    width:auto;
+}
+
+.modify-template-buttons .button-record-inside-user-link {
+    text-align:left;
+    width:auto;
+    float:left;
+    height:23px;
+    font-size:14px;
+    margin-right:0px;
+}
+
+.article-textarea{
+  margin-top: 5px;
+  resize: none;
+  width: 487px;
+  height: 350px;
+  border:solid 1px #ccc;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding: 5px;
+}
+
+.article-input-title{
+  float: right;
+  width: 350px;
+}

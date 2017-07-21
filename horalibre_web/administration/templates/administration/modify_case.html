@@ -16,11 +16,11 @@
                     <div class="form-inputs-container">
                     {{ form.as_p }}
                     </div>
-                    <div class="modify-template-buttons">
-                        <input type="submit" value="Guardar cambios" style="float:left; margin-right:10px; width:auto;" />
-                        <div class = "button-record-inside-user-link" style="text-align:left; width:128px; float:left; height:23px; font-size:14px; margin-right:-12px;">
+                    <div class="modify-template-buttons" style="width:300px;">
+                        <div class = "button-record-inside-user-link" >
                         <a class="button-record-link" href ="{% url 'administration:modify_case_menu' %}">Volver sin guardar</a>
                         </div>
+                        <input type="submit" value="Guardar cambios"/>
                     </div>
                 </form>
               </div>
