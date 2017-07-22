@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <div id="content">
+            <div class="section-title"><h1>Lista de pacientes</h1></div>
+            <div id="create-user-form" style="margin-top:10px;">
+                <form action="{% url 'administration:list_patient' %}" method="post"
+                id="create-record-form">
+                <!-- input has class: 'administration-input' -->
+                    {% csrf_token %}
+                    <div class="form-inputs-container">
+                    {{ form.patient }}
+                    </div>
+                    <div class="modify-template-buttons">
+                        <div class = "button-record-inside-user-link">
+                        <a class="button-record-link" href ="{% url 'administration:admin_home' %}">Volver</a>
+                        </div>
+                        <input type="submit" value="Seleccionar"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}

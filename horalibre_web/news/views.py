@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 # Django Imports
 from django.shortcuts import render, redirect
@@ -15,6 +13,7 @@ from django.db.models import Q
 # Project Imports
 from login.views import redirect_home
 from records.models import Professional, Secretary
+from administration.views import add_log
 from .models import Article
 from .forms import ArticleForm, ArticleListForm, ArticleEditForm
 
@@ -22,7 +21,7 @@ from .forms import ArticleForm, ArticleListForm, ArticleEditForm
 def news_home(request):
     if request.user.is_authenticated:
         try:
-            article_list = (Article.objects.all().order_by('-creation_date'))
+            article_list = (Article.objects.filter(is_draft=False).order_by('-creation_date'))
 
             paginator = Paginator(article_list, 5) # Show 5 records per page
             page = request.GET.get('page')
@@ -77,8 +76,9 @@ def create_article(request):
                     title=title,
                     content=content,
                     is_draft=is_draft)
-
                 new_article.save()
+
+                add_log(request.user.username, "add", "news", new_article.log_str())
                 return HttpResponseRedirect('/news/')
             else:
                 form = ArticleForm()
@@ -128,6 +128,7 @@ def modify_article(request, article_id):
                 article.content = form.cleaned_data['content']
                 article.is_draft = form.cleaned_data['is_draft']
                 article.save()
+                add_log(request.user.username, "mod", "news", article.log_str())
                 return HttpResponseRedirect('/news/')
             else:
                 error_message = "Entradas invalidas."
@@ -158,6 +159,7 @@ def delete_article(request):
             # Check whether is valid:
             if form.is_valid():
                 article = form.cleaned_data['article']
+                add_log(request.user.username, "del", "news", article.log_str())
                 article.delete()
             return HttpResponseRedirect('/news/')
         # if a GET (or any other method) we'll create a blank form

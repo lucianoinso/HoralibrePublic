@@ -16,6 +16,10 @@
                     <div class="form-inputs-container">
                     {{ form.as_p }}
                     </div>
+                    
+                    <div class="restore-password">
+                    <a href="{% url 'administration:change_pwd_prof' prof_id %}">Cambiar contraseña</a>
+                    </div>
 
                     <div class="modify-template-buttons" style="width:300px;">
                         <div class = "button-record-inside-user-link">

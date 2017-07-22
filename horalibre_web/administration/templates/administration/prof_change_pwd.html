@@ -2,14 +2,14 @@
 
 {% block content %}
         <div id="content">
-            <div class="section-title"><h1>Modificar profesional de secretaría</h1></div>
+            <div class="section-title"><h1>Cambiar Contraseña (Usuario:{{ request.user.username }})</h1></div>
             <div id="create-user-form" style="margin-top:10px;">
                 {% if error_message %}
                 <div class="error-message" style="color:red;font-size:13px;">
                     {{ error_message }}
                 </div>
                 {% endif %}
-                <form action="{% url 'administration:modify_secretary' secretary_id %}" method="post"
+                <form action="{% url 'administration:change_pwd_prof' prof_id %}" method="post"
                 id="create-record-form">
                 <!-- input has class: 'administration-input' -->
                     {% csrf_token %}
@@ -17,17 +17,22 @@
                     {{ form.as_p }}
                     </div>
 
-                    <div class="restore-password">
-                    <a href="{% url 'administration:change_pwd_secr' secretary_id %}">Cambiar contraseña</a>
-                    </div>
-
                     <div class="modify-template-buttons" style="width:300px;">
                         <div class = "button-record-inside-user-link">
-                        <a class="button-record-link" href ="{% url 'administration:modify_secretary_menu' %}">Volver sin guardar</a>
+                        <a class="button-record-link" href ="{% url 'administration:modify_professional' prof_id %}">Volver sin guardar</a>
                         </div>
-                        <input type="submit" value="Guardar cambios"/>
+                        <input type="submit" value="Cambiar contraseña"/>
                     </div>
                 </form>
             </div>
         </div>
+
+<script type="text/javascript">
+    $(document).on('click', 'input[type="submit"]', function(){
+        if($("#id_password").val()){
+            return confirm('¿Está seguro que desea cambiar la contraseña?');
+        }
+    })
+</script>
+
 {% endblock %}

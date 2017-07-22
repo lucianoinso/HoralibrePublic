@@ -11,7 +11,13 @@
       {% for article in article_page %}
         <div class="article-entry">
           <div class="entry-title"><a href="{% url 'news:article_detail' article.id %}">{{ article.title }}</a></div>
-          <span class="article-author">Por <span class="article-author-name">{{ article.author.get_full_name }}</span></span>
+          <span class="article-author"><span style="font-style:normal;">Por</span>
+            <span class="article-author-name">
+              {% if article.author %}{{ article.author.get_full_name }}
+              {% else %}Usuario Eliminado
+              {% endif %}
+            </span>
+          </span>
           <span class="entry-date">{{ article.creation_date |date:"d/m/Y" }}</span>
           <div class="entry-text"><p>{{ article.content|truncatechars:180|linebreaksbr}}</p></div>
         </div>

@@ -6,7 +6,11 @@
     <div class="article-title">{{ article.title }}</div>
     <div class="article-header">
         <div class="article-date">Fecha : {{ article.creation_date|date:"d/m/Y" }}</div>
-        <div class="article-author" style="font-size:13px;">Por: {{ article.author.get_full_name }}</div>
+        <div class="article-author" style="font-size:13px; font-style:normal;">Por:
+            {% if article.author %}{{ article.author.get_full_name }}
+            {% else %}Usuario Eliminado
+            {% endif %}
+        </div>
         <div class="article-last-modified" style="font-size:12px;">Ultima modificación: {{ article.last_modified }}</div>
     </div>
 

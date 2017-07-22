@@ -9,6 +9,11 @@
                 <div class="menu-section-title">Profesionales</div>
                 <div class="menu-items">
                   <div class="menu-item">
+                  <img src="{% static "administration/images/people-list-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:list_professional' %}">Listado</a><br />
+                  </div>
+
+                  <div class="menu-item">
                   <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
                   <a href="{% url 'administration:create_professional' %}">Agregar</a><br />
                   </div>
@@ -27,6 +32,11 @@
             <div class="menu-section">
                 <div class="menu-section-title">Secretaría</div>
                 <div class="menu-items">
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/people-list-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:list_secretary' %}">Listado</a><br />
+                  </div>
+
 
                   <div class="menu-item">
                   <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
@@ -48,6 +58,11 @@
             <div class="menu-section">
                 <div class="menu-section-title">Pacientes</div>
                 <div class="menu-items">
+
+                  <div class="menu-item">
+                  <img src="{% static "administration/images/people-list-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />
+                  <a href="{% url 'administration:list_patient' %}">Listado</a><br />
+                  </div>
 
                   <div class="menu-item">
                   <img src="{% static "administration/images/add-icon-15px.png" %}" alt="Agregar" style="vertical-align:middle" />

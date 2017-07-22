@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load administration_extras %}
-
 {% block content %}
 
   <div id="content">
@@ -11,6 +10,7 @@
         <div class="patient-entry">
           <div class="patient-data">Fecha de nacimiento: {{ patient.birthdate|date:"d-m-Y" }}</div>
           <div class="patient-data">Edad: {{ patient.birthdate|timesince|upto:',' }}</div>
+
           <div class="patient-data">DNI: {{ patient.dni }}</div>
           {% if patient.phone_number %}
           <div class="patient-data">Tel: {{ patient.phone_number }}</div>
@@ -20,13 +20,11 @@
       </div>
       <div class="patient-entries">
         <div class="patient-entry">
-          <div class="patient-data-button"><a href="{% url 'records:my_records_list' patient.id %}">&#10148; Ver mis registros</a></div>
-          <div class="patient-data-button"><a href="{% url 'records:all_records_list' patient.id %}">&#10148; Ver todos los registros</a></div>
         </div>
       </div>
 
       <div class = "button-record-inside-user-link" style="width:52px;">
-      <a class="button-record-link" href ="{% url 'records:patient_list' %}" >Volver</a></div>
+      <a class="button-record-link" href ="{% url 'administration:list_patient' %}" >Volver</a></div>
   </div>
 
 {% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+  <div id="content">
+    <div class="section-title"><h1>{{ prof.get_full_name }}</h1>
+    </div>
+      
+      <div class="patient-entries">
+        <div class="patient-entry">
+          <div class="patient-data">Nombre de usuario: "{{ prof.user.username }}"</div>
+          <div class="patient-data">
+            Profesión: {{ prof.profession }}
+            {% if prof.is_coordinator %} (Coordinador){% endif %}
+          </div>
+          <div class="patient-data">DNI: {{ prof.dni }}</div>
+          {% if prof.phone_number %}
+          <div class="patient-data">Tel: {{ prof.phone_number }}</div>
+          {% endif %}
+          <div class="patient-data">Correo electronico: {{ prof.user.email }}</div>
+
+
+          <div class="patient-data">
+            {% if prof.user.is_active %}
+              <img src="{% static "administration/images/tick-icon-15px.png" %}" alt="No" style="vertical-align:middle" />
+            {% else %}
+              <img src="{% static "administration/images/delete-icon-15px.png" %}" alt="Yes" style="vertical-align:middle" />
+            {% endif %}
+            Es usuario activo
+          </div>
+
+          <div class="patient-data">
+            {% if prof.user.is_staff %}
+              <img src="{% static "administration/images/tick-icon-15px.png" %}" alt="No" style="vertical-align:middle" />
+            {% else %}
+              <img src="{% static "administration/images/delete-icon-15px.png" %}" alt="Yes" style="vertical-align:middle" />
+            {% endif %}
+            Forma parte del staff
+          </div>
+        </div>
+      </div>
+      <div class="patient-entries">
+        <div class="patient-entry">
+        </div>
+      </div>
+
+      <div class = "button-record-inside-user-link" style="width:52px;">
+      <a class="button-record-link" href ="{% url 'administration:list_professional' %}" >Volver</a></div>
+  </div>
+
+{% endblock %}

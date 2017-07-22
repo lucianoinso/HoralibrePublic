@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-
-from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -27,7 +24,7 @@ class Secretary(models.Model):
     phone_number = models.CharField(max_length=15)
     
     def get_full_name(self):
-        return (self.first_name + " " + self.last_name)
+        return (self.user.first_name + " " + self.user.last_name)
 
     def __str__(self):
         return str(self.user.last_name + ", " + self.user.first_name +
@@ -79,6 +76,25 @@ class Case(models.Model):
             coord_name = self.coordinator.get_full_name()
 
         return ("Paciente: \"" + patient_name + "\" ~ Profesional: \"" + prof_name + "\" ~ Coordinador: \"" + coord_name + "\"")
+    
+    def log_str(self):
+        prof_name = patient_name = coord_name = ""
+        if self.professional is None:
+            prof_name = "Profesional eliminado"
+        else:
+            prof_name = self.professional.get_full_name()
+
+        if self.patient is None:
+            patient_name = "Paciente eliminado"
+        else:
+            patient_name = self.patient.get_full_name()
+        
+        if self.coordinator is None:
+            coord_name = "Coordinador eliminado"
+        else:
+            coord_name = self.coordinator.get_full_name()
+
+        return str(patient_name + " - " + prof_name + " - " + coord_name + " (id: " + str(self.id) + ")")
 
 
 class Record(models.Model):

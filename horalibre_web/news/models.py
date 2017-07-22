@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
+# Python imports
+from datetime import datetime
+
+# Django imports
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
@@ -18,13 +20,26 @@ class Article(models.Model):
 
     def __str__(self):
         if self.is_draft:
-            draft = "(BORRADOR)"
+            draft = "(Es borrador)"
         else:
             draft = ""
 
+        title = self.title
+
         if self.author is None:
-            return (str(self.creation_date) + " , " + self.title + " - " +
-                    "Autor eliminado, resumen: " + self.content[:20] + "...")
+            author = "Usuario eliminado"
         else:
-            return (str(self.creation_date) + " - Titulo:" + self.title[:30] + "..." +" - Autor:" + 
-                    self.author.get_full_name() + draft)
+            author = self.author.get_full_name()
+
+        if (len(title) > 30):
+            title = title[:30] + "[...]"
+        return (str(self.creation_date.strftime('%d/%m/%y')) + " - Titulo:" + title + " - Autor:" + 
+                author + " " + draft)
+
+    def log_str(self):
+        title = self.title
+        creation_date = self.creation_date.strftime('%d/%m/%y')
+        if (len(title) > 45):
+            title = title[:45] + "[...]"
+        return (str(creation_date) + ": " + title + " (id: " + str(self.id) + ")")
+

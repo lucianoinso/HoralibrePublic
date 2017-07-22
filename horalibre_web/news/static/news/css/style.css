@@ -1,7 +1,6 @@
 .entry-title a {
     color: #303030;
     font-weight: 500;
-    font-style: italic;
 }
 
 .feed-entries{
@@ -35,7 +34,7 @@
 .article-author{
     font-size: 1em;
     color: #909090;
-    
+    font-style: italic;
 }
 
 .article-author .article-author-name{
