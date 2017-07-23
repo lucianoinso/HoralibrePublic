@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# Django imports
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 
 # Project imports
 from .models import Record, Patient, Professional, Case, Secretary

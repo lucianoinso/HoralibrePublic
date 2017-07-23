@@ -1,3 +1,7 @@
+from django.conf.urls import url
+
+from . import views
+from commentary import views as comment_views
 
 urlpatterns = [
     url(r'^patient_list$', views.patient_list, name='patient_list'),
