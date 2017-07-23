@@ -27,7 +27,7 @@ from .forms import (ProfessionalForm, ProfessionalListForm, ChangePasswordForm,
 
 def create_dir(path):
     try:
-        os.makedirs(path)
+        os.makedirs(path, exist_ok=True)
     except OSError as exception:
         if exception.errno != errno.EEXIST:
             raise
@@ -35,8 +35,8 @@ def create_dir(path):
 
 def create_logfile(log):
     logfile_name = str(datetime.now().strftime('%d-%m-%Y')) + ".txt"
-    year = str(datetime.now().strftime('%Y'))
-    month = str(datetime.now().strftime('%m'))
+    year = (datetime.now().strftime('%Y'))
+    month = (datetime.now().strftime('%m'))
     log_dir = settings.LOGS_DIR + "/" + year + "-" + month
 
     if not os.path.isdir(log_dir):
@@ -69,7 +69,7 @@ def add_log(username, event, model, model_key):
     }
 
     timestamp = str(datetime.now().strftime('[%d/%m/%y - %H:%M:%S]'))
-    log = timestamp + " \'" + str(username) + "\' " + events[event] + " " + "\"" + model_key + "\" " + "[" + models[model] + "]"
+    log = (timestamp + " \'" + str(username) + "\' " + str(events[event]) + " " + "\"" + model_key + "\" " + "[" + str(models[model]) + "]")
     create_logfile(log)
 
 
@@ -140,7 +140,7 @@ def professional_detail(request, prof_id):
             return render(request, 'administration/prof_detail.html',
                               {'prof': prof })
         except ObjectDoesNotExist as e:
-            print e
+            print(e)
             return redirect_home()
 
         except Exception as e:
@@ -175,7 +175,7 @@ def secretary_detail(request, secretary_id):
             return render(request, 'administration/secretary_detail.html',
                               {'secretary': secretary })
         except ObjectDoesNotExist as e:
-            print e
+            print(e)
             return redirect_home()
 
         except Exception as e:
@@ -210,7 +210,7 @@ def patient_detail(request, patient_id):
             return render(request, 'administration/patient_detail.html',
                               {'patient': patient })
         except ObjectDoesNotExist as e:
-            print e
+            print(e)
             return redirect_home()
 
         except Exception as e:

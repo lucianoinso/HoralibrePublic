@@ -24,13 +24,11 @@
               {% if record.author.user == request.user %}
                 ud.
               {% else %}
-
                 {% if record.author.get_full_name != None %}
                   {{ record.author.get_full_name }}
                 {% else %}
                   "Profesional Eliminado"
                 {% endif %}
-
               {% endif %}
               </a>
             {% endif %}
@@ -53,10 +51,10 @@
                 <a href="?page={{ page_records.next_page_number }}">&rarr;</a>
             {% endif %}
           </span>
-        </div>
         {% else %}
             <i> No existen registros de este paciente </i>
         {% endif %}
+        </div>
       <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left;">
       <a class="button-record-link" href ="{% url 'records:create_record_from_patient' patient.id %}">Crear registro nuevo para este paciente</a></div>
 

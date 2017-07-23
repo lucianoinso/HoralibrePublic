@@ -35,13 +35,13 @@ class Article(models.Model):
 
         if (len(title) > 30):
             title = title[:30] + "[...]"
-        return (str(self.creation_date.strftime('%d/%m/%y')) + " - Titulo:" + title + " - Autor:" + 
-                author + " " + draft)
+        return str(str(self.creation_date.strftime('%d/%m/%y')) + " - Titulo:" + str(title) + " - Autor:" + 
+                str(author) + " " + str(draft))
 
     def log_str(self):
         title = self.title
         creation_date = self.creation_date.strftime('%d/%m/%y')
         if (len(title) > 45):
             title = title[:45] + "[...]"
-        return (str(creation_date) + ": " + title + " (id: " + str(self.id) + ")")
+        return str(str(creation_date) + ": " + title + " (id: " + str(self.id) + ")")
 

@@ -46,3 +46,7 @@ psql
 Fixture Setup
 -------------
 python manage.py loaddata groups.json
+
+Virtual Env
+-----------
+virtualenv -p python3 envname

@@ -32,7 +32,7 @@ class Secretary(models.Model):
 
     def __str__(self):
         return str(self.user.last_name + ", " + self.user.first_name +
-                  ' (DNI:' + str(self.dni) + ')')
+                   ' (DNI:' + str(self.dni) + ')')
 
 
 class Patient(models.Model):
@@ -51,7 +51,7 @@ class Patient(models.Model):
 
     def __str__(self):
         return str(self.last_name + ", " + self.first_name +
-                   ' (DNI:' + str(self.dni) + ')')
+                ' (DNI:' + str(self.dni) + ')')
 
 
 # CHANGE ON_DELETE to default user
@@ -79,7 +79,7 @@ class Case(models.Model):
         else:
             coord_name = self.coordinator.get_full_name()
 
-        return ("Paciente: \"" + patient_name + "\" ~ Profesional: \"" + prof_name + "\" ~ Coordinador: \"" + coord_name + "\"")
+        return str("Paciente: \"" + patient_name + "\" ~ Profesional: \"" + prof_name + "\" ~ Coordinador: \"" + coord_name + "\"")
     
     def log_str(self):
         prof_name = patient_name = coord_name = ""
@@ -122,6 +122,6 @@ class Record(models.Model):
         if self.case is None:
             return "Deleted Case, resume:" + self.session_resume[:40] + "..."
         else:
-            return (author + " - " + 
+            return str(author + " - " + 
                     self.case.patient.__str__() + " - Fecha de la sesion: " +
                     str(self.session_datetime.date()))

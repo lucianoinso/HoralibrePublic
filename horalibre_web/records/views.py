@@ -69,7 +69,7 @@ def my_records_list(request, patient_id):
             return redirect_home()
 
         except Exception as e:
-            print e
+            print(e)
             return redirect_home()
 
         return render(request, 'records/record_list.html', {
@@ -113,7 +113,7 @@ def all_records_list(request, patient_id):
             return redirect_home()
 
         except Exception as e:
-            print e
+            print(e)
             return redirect_home()
 
         return render(request, 'records/record_list.html', {
