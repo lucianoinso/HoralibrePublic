@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+# Python Imports
+from datetime import datetime
+
 # Django Imports
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
@@ -207,14 +211,27 @@ def edit_record(request, patient_id, record_id):
             if request.method == "POST":
                 if request.POST.get("session_datetime"):
                     record.session_datetime = request.POST.get("session_datetime")
-                if request.POST.get("session_duration"):
-                    record.session_duration = request.POST.get("session_duration")
+                if (request.POST.get("session_duration_hours") and
+                    request.POST.get("session_duration_minutes")):
+                    ses_dur_hrs = request.POST.get("session_duration_hours")
+                    ses_dur_mins = request.POST.get("session_duration_minutes")
+                    session_duration = datetime.strptime(ses_dur_hrs + ":" + ses_dur_mins, '%H:%M')
+                    record.session_duration = session_duration
                 if request.POST.get("session_resume"):
                     record.session_resume = request.POST.get("session_resume")
                 record.save()
                 return redirect_record(patient_id, record_id)
             else:
-                return render(request, 'records/edit_record.html', {'record': record})
+                ses_dur_hrs = record.session_duration.strftime('%H')
+                print(ses_dur_hrs)
+                ses_dur_mins = record.session_duration.strftime('%M')
+                print(ses_dur_mins)
+                return render(request, 'records/edit_record.html',
+                              {'record': record,
+                               'session_duration_hours': ses_dur_hrs,
+                               'session_duration_minutes': ses_dur_mins,
+                              }
+                             )
         else:
             return redirect_home()
     else:

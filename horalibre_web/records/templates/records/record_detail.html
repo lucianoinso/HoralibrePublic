@@ -7,8 +7,14 @@
     <div class="patient-entries">
       <div class="patient-entry">
         <div class="patient-data">Fecha y hora de la sesión: {{ record.session_datetime }}</div>
-        <div class="patient-data">Duración de la sesión: {{ record.session_duration }} minutos</div>
-        <div class="patient-data" style="font-size:13px;">Autor: 
+        <div class="patient-data">
+          Duración de la sesión:
+          {{ record.session_duration|date:'G' }} hora{% if record.session_duration|date:'G' != "1" %}s{% endif %}
+          {% if record.session_duration|date:'i' != "00" %}
+          , {{ record.session_duration|date:'i' }} minutos.
+          {% endif %}
+        </div>
+        <div class="patient-data" style="font-size:14px; margin-top:5px;">Autor: 
         {% if record.author.get_full_name %}
             {{ record.author.get_full_name }}
         {% else %}
@@ -16,13 +22,13 @@
         {% endif %}
 
         </div>
-        <div class="patient-data" style="font-size:13px; margin-bottom:14px;">Coordinador del caso: {{ record.case.coordinator.get_full_name }}</div>
+        <div class="patient-data" style="font-size:14px; margin-bottom:14px;">Coordinador del caso: {{ record.case.coordinator.get_full_name }}</div>
         <div class="patient-data" style="font-size:12px;">Fecha y hora de creación: {{ record.creation_datetime }}</div>
         <div class="patient-data" style="font-size:12px;">Ultima modificación: {{ record.last_modified }}</div>
       </div>
     </div>
 
-    <div class = "record-log">
+    <div class = "record-log" style="margin-top:10px;">
         {{ record.session_resume|linebreaksbr }}
     </div>
 

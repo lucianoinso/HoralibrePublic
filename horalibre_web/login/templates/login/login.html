@@ -4,7 +4,7 @@
 <div id="content">
   <div class="login-form" style="text-align:center; margin-top:5%; ">
       <h4>Ingrese sus datos</h4>
-      <form action="{% url 'login' %}" method="post" class="email-login">{% csrf_token %}
+      <form action="{% url 'login' %}" method="post" class="email-login" autocomplete="off">{% csrf_token %}
           <div class="username-input">
               <input type="username" name="username" placeholder="Usuario" required/>
           </div>
@@ -17,7 +17,7 @@
             </div>
           {% endif %}
           <div class="submit-button" style="margin-top:15px;">
-            <button type="submit" value="Submit">Ingresar</button>
+            <button type="submit" value="Submit" style="">Ingresar</button>
           </div>
       </form>
   </div>

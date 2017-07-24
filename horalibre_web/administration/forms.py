@@ -30,12 +30,16 @@ class ProfessionalListForm(forms.Form):
 
 class ProfessionalForm(ModelForm):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    username = forms.CharField(max_length = 150, label='Nombre de usuario')
+    username = forms.CharField(max_length = 150, label='Nombre de usuario',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
     password = forms.CharField(widget=forms.PasswordInput, max_length = 50,
                                label='Contraseña')
-    first_name = forms.CharField(max_length = 30, label='Nombre')
-    last_name = forms.CharField(max_length = 30, label='Apellido')
-    email = forms.EmailField(error_messages={'invalid':"Ingrese un correo electronico valido."})
+    first_name = forms.CharField(max_length = 30, label='Nombre',
+                                 widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    last_name = forms.CharField(max_length = 30, label='Apellido',
+                                widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    email = forms.EmailField(error_messages={'invalid':"Ingrese un correo electronico valido."},
+                             widget=forms.TextInput(attrs={'autocomplete':'off'}))
     is_staff = forms.BooleanField(initial=False, required=False, label='Es administradór')
     is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
 
@@ -56,6 +60,9 @@ class ProfessionalForm(ModelForm):
                 'max_value': "El numero ingresado es demasiado largo.",
                 'invalid': "El numero ingresado es invalido.",
             },
+        }
+        widgets = {
+            "phone_number":forms.TextInput(attrs={'autocomplete':'off'})
         }
 
 class ChangePasswordForm(forms.Form):

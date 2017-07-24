@@ -106,7 +106,7 @@ class Record(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     session_datetime = models.DateTimeField()
     session_resume = models.CharField(max_length=5000)
-    session_duration = models.IntegerField()
+    session_duration = models.TimeField()
     author = models.ForeignKey(Professional, related_name='record_author', 
                    on_delete=models.SET_NULL, null=True)
     patient = models.ForeignKey(Patient, on_delete=models.SET_NULL,
