@@ -22,8 +22,10 @@ body{
   input, select{
      padding: 5px !important;
      border-radius: 5px;
-     background-color: white;
+     background-color: #F9F9F9;
      border: 1px solid #909090;
+     box-shadow: -1px 8px 11px 0px rgba(0,0,0,0.02);
+     font-size: 14px;
    }
   .password-input{
     margin-top: 5px;
@@ -41,9 +43,12 @@ body{
      box-shadow: -1px 8px 11px 0px rgba(0,0,0,0.02);
      font-size: 14px;
      }
-     .password-input{
-     margin-top: 3px;
-   }
+    .password-input{
+      margin-top: 3px;
+    }
+    .submit-button{
+      margin-right: 5px !important;
+    }
 }
 
 /* Chrome 22-28 */
@@ -51,8 +56,10 @@ body{
   input, select {-chrome-:only(; 
      padding: 5px !important;
      border-radius: 5px;
-     background-color: white;
+     background-color: #F9F9F9;
      border: 1px solid #909090;
+     box-shadow: -1px 8px 11px 0px rgba(0,0,0,0.02);
+     font-size: 14px;
   );}
 }
 
@@ -363,6 +370,18 @@ span.article-author {
 
 .record-log-date {
   
+}
+
+.username-input{
+  width: 100%;
+}
+
+.password-input{
+  width: 100%;
+}
+
+.username-input input, .password-input input{
+  width: 93%;
 }
 
 .records-list-container{
