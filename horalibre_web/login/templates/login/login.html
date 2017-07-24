@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="content">
-  <div class="login-form" style="text-align:center; margin-top:5%; ">
+<div id="login-content">
+  <div class="login-form">
       <h4>Ingrese sus datos</h4>
       <form action="{% url 'login' %}" method="post" class="email-login" autocomplete="off">{% csrf_token %}
           <div class="username-input">
@@ -12,12 +12,12 @@
               <input type="password" name="password" placeholder="Contraseña" required/>
           </div>
           {% if error_message %}
-            <div class="error-message" style="color:red;font-size:12px; margin-left:36px; margin-top:4px">
+            <div class="error-message" style="color:red;font-size:11px; margin-top:2px;">
               {{ error_message }}
             </div>
           {% endif %}
-          <div class="submit-button" style="margin-top:15px;">
-            <button type="submit" value="Submit" style="">Ingresar</button>
+          <div class="submit-button" style="margin-right:18px;">
+            <button type="submit" value="Submit" style="float:right;">Ingresar</button>
           </div>
       </form>
   </div>

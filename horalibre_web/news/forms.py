@@ -33,7 +33,9 @@ class ArticleForm(ModelForm):
         }
         widgets = {
             "content":forms.Textarea(attrs={'class':'article-textarea'}),
-            "title":forms.TextInput(attrs={'class':'article-input-title'}),
+            "title":forms.TextInput(attrs={'class':'article-input-title',
+                                           'autocomplete':'off'}),
+            "is_draft":forms.CheckboxInput(attrs={'class':'article-is-draft'}),
         }  
 
 
@@ -60,5 +62,7 @@ class ArticleEditForm(ModelForm):
         }
         widgets = {
             "content":forms.Textarea(attrs={'class':'article-textarea'}),
-            "title":forms.TextInput(attrs={'class':'article-input-title'}),
+            "title":forms.TextInput(attrs={'class':'article-input-title',
+                                           'autocomplete':'off'}),
+            "is_draft":forms.CheckboxInput(attrs={'class':'article-is-draft'}),
         }

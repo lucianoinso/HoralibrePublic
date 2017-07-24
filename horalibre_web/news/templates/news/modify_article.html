@@ -14,13 +14,15 @@
                 <!-- input has class: 'news-input' -->
                     {% csrf_token %}
                     <div class="form-inputs-container">
+                        <div class="modify-article-special-checkbox">
                         {{ form.as_p }}
+                        </div>
                     </div>
                     <div class="modify-template-buttons" style="width:500px;">
-                        <div class = "button-record-inside-user-link">
+                        <div class = "button-record-inside-user-link" style="margin-top:0px;">
                         <a class="button-record-link" href ="{% url 'administration:admin_home' %}">Volver sin guardar</a>
                         </div>
-                        <input type="submit" value="Guardar cambios" style="float:right;" />
+                        <input type="submit" value="Guardar cambios" style="float:right; margin-top:0px;" />
                     </div>
                 </form>
             </div>

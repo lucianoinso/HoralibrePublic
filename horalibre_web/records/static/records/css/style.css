@@ -197,10 +197,11 @@ li a {
 
 
 #center {
+    padding:20px 60px 5px 10px ;
+    clear:both;
     margin: 0px 50px;
-    width:1150px;
-    padding-bottom: 40px;
-
+    min-width: 850px;
+    width: 70%;
     min-height: 350px;
 }
 
@@ -218,15 +219,26 @@ li a {
   color:#111;
 }
 
-#content {
+#content{
   height:100%;
-  width: 60%;
+  width: 80%;
   padding-top:30px;
   margin-left:280px;
 }
 
+#login-content {
+  height:100%;
+  width: 100%;
+}
+
+.login-form{
+  width: 230px;
+  margin: 0 auto;
+}
+
+
 .section-title h1{
-  font-size:2em;
+  font-size:1.8em;
   font-weight: 500;
   color: #505050;
   margin: 0px;
@@ -334,6 +346,7 @@ span.article-author {
   border: 1px solid #cccccc;
   border-radius: 5px;
   margin-top: 15px;
+  width: 100%;
 }
 
 .record-log {
@@ -350,6 +363,10 @@ span.article-author {
 
 .record-log-date {
   
+}
+
+.records-list-container{
+  width: 85%;
 }
 
 .record {

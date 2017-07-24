@@ -37,6 +37,11 @@
     font-style: italic;
 }
 
+input[type="checkbox"]{
+    vertical-align: middle;
+}
+
+
 .article-author .article-author-name{
 
 }

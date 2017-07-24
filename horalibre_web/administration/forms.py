@@ -70,10 +70,14 @@ class ChangePasswordForm(forms.Form):
                                label='Contraseña nueva')
 
 class ProfessionalEditForm(ModelForm):
-    username = forms.CharField(max_length = 150, label='Nombre de usuario')
-    first_name = forms.CharField(max_length = 30, label='Nombre')
-    last_name = forms.CharField(max_length = 30, label='Apellido')
-    email = forms.EmailField()
+    username = forms.CharField(max_length = 150, label='Nombre de usuario',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    first_name = forms.CharField(max_length = 30, label='Nombre',
+                                 widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    last_name = forms.CharField(max_length = 30, label='Apellido',
+                                 widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    email = forms.EmailField(error_messages={'invalid':"Ingrese un correo electronico valido."},
+                             widget=forms.TextInput(attrs={'autocomplete':'off'}))
     is_staff = forms.BooleanField(required=False, label='Es administradór')
     is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
     class Meta:
@@ -86,7 +90,7 @@ class ProfessionalEditForm(ModelForm):
             "dni": "Número de documento",
             "phone_number": "Número de teléfono",
             "profession": "Profesión",
-            "is_coordinator": "Es coordinador?",
+            "is_coordinator": "Es coordinador",
         }
         error_messages = {
             'dni': {
@@ -94,15 +98,21 @@ class ProfessionalEditForm(ModelForm):
                 'invalid': "El numero ingresado es invalido.",
             },
         }
+        widgets = {
+            "phone_number":forms.TextInput(attrs={'autocomplete':'off'})
+        }
 
 class SecretaryForm(ModelForm):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    username = forms.CharField(max_length = 150, label='Nombre de usuario')
+    username = forms.CharField(max_length = 150, label='Nombre de usuario',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
     password = forms.CharField(widget=forms.PasswordInput, max_length = 50,
                                label='Contraseña')
-    first_name = forms.CharField(max_length = 30, label='Nombre')
-    last_name = forms.CharField(max_length = 30, label='Apellido')
-    email = forms.EmailField()
+    first_name = forms.CharField(max_length = 30, label='Nombre',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    last_name = forms.CharField(max_length = 30, label='Apellido',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'autocomplete':'off'}))
     is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
     class Meta:
         model = Secretary
@@ -119,12 +129,18 @@ class SecretaryForm(ModelForm):
                 'invalid': "El numero ingresado es invalido.",
             },
         }
+        widgets = {
+            "phone_number":forms.TextInput(attrs={'autocomplete':'off'})
+        }
 
 class SecretaryEditForm(ModelForm):
-    username = forms.CharField(max_length = 150, label='Nombre de usuario')
-    first_name = forms.CharField(max_length = 30, label='Nombre')
-    last_name = forms.CharField(max_length = 30, label='Apellido')
-    email = forms.EmailField()
+    username = forms.CharField(max_length = 150, label='Nombre de usuario',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    first_name = forms.CharField(max_length = 30, label='Nombre',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    last_name = forms.CharField(max_length = 30, label='Apellido',
+                               widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'autocomplete':'off'}))
     is_active = forms.BooleanField(initial=True, required=False, label='Cuenta activa')
     class Meta:
         model = Secretary
@@ -141,11 +157,13 @@ class SecretaryEditForm(ModelForm):
                 'invalid': "El numero ingresado es invalido.",
             },
         }
+        widgets = {
+            "phone_number":forms.TextInput(attrs={'autocomplete':'off'})
+        }
 
 class SecretaryListForm(forms.Form):
     secretary = forms.ModelChoiceField(queryset=Secretary.objects.all().order_by('user__last_name')
                                        ,label='Secretarias')
-
 
 class PatientForm(ModelForm):
     birthdate_year_choices = set((year) for year in range(datetime.now().year - 110, datetime.now().year + 1))
@@ -169,6 +187,12 @@ class PatientForm(ModelForm):
                 'invalid': "El numero ingresado es invalido.",
             },
         }
+        widgets = {
+            "first_name":forms.TextInput(attrs={'autocomplete':'off'}),
+            "last_name":forms.TextInput(attrs={'autocomplete':'off'}),
+            "phone_number":forms.TextInput(attrs={'autocomplete':'off'}),
+        }
+
 
 class PatientListForm(forms.Form):
     patient = forms.ModelChoiceField(queryset=Patient.objects.all().order_by('last_name'))
