@@ -1,3 +1,7 @@
+.article-container {
+    width: 90%;
+}
+
 .entry-title a {
     color: #303030;
     font-weight: 500;

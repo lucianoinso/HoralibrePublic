@@ -46,7 +46,6 @@ def patient_list(request):
         return HttpResponseRedirect("/login")
 
 
-# cambiar de case.patient a patient
 def my_records_list(request, patient_id):
     if request.user.is_authenticated:
         try:
@@ -79,13 +78,11 @@ def my_records_list(request, patient_id):
         return render(request, 'records/record_list.html', {
             'page_records': page_records,
             'patient': patient,
-#            'case': case,
             })
     else:
         return HttpResponseRedirect("/login")
 
-# CHECK PERMISSIONS X
-# I think it's okay now
+
 def all_records_list(request, patient_id):
     if request.user.is_authenticated:
         try:
@@ -164,11 +161,14 @@ def create_record_from_patient(request, patient_id):
                                          Q(professional=professional) | Q(coordinator=professional))
         if case:
             if request.method == "POST":
+                ses_dur_hrs = request.POST.get("session_duration_hours")
+                ses_dur_mins = request.POST.get("session_duration_minutes")
+                session_duration = datetime.strptime(ses_dur_hrs + ":" + ses_dur_mins, '%H:%M')
                 record = Record(session_datetime=request.POST.get("session_datetime"),
                                 session_resume=request.POST.get("session_resume"),
                                 case=case.first(), author=professional,
                                 patient=patient,
-                                session_duration=request.POST.get("session_duration"))
+                                session_duration=session_duration)
                 record.save()
                 return redirect_my_patient_records(patient_id)
             else:
@@ -223,9 +223,7 @@ def edit_record(request, patient_id, record_id):
                 return redirect_record(patient_id, record_id)
             else:
                 ses_dur_hrs = record.session_duration.strftime('%H')
-                print(ses_dur_hrs)
                 ses_dur_mins = record.session_duration.strftime('%M')
-                print(ses_dur_mins)
                 return render(request, 'records/edit_record.html',
                               {'record': record,
                                'session_duration_hours': ses_dur_hrs,

@@ -628,6 +628,10 @@ span.add-comment h4{
   width: 100%;
 }
 
+textarea#comment_text{
+  width: 45%;
+}
+
 .comment p{
   margin-top:7px;
 }

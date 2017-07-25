@@ -82,7 +82,7 @@
       <br>
       <form action="{% url 'records:new_comment' record.patient.id record.id %}" method="post" id="post_comment">{% csrf_token %}
         <span class="add-comment"><h4>Agregar comentario:</h4></span>
-        <textarea id="comment_text" name="comment_text" maxlength=500 style="width:auto; resize: none;" rows="5" cols="36" required></textarea>
+        <textarea id="comment_text" name="comment_text" maxlength=500 style="resize: none;" rows="5" cols="36" required></textarea>
         <div class="comment-button"><input type="submit" value="Comentar" style="width:84px;"></div>
       </form>
     </div>

@@ -22,7 +22,7 @@
                 <div class="session-duration-label" style="width:170px; height:100%; float:left; padding-top:5px;">Duración de la sesión:</div>
                 
                 <div class="session-duration-minutes" style="float:right; margin-left:5px;">Minutos:
-                  <select id="session-duration-minutes" name="session_duration_minutes" value="3">
+                  <select id="session-duration-minutes" name="session_duration_minutes" required>
                     <option {% if session_duration_minutes == "0" %}selected="selected"{% endif %} value="0">0</option>
                     <option {% if session_duration_minutes == "15" %}selected="selected"{% endif %} value="15">15</option> 
                     <option {% if session_duration_minutes == "30" %}selected="selected"{% endif %} value="30">30</option>
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="session-duration-hours" style="float:right;">Horas:
-                  <select id="session-duration-hours" name="session_duration_hours" value="3">hora(s)
+                  <select id="session-duration-hours" name="session_duration_hours" required>hora(s)
                     <option {% if session_duration_hours == "01" %}selected="selected"{% endif %} value="1">1</option> 
                     <option {% if session_duration_hours == "02" %}selected="selected"{% endif %} value="2">2</option>
                     <option {% if session_duration_hours == "03" %}selected="selected"{% endif %} value="3">3</option>
