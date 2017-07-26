@@ -35,13 +35,29 @@ class Article(models.Model):
 
         if (len(title) > 30):
             title = title[:30] + "[...]"
-        return str(str(self.creation_date.strftime('%d/%m/%y')) + " - Titulo:" + str(title) + " - Autor:" + 
-                str(author) + " " + str(draft))
+        
+        creation_date = (self.creation_date.strftime('%d/%m/%y'))
+        creation_date = (creation_date).decode('utf-8')
+
+        response = (creation_date + " - Titulo:" + (title) + " - Autor:" + 
+                   (author) + " " + (draft))
+        return response
+
 
     def log_str(self):
         title = self.title
+
+        if self.author is None:
+            author = "Usuario eliminado"
+        else:
+            author = self.author.get_full_name()
+
         creation_date = self.creation_date.strftime('%d/%m/%y')
+        creation_date = (creation_date).decode('utf-8')
+
         if (len(title) > 45):
             title = title[:45] + "[...]"
-        return str(str(creation_date) + ": " + title + " (id: " + str(self.id) + ")")
 
+        response = (creation_date + ": " + title + " (id: " + str(self.id) + ")")
+
+        return response

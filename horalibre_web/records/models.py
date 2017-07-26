@@ -16,10 +16,14 @@ class Professional(models.Model):
     is_coordinator = models.BooleanField(default=False)
 
     def get_full_name(self):
-        return (self.user.first_name + " " + self.user.last_name)
+        return (self.user.first_name + " " + self.user.last_name).encode("utf-8")
 
     def __str__(self):
-        return str(self.user.last_name + ", " + self.user.first_name + ' (DNI:' + str(self.dni) + ')')
+#        print type(self.user.last_name)
+#        print type(self.user.first_name)
+        response = (self.user.last_name + ", " + self.user.first_name + ' (DNI:' + str(self.dni) + ')').encode("utf-8")
+        print type(response)
+        return response
 
 
 class Secretary(models.Model):
@@ -28,11 +32,11 @@ class Secretary(models.Model):
     phone_number = models.CharField(max_length=15)
     
     def get_full_name(self):
-        return (self.user.first_name + " " + self.user.last_name)
+        return (self.user.first_name + " " + self.user.last_name).encode("utf-8")
 
     def __str__(self):
-        return str(self.user.last_name + ", " + self.user.first_name +
-                   ' (DNI:' + str(self.dni) + ')')
+        return (self.user.last_name + ", " + self.user.first_name +
+                   ' (DNI:' + str(self.dni) + ')').encode("utf-8")
 
 
 class Patient(models.Model):
@@ -44,14 +48,14 @@ class Patient(models.Model):
     phone_number = models.CharField(max_length=30, null=True)
 
     def get_full_name(self):
-        return (self.first_name + " " + self.last_name)
+        return (self.first_name + " " + self.last_name).encode("utf-8")
 
     def get_age(self):
         return ((timezone.now().date()) - self.birthdate)
 
     def __str__(self):
-        return str(self.last_name + ", " + self.first_name +
-                ' (DNI:' + str(self.dni) + ')')
+        return (self.last_name + ", " + self.first_name +
+                ' (DNI:' + str(self.dni) + ')').encode("utf-8")
 
 
 # CHANGE ON_DELETE to default user
@@ -63,26 +67,30 @@ class Case(models.Model):
                   on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        prof_name = patient_name = coord_name = ""
+
         if self.professional is None:
-            prof_name = "Profesional eliminado"
+            prof_name = ("Profesional eliminado")
         else:
             prof_name = self.professional.get_full_name()
         
         if self.patient is None:
-            patient_name = "Paciente eliminado"
+            patient_name = ("Paciente eliminado")
         else:
             patient_name = self.patient.get_full_name()
         
         if self.coordinator is None:
-            coord_name = "Coordinador eliminado"
+            coord_name = ("Coordinador eliminado")
         else:
             coord_name = self.coordinator.get_full_name()
 
-        return str("Paciente: \"" + patient_name + "\" ~ Profesional: \"" + prof_name + "\" ~ Coordinador: \"" + coord_name + "\"")
+
+        prof_name = (prof_name).decode('utf-8')
+        patient_name = (patient_name).decode('utf-8')
+        coord_name = (coord_name).decode('utf-8')
+        response = ("Paciente: \"" + patient_name + "\" ~ Profesional: \"" + prof_name + "\" ~ Coordinador: \"" + coord_name + "\"").encode('utf-8')
+        return response
     
     def log_str(self):
-        prof_name = patient_name = coord_name = ""
         if self.professional is None:
             prof_name = "Profesional eliminado"
         else:
@@ -97,8 +105,14 @@ class Case(models.Model):
             coord_name = "Coordinador eliminado"
         else:
             coord_name = self.coordinator.get_full_name()
+        
+        prof_name = (prof_name).decode('utf-8')
+        patient_name = (patient_name).decode('utf-8')
+        coord_name = (coord_name).decode('utf-8')
 
-        return str(patient_name + " - " + prof_name + " - " + coord_name + " (id: " + str(self.id) + ")")
+        response = patient_name + " - " + prof_name + " - " + coord_name + " (id: " + str(self.id) + ")"
+        
+        return response
 
 
 class Record(models.Model):
@@ -122,6 +136,6 @@ class Record(models.Model):
         if self.case is None:
             return "Deleted Case, resume:" + self.session_resume[:40] + "..."
         else:
-            return str(author + " - " + 
+            return (author + " - " + 
                     self.case.patient.__str__() + " - Fecha de la sesion: " +
-                    str(self.session_datetime.date()))
+                    str(self.session_datetime.date()).decode("utf-8"))

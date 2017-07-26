@@ -116,6 +116,8 @@ def modify_article_menu(request):
                           {'form': form})
     else:
         return render(request, 'login/login.html')
+    
+
 
 
 @csrf_protect

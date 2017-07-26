@@ -42,8 +42,12 @@ def create_logfile(log):
     if not os.path.isdir(log_dir):
         create_dir(log_dir)
 
+    print "log type:"
+    print type(log)
     log += "\n"
     logfile_obj = open(log_dir + "/" + logfile_name, "a")
+    log = log.encode('utf-8')
+    print (log)
     logfile_obj.write(log)
     logfile_obj.close()
 
@@ -68,8 +72,11 @@ def add_log(username, event, model, model_key):
                 "news": "Article",
     }
 
-    timestamp = str(datetime.now().strftime('[%d/%m/%y - %H:%M:%S]'))
-    log = (timestamp + " \'" + str(username) + "\' " + str(events[event]) + " " + "\"" + model_key + "\" " + "[" + str(models[model]) + "]")
+
+    timestamp = (datetime.now().strftime('[%d/%m/%y - %H:%M:%S]'))
+    timestamp = timestamp.decode('utf-8')
+
+    log = (timestamp + " \'" + (username) + "\' " + (events[event]) + " " + "\"" + model_key + "\" " + "[" + (models[model]) + "]")
     create_logfile(log)
 
 
@@ -589,7 +596,7 @@ def create_patient(request):
                         dni=dni,
                         phone_number=phone_number)
                     new_patient.save()
-                    add_log(request.user.username, "add", "patient", new_patient.__str__())
+                    add_log(request.user.username, "add", "patient", new_patient.__str__().decode("utf-8"))
                     return HttpResponseRedirect('/administration/')
                 else:
                     # We prepopulate the form with the previous values
@@ -656,7 +663,7 @@ def modify_patient(request, patient_id):
                     patient.health_insurance = form.cleaned_data['health_insurance']
                     patient.phone_number = form.cleaned_data['phone_number']
                     patient.save()
-                    add_log(request.user.username, "mod", "patient", patient.__str__())
+                    add_log(request.user.username, "mod", "patient", patient.__str__().decode("utf-8"))
                 else:
                     error_message = "El DNI del paciente ya existe, elija otro"
                     return render(request, 'administration/modify_patient.html',
@@ -694,7 +701,7 @@ def delete_patient(request):
             # Check whether is valid:
             if form.is_valid():
                 patient = form.cleaned_data['patient']
-                add_log(request.user.username, "del", "patient", patient.__str__())
+                add_log(request.user.username, "del", "patient", patient.__str__().decode("utf-8"))
                 patient.delete()
             return HttpResponseRedirect('/administration/')
 
