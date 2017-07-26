@@ -178,31 +178,6 @@ def create_record_from_patient(request, patient_id):
     else:
         return HttpResponseRedirect("/login")
 
-"""
-def create_record(request):
-    if request.user.is_authenticated:
-        user = User.objects.get(username=request.user.username)
-        case_list = Case.objects.all().filter(professional=user)
-
-        if request.user == user:
-            if request.method == "POST":
-                patient = Patient.objects.get(id=request.POST.get("patient_from_list"))
-                case = Case.objects.get(professional=user, patient=patient)
-                record = Record(session_datetime=request.POST.get("session_datetime"),
-                                session_resume=request.POST.get("session_resume"),
-                                case=case,
-
-                                session_duration = request.POST.get("session_duration"))
-                record.save()
-                return redirect_patient_list()
-            else:
-                return render(request, 'records/create_record.html', {'user': user, 'case_list': case_list })
-        else:
-            return redirect_my_patient_records(request.user.username, patient_id)
-    else:
-        return HttpResponseRedirect("/login")
-"""
-
 
 def edit_record(request, patient_id, record_id):
     if request.user.is_authenticated:

@@ -7,7 +7,7 @@
         <form action="{% url 'records:edit_comment' record.case.patient.id record.id comment.id%}" method="post" id="edit_comment">{% csrf_token %}
         <div class="form-inputs-container">
           <h3>Comentario</h3>
-          <textarea id="comment_text" name="comment_text" maxlength=500 
+          <textarea id="comment_text" name="comment_text" maxlength=1000 
                     style="width:553px; resize: none;" rows="5" cols="50" required>{{ comment.text }}</textarea>
         </div>
           <div class="modify-template-buttons" style="height:45px; width:575px;">

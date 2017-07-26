@@ -81,7 +81,7 @@ def create_article(request):
                 new_article.save()
 
                 add_log(request.user.username, "add", "news", new_article.log_str())
-                return HttpResponseRedirect('/news/')
+                return HttpResponseRedirect('/administration/')
             else:
                 form = ArticleForm()
                 error_message = ("Error en los datos ingresados.")
@@ -133,7 +133,7 @@ def modify_article(request, article_id):
                 article.is_draft = form.cleaned_data['is_draft']
                 article.save()
                 add_log(request.user.username, "mod", "news", article.log_str())
-                return HttpResponseRedirect('/news/')
+                return HttpResponseRedirect('/administration/')
             else:
                 error_message = "Entradas invalidas."
                 return render(request, 'news/modify_article.html',
@@ -165,7 +165,7 @@ def delete_article(request):
                 article = form.cleaned_data['article']
                 add_log(request.user.username, "del", "news", article.log_str())
                 article.delete()
-            return HttpResponseRedirect('/news/')
+            return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create a blank form
         else:
             form = ArticleListForm()

@@ -10,7 +10,7 @@ from records.models import Record, Professional
 class Comment(models.Model):
     owner = models.ForeignKey(Professional, on_delete=models.CASCADE, null=True)
     record = models.ForeignKey(Record, on_delete=models.CASCADE)
-    text = models.CharField(max_length=400)
+    text = models.CharField(max_length=1000)
     create_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

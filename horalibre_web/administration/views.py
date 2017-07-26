@@ -27,7 +27,7 @@ from .forms import (ProfessionalForm, ProfessionalListForm, ChangePasswordForm,
 
 def create_dir(path):
     try:
-        os.makedirs(path, exist_ok=True)
+        os.makedirs(path)
     except OSError as exception:
         if exception.errno != errno.EEXIST:
             raise
@@ -340,7 +340,6 @@ def modify_professional(request, prof_id):
         prof = Professional.objects.get(id=prof_id)
         if request.method == 'POST':
             form = ProfessionalEditForm(request.POST)
-
             if form.is_valid():
                 # Check if username is available
                 new_username = form.cleaned_data['username']

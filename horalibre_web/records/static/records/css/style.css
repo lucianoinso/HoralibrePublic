@@ -362,6 +362,7 @@ span.article-author {
   border: 1px solid #cccccc;
   border-radius: 5px;
   width: 550px;
+  word-wrap: break-word;
 }
 
 .record-log p {

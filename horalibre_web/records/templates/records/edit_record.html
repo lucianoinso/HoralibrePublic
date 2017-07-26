@@ -47,7 +47,7 @@
             </div>
             <div class = "record-text" style="padding-top:0px;">
               <div class = "edit-record-text">
-                <textarea id = "edit-record-textarea" name="session_resume">{{ record.session_resume }} </textarea>
+                <textarea id = "edit-record-textarea" name="session_resume" maxlength="5000">{{ record.session_resume }} </textarea>
               </div>
               <input type="submit" value="Guardar" style="float:right; margin-right:1px;">
               <div class = "button-record-inside-user-link" style="text-align:left; width:128px; float:left; height:23px; font-size:14px; margin-right:-12px;">
@@ -55,8 +55,6 @@
               </div>
             </div>
           </form>
-
-          
         </div>
 
 {% endblock %}
