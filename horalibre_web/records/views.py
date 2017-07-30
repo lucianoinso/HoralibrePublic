@@ -56,7 +56,7 @@ def my_records_list(request, patient_id):
             if not case:
                 raise ObjectDoesNotExist
 
-            record_list = Record.objects.all().filter(author=professional,case__patient=patient).order_by('-session_datetime')
+            record_list = Record.objects.all().filter(author=professional,patient=patient).order_by('-session_datetime')
             paginator = Paginator(record_list, 15) # Show 15 records per page
             page = request.GET.get('page')
             page_records = paginator.page(page)

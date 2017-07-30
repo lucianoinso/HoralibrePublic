@@ -19,8 +19,6 @@ class Professional(models.Model):
         return (self.user.first_name + " " + self.user.last_name).encode("utf-8")
 
     def __str__(self):
-#        print type(self.user.last_name)
-#        print type(self.user.first_name)
         response = (self.user.last_name + ", " + self.user.first_name + ' (DNI:' + str(self.dni) + ')').encode("utf-8")
         print type(response)
         return response
@@ -58,7 +56,6 @@ class Patient(models.Model):
                 ' (DNI:' + str(self.dni) + ')').encode("utf-8")
 
 
-# CHANGE ON_DELETE to default user
 class Case(models.Model):
     professional = models.ForeignKey(Professional, related_name='case_prof', 
                    on_delete=models.SET_NULL, null=True)
