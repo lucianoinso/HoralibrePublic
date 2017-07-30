@@ -136,6 +136,13 @@ def record_detail(request, patient_id, record_id):
                 record = Record.objects.get(id=record_id)
                 comments = (Comment.objects.all().filter(record=record)
                                .order_by('create_date'))
+                # Assuming there is only one coordinator per patient, if the 
+                # record is case-orphan we assign the new case to the first case 
+                # that has professional as a professional or as a coordinator, 
+                # and patient as a patient
+                if record.case is None:
+                    record.case = case.first()
+                    record.save()
 
             except ObjectDoesNotExist:
                 return redirect_home()
