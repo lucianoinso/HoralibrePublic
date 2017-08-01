@@ -4,6 +4,7 @@ from . import views
 from commentary import views as comment_views
 
 urlpatterns = [
+    url(r'^send_notifications$', views.send_notifications, name='send_notifications'),
     url(r'^patient_list$', views.patient_list, name='patient_list'),
 #    url(r'^create_record$', views.create_record, name='create_record'),
     url(r'^patient/(?P<patient_id>[0-9]+)/select_records$',views.select_records,name='select_records'),

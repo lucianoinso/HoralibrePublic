@@ -142,6 +142,12 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 
+# EMAIL STUFF
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'horalibrefundacion@gmail.com'
+EMAIL_HOST_PASSWORD = 'UTr@v&tQV8^*ZRF2'
+EMAIL_PORT = 587
 
 # DATE_INPUT_FORMATS += (
 #     '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y', # '2006-10-25', '10/25/2006', '10/25/06'

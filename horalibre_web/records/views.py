@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
 
 # Project Imports
 from login.views import redirect_home
@@ -123,6 +124,22 @@ def all_records_list(request, patient_id):
             })
     else:
         return HttpResponseRedirect("/login")
+
+
+def send_notifications(request):
+    print "asdf"
+    profs = Professional.objects.all()
+    active_cases = Case.objects.all()
+    print active_cases
+    return HttpResponse("Notifications sent")
+    #                send_mail(
+    #                    'Prrrobando enviar email',
+    #                    'prrrrrrrobando',
+    #                    'lucianoinso@gmail.com',
+    #                    ['luciano_inso@hotmail.com',
+    #                     'aroundthefur0@hotmail.com'],
+    #                    fail_silently=False,
+    #                )
 
 
 def record_detail(request, patient_id, record_id):

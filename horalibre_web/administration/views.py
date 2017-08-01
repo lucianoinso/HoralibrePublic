@@ -47,7 +47,7 @@ def create_logfile(log):
     log += "\n"
     logfile_obj = open(log_dir + "/" + logfile_name, "a")
     log = log.encode('utf-8')
-    print (log)
+    print(log)
     logfile_obj.write(log)
     logfile_obj.close()
 
@@ -57,26 +57,24 @@ def add_log(username, event, model, model_key):
         Example:
         [24/07/17 - 14:23:01] 'vivibalsamo' modified "sol_secre" [Secretary]
     """
-    events = {
-                "add" : "added",
-                "mod" : "modified",
-                "chpwd" : "changed password of",
-                "del" : "deleted",
-    }
+    events = {"add": "added",
+              "mod": "modified",
+              "chpwd": "changed password of",
+              "del": "deleted",
+              }
 
-    models = {
-                "prof": "Professional",
-                "secr": "Secretary",
-                "patient": "Patient",
-                "case": "Case",
-                "news": "Article",
-    }
-
+    models = {"prof": "Professional",
+              "secr": "Secretary",
+              "patient": "Patient",
+              "case": "Case",
+              "news": "Article",
+              }
 
     timestamp = (datetime.now().strftime('[%d/%m/%y - %H:%M:%S]'))
     timestamp = timestamp.decode('utf-8')
 
-    log = (timestamp + " \'" + (username) + "\' " + (events[event]) + " " + "\"" + model_key + "\" " + "[" + (models[model]) + "]")
+    log = (timestamp + " \'" + (username) + "\' " + (events[event]) + " " +
+           "\"" + model_key + "\" " + "[" + (models[model]) + "]")
     create_logfile(log)
 
 
@@ -88,6 +86,7 @@ def admin_home(request):
     else:
         return render(request, 'login/login.html')
 
+
 @csrf_protect
 def change_pwd_prof(request, prof_id):
     if request.user.is_authenticated and request.user.is_staff:
@@ -98,18 +97,19 @@ def change_pwd_prof(request, prof_id):
                 prof.user.set_password(form.cleaned_data['password'])
                 prof.user.save()
                 prof.save()
-                add_log(request.user.username, "chpwd", "prof", prof.user.username)
+                add_log(request.user.username, "chpwd", "prof",
+                        prof.user.username)
                 return HttpResponseRedirect('/administration/')
             else:
                 error_message = "Elija una contraseña valida"
                 return render(request, 'administration/prof_change_pwd.html',
-                             {'form': form,
-                              'prof_id': prof_id,
-                              'error_message': error_message})
+                              {'form': form,
+                               'prof_id': prof_id,
+                               'error_message': error_message})
         else:
             form = ChangePasswordForm()
             return render(request, 'administration/prof_change_pwd.html',
-                          {'form':form, 'prof_id': prof.id})
+                          {'form': form, 'prof_id': prof.id})
     else:
         return render(request, 'login/login.html')
 
@@ -124,28 +124,31 @@ def change_pwd_secr(request, secretary_id):
                 secretary.user.set_password(form.cleaned_data['password'])
                 secretary.user.save()
                 secretary.save()
-                add_log(request.user.username, "chpwd", "secr", secretary.user.username)
+                add_log(request.user.username, "chpwd", "secr",
+                        secretary.user.username)
                 return HttpResponseRedirect('/administration/')
             else:
                 error_message = "Elija una contraseña valida"
                 return render(request, 'administration/secr_change_pwd.html',
-                             {'form': form,
-                              'secretary_id': secretary_id,
-                              'error_message': error_message})
+                              {'form': form,
+                               'secretary_id': secretary_id,
+                               'error_message': error_message
+                               })
         else:
             form = ChangePasswordForm()
             return render(request, 'administration/secr_change_pwd.html',
-                          {'form':form, 'secretary_id': secretary.id})
+                          {'form': form, 'secretary_id': secretary.id})
     else:
         return render(request, 'login/login.html')
+
 
 # Professionals
 def professional_detail(request, prof_id):
     if request.user.is_authenticated and request.user.is_staff:
-        try:            
+        try:
             prof = Professional.objects.get(id=prof_id)
             return render(request, 'administration/prof_detail.html',
-                              {'prof': prof })
+                          {'prof': prof})
         except ObjectDoesNotExist as e:
             print(e)
             return redirect_home()
@@ -154,6 +157,7 @@ def professional_detail(request, prof_id):
             return HttpResponse(e)
     else:
         return render(request, 'login/login.html')
+
 
 @csrf_protect
 def list_professional(request):
@@ -164,7 +168,8 @@ def list_professional(request):
             # Check whether is valid:
             if form.is_valid():
                 prof = form.cleaned_data['professional']
-                return redirect('administration:professional_detail', prof_id=prof.id)
+                return redirect('administration:professional_detail',
+                                prof_id=prof.id)
             else:
                 return HttpResponseRedirect('/administration/')
         else:
@@ -177,10 +182,10 @@ def list_professional(request):
 
 def secretary_detail(request, secretary_id):
     if request.user.is_authenticated and request.user.is_staff:
-        try:            
+        try:
             secretary = Secretary.objects.get(id=secretary_id)
             return render(request, 'administration/secretary_detail.html',
-                              {'secretary': secretary })
+                          {'secretary': secretary})
         except ObjectDoesNotExist as e:
             print(e)
             return redirect_home()
@@ -189,6 +194,7 @@ def secretary_detail(request, secretary_id):
             return HttpResponse(e)
     else:
         return render(request, 'login/login.html')
+
 
 @csrf_protect
 def list_secretary(request):
@@ -199,7 +205,8 @@ def list_secretary(request):
             # Check whether is valid:
             if form.is_valid():
                 secretary = form.cleaned_data['secretary']
-                return redirect('administration:secretary_detail', secretary_id=secretary.id)
+                return redirect('administration:secretary_detail',
+                                secretary_id=secretary.id)
             else:
                 return HttpResponseRedirect('/administration/')
         else:
@@ -212,10 +219,10 @@ def list_secretary(request):
 
 def patient_detail(request, patient_id):
     if request.user.is_authenticated and request.user.is_staff:
-        try:            
+        try:
             patient = Patient.objects.get(id=patient_id)
             return render(request, 'administration/patient_detail.html',
-                              {'patient': patient })
+                          {'patient': patient})
         except ObjectDoesNotExist as e:
             print(e)
             return redirect_home()
@@ -224,6 +231,7 @@ def patient_detail(request, patient_id):
             return HttpResponse(e)
     else:
         return render(request, 'login/login.html')
+
 
 @csrf_protect
 def list_patient(request):
@@ -234,7 +242,8 @@ def list_patient(request):
             # Check whether is valid:
             if form.is_valid():
                 patient = form.cleaned_data['patient']
-                return redirect('administration:patient_detail', patient_id=patient.id)
+                return redirect('administration:patient_detail',
+                                patient_id=patient.id)
             else:
                 return HttpResponseRedirect('/administration/')
         else:
@@ -285,7 +294,8 @@ def create_professional(request):
                         profession=profession,
                         is_coordinator=is_coordinator)
                     new_professional.save()
-                    add_log(request.user.username, "add", "prof", new_professional.user.username)
+                    add_log(request.user.username, "add", "prof",
+                            new_professional.user.username)
                     return HttpResponseRedirect('/administration/')
                 else:
                     # We prepopulate the form with the previous values
@@ -296,12 +306,13 @@ def create_professional(request):
                                 'dni': dni, 'phone_number': phone_number,
                                 'profession': profession,
                                 'is_coordinator': is_coordinator,
-                                'is_active':is_active,
+                                'is_active': is_active,
                                 }
                     form = ProfessionalForm(initial=pre_data)
                     error_message = ("El nombre de usuario ingresado ya " +
                                      "existe, elija otro")
-                    return render(request, 'administration/create_professional.html',
+                    return render(request,
+                                  'administration/create_professional.html',
                                   {'form': form,
                                    'error_message': error_message})
         # if a GET (or any other method) we'll create a blank form
@@ -322,7 +333,8 @@ def modify_professional_menu(request):
             # Check whether is valid:
             if form.is_valid():
                 professional = form.cleaned_data['professional']
-                return redirect('administration:modify_professional', prof_id=professional.id)
+                return redirect('administration:modify_professional',
+                                prof_id=professional.id)
             else:
                 return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create a blank form
@@ -343,7 +355,9 @@ def modify_professional(request, prof_id):
             if form.is_valid():
                 # Check if username is available
                 new_username = form.cleaned_data['username']
-                username_user = Professional.objects.filter(user__username=new_username).exclude(id=prof_id).first()
+                username_user = (Professional.objects
+                                 .filter(user__username=new_username)
+                                 .exclude(id=prof_id).first())
                 # Exclude the professional from the querylist
 
                 if username_user is None:
@@ -359,13 +373,16 @@ def modify_professional(request, prof_id):
                     prof.user.is_active = form.cleaned_data['is_active']
                     prof.user.save()
                     prof.save()
-                    add_log(request.user.username, "mod", "prof", prof.user.username)
+                    add_log(request.user.username, "mod", "prof",
+                            prof.user.username)
                     return HttpResponseRedirect('/administration/')
                 else:
-                    error_message = "El nombre de usuario ya existe, elija otro"
-                    return render(request, 'administration/modify_professional.html',
-                          {'form': form, 'prof_id': prof_id,
-                            'error_message': error_message})
+                    error_message = ("El nombre de usuario ya existe, " +
+                                     "elija otro")
+                    return render(request,
+                                  'administration/modify_professional.html',
+                                  {'form': form, 'prof_id': prof_id,
+                                   'error_message': error_message})
 
         # if a GET (or any other method) we'll create the populated form
         else:
@@ -397,7 +414,8 @@ def delete_professional(request):
             # Check whether is valid:
             if form.is_valid():
                 professional = form.cleaned_data['professional']
-                add_log(request.user.username, "del", "prof", professional.user.username)
+                add_log(request.user.username, "del", "prof",
+                        professional.user.username)
                 professional.user.delete()
                 professional.delete()
             return HttpResponseRedirect('/administration/')
@@ -428,7 +446,8 @@ def create_secretary(request):
                 phone_number = form.cleaned_data['phone_number']
                 is_active = form.cleaned_data['is_active']
 
-                entered_username = User.objects.filter(username=username).first()
+                entered_username = (User.objects.filter(username=username)
+                                                .first())
                 if entered_username is None:
                     new_user = User.objects.create_user(username=username,
                                                         email=email,
@@ -446,7 +465,8 @@ def create_secretary(request):
                         dni=dni,
                         phone_number=phone_number)
                     new_secretary.save()
-                    add_log(request.user.username, "add", "secr", new_secretary.user.username)
+                    add_log(request.user.username, "add", "secr",
+                            new_secretary.user.username)
                     return HttpResponseRedirect('/administration/')
                 else:
                     # We prepopulate the form with the previous values
@@ -456,11 +476,12 @@ def create_secretary(request):
                                 'last_name': last_name, 'dni': dni,
                                 'phone_number': phone_number,
                                 'is_active': is_active,
-                               }
+                                }
                     form = SecretaryForm(initial=pre_data)
                     error_message = ("El nombre de usuario ingresado ya " +
                                      "existe, elija otro")
-                    return render(request, 'administration/create_secretary.html',
+                    return render(request,
+                                  'administration/create_secretary.html',
                                   {'form': form,
                                    'error_message': error_message})
         # if a GET (or any other method) we'll create a blank form
@@ -481,7 +502,8 @@ def modify_secretary_menu(request):
             # Check whether is valid:
             if form.is_valid():
                 secretary = form.cleaned_data['secretary']
-                return redirect('administration:modify_secretary', secretary_id=secretary.id)
+                return redirect('administration:modify_secretary',
+                                secretary_id=secretary.id)
             else:
                 return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create a blank form
@@ -504,7 +526,9 @@ def modify_secretary(request, secretary_id):
                 # remove the current secretary from the querylist
 
                 new_username = form.cleaned_data['username']
-                username_user = Secretary.objects.filter(user__username=new_username).exclude(id=secretary_id).first()
+                username_user = (Secretary.objects
+                                 .filter(user__username=new_username)
+                                 .exclude(id=secretary_id).first())
 
                 if username_user is None:
                     secr.user.username = new_username
@@ -516,17 +540,20 @@ def modify_secretary(request, secretary_id):
                     secr.phone_number = form.cleaned_data['phone_number']
                     secr.user.save()
                     secr.save()
-                    add_log(request.user.username, "mod", "secr", secr.user.username)
+                    add_log(request.user.username, "mod", "secr",
+                            secr.user.username)
                 else:
-                    error_message = "El nombre de usuario ya existe, elija otro"
-                    return render(request, 'administration/modify_secretary.html',
-                          {'form': form, 'secretary_id': secretary_id,
-                            'error_message': error_message})
+                    error_message = ("El nombre de usuario ya existe," +
+                                     "elija otro")
+                    return render(request,
+                                  'administration/modify_secretary.html',
+                                  {'form': form, 'secretary_id': secretary_id,
+                                   'error_message': error_message})
             else:
                 error_message = "Entrada(s) invalida(s)"
                 return render(request, 'administration/modify_secretary.html',
-                          {'form': form, 'secretary_id': secretary_id,
-                            'error_message': error_message})
+                              {'form': form, 'secretary_id': secretary_id,
+                               'error_message': error_message})
             return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create the populated form
         else:
@@ -555,7 +582,8 @@ def delete_secretary(request):
             # Check whether is valid:
             if form.is_valid():
                 secretary = form.cleaned_data['secretary']
-                add_log(request.user.username, "del", "secr", secretary.user.username)
+                add_log(request.user.username, "del", "secr",
+                        secretary.user.username)
                 secretary.user.delete()
                 secretary.delete()
             return HttpResponseRedirect('/administration/')
@@ -595,7 +623,8 @@ def create_patient(request):
                         dni=dni,
                         phone_number=phone_number)
                     new_patient.save()
-                    add_log(request.user.username, "add", "patient", new_patient.__str__().decode("utf-8"))
+                    add_log(request.user.username, "add", "patient",
+                            new_patient.__str__().decode("utf-8"))
                     return HttpResponseRedirect('/administration/')
                 else:
                     # We prepopulate the form with the previous values
@@ -631,7 +660,8 @@ def modify_patient_menu(request):
             # Check whether is valid:
             if form.is_valid():
                 patient = form.cleaned_data['patient']
-                return redirect('administration:modify_patient', patient_id=patient.id)
+                return redirect('administration:modify_patient',
+                                patient_id=patient.id)
             else:
                 return HttpResponseRedirect('/administration/')
         else:
@@ -651,7 +681,8 @@ def modify_patient(request, patient_id):
             if form.is_valid():
                 # CHECK IF DNI IS AVAILABLE
                 dni = form.cleaned_data['dni']
-                dni_patient = Patient.objects.filter(dni=dni).exclude(id=patient_id).first()
+                dni_patient = (Patient.objects.filter(dni=dni)
+                                              .exclude(id=patient_id).first())
                 # We remove the current dni from the queryset so it doesn't
                 # take it as if it is already in the database
                 if dni_patient is None:
@@ -662,17 +693,19 @@ def modify_patient(request, patient_id):
                     patient.health_insurance = form.cleaned_data['health_insurance']
                     patient.phone_number = form.cleaned_data['phone_number']
                     patient.save()
-                    add_log(request.user.username, "mod", "patient", patient.__str__().decode("utf-8"))
+                    add_log(request.user.username, "mod", "patient",
+                            patient.__str__().decode("utf-8"))
                 else:
                     error_message = "El DNI del paciente ya existe, elija otro"
-                    return render(request, 'administration/modify_patient.html',
-                          {'form': form, 'patient_id': patient_id,
-                            'error_message': error_message})
+                    return render(request,
+                                  'administration/modify_patient.html',
+                                  {'form': form, 'patient_id': patient_id,
+                                   'error_message': error_message})
             else:
                 error_message = "Entrada(s) invalida(s)"
                 return render(request, 'administration/modify_patient.html',
-                          {'form': form, 'patient_id': patient_id,
-                            'error_message': error_message})
+                              {'form': form, 'patient_id': patient_id,
+                               'error_message': error_message})
             return HttpResponseRedirect('/administration/')
         # if a GET (or any other method) we'll create the populated form
         else:
@@ -700,7 +733,8 @@ def delete_patient(request):
             # Check whether is valid:
             if form.is_valid():
                 patient = form.cleaned_data['patient']
-                add_log(request.user.username, "del", "patient", patient.__str__().decode("utf-8"))
+                add_log(request.user.username, "del", "patient",
+                        patient.__str__().decode("utf-8"))
                 patient.delete()
             return HttpResponseRedirect('/administration/')
 
@@ -727,16 +761,18 @@ def create_case(request):
                 professional = new_case.professional
                 coordinator = new_case.coordinator
 
-                entered_case = Case.objects.filter(patient=patient,
-                                                   professional=professional,
-                                                   coordinator=coordinator).first()
+                entered_case = (Case.objects.filter(patient=patient,
+                                                    professional=professional,
+                                                    coordinator=coordinator)
+                                            .first())
                 if entered_case is None:
                     new_case = Case.objects.create(
                         patient=patient,
                         professional=professional,
                         coordinator=coordinator)
                     new_case.save()
-                    add_log(request.user.username, "add", "case", new_case.log_str())
+                    add_log(request.user.username, "add", "case",
+                            new_case.log_str())
                     return HttpResponseRedirect('/administration/')
                 else:
                     form = CaseForm(request.POST)
@@ -784,26 +820,32 @@ def modify_case(request, case_id):
                 patient = form.cleaned_data['patient']
                 professional = form.cleaned_data['professional']
                 coordinator = form.cleaned_data['coordinator']
-                new_case = Case.objects.filter(patient=patient).filter(professional=professional).filter(coordinator=coordinator).exclude(id=case_id).first()
+                new_case = (Case.objects.filter(patient=patient)
+                                        .filter(professional=professional)
+                                        .filter(coordinator=coordinator)
+                                        .exclude(id=case_id).first())
 
-                # We remove the current dni from the queryset so it doesn't
+                # We remove the current case from the queryset so it doesn't
                 # take it as if it is already in the database
                 if new_case is None:
                     case.patient = patient
                     case.professional = professional
                     case.coordinator = coordinator
                     case.save()
-                    add_log(request.user.username, "mod", "case", case.log_str())
+                    add_log(request.user.username, "mod", "case",
+                            case.log_str())
                 else:
                     error_message = "El caso ya existe, elija otra combinación"
                     return render(request, 'administration/modify_case.html',
-                          {'form': form, 'case_id': case_id,
-                            'error_message': error_message})
+                                  {'form': form, 'case_id': case_id,
+                                   'error_message': error_message,
+                                   })
             else:
                 error_message = "Entrada(s) invalida(s)"
                 return render(request, 'administration/modify_case.html',
-                          {'form': form, 'case_id': case_id,
-                            'error_message': error_message})
+                              {'form': form, 'case_id': case_id,
+                               'error_message': error_message
+                               })
             return HttpResponseRedirect('/administration/')
         # if a GET, we'll create the populated form
         else:
@@ -816,7 +858,8 @@ def modify_case(request, case_id):
             return render(request, 'administration/modify_case.html',
                           {'form': form, 'case_id': case_id})
     else:
-        return render(request, 'login/login.html')    
+        return render(request, 'login/login.html')
+
 
 @csrf_protect
 def delete_case(request):
