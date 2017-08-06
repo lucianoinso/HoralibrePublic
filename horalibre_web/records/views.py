@@ -12,10 +12,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from django.conf import settings
 
 # Project Imports
 from login.views import redirect_home
-from .models import Patient, Record, Professional, Case
+from .models import Patient, Record, Professional, Case, Notification
 from commentary.models import Comment
 
 
@@ -38,7 +39,7 @@ def patient_list(request):
             case_list = Case.objects.filter(id__in=cases).order_by('patient__last_name')
 
         except Exception as e:
-            return HttpResponse(e)
+            return redirect_home()
 
         return render(request, 'records/patient_list.html', {
             'case_list': case_list,
@@ -126,113 +127,141 @@ def all_records_list(request, patient_id):
         return HttpResponseRedirect("/login")
 
 
-def send_notifications(request):
-    print "asdf"
-    profs = Professional.objects.all()
-    active_cases = Case.objects.all()
-    print active_cases
-    return HttpResponse("Notifications sent")
-    #                send_mail(
-    #                    'Prrrobando enviar email',
-    #                    'prrrrrrrobando',
-    #                    'lucianoinso@gmail.com',
-    #                    ['luciano_inso@hotmail.com',
-    #                     'aroundthefur0@hotmail.com'],
-    #                    fail_silently=False,
-    #                )
+def send_notifications():
+    try:
+        notifs = Notification.objects.all()
+        coords = set()
+        email_list = []
+        for notif in notifs:
+            coords.add(notif.record.case.coordinator.user.email)
+
+        coords_content = dict.fromkeys(coords, "")
+
+        for notif in notifs:
+            notif_content = ("<li style=\"margin-bottom:5px;\">" + (notif.record.author.get_full_name()) + " ha agregado un registro nuevo para el/la paciente " +
+                            (notif.record.patient).get_full_name() + " " + "<a href=\"" + "http://fundacionhoralibre-sitetest.rhcloud.com/home/records/patient/"+ str(notif.record.patient.id) + "/record/" + str(notif.record.id) + "/" + "\">" + "(" + (notif.record.session_datetime).strftime('%d/%m/%Y') + ")</a>.</li>")
+            coords_content[notif.record.case.coordinator.user.email] += notif_content
+
+        for coord in coords_content:
+            html_message = u"<!DOCTYPE HTML><html><body><h3>Estimado/a, le acercamos las últimas novedades de registros vinculadas a sus casos:</h3><ul style=\"padding-left:10px;\">" + coords_content[coord] + u"</ul><p style=\"padding-top:10px\">Atte.<br>El equipo de Fundación Hora Libre</p></body></html>"
+            # send_mail('SUBJECT','CONTENT','from@email.com',['dest1@hotmail.com', 'dest2@hotmail.com'],fail_silently=False)
+            send_mail('Novedades de registros', "",
+                      settings.EMAIL_HOST_USER, [coord], fail_silently=False,
+                      html_message=html_message)
+
+        return HttpResponse("Notifications sent")
+
+    except Exception as e:
+        print (e)
+    
 
 
 def record_detail(request, patient_id, record_id):
-    if request.user.is_authenticated:
-        prof = Professional.objects.get(user=request.user)
-        patient = Patient.objects.get(id=patient_id)
-        case = Case.objects.all().filter(Q(professional=prof) | Q(coordinator=prof)
-                                        ,Q(patient=patient))
-        if case:
-            try:
-                record = Record.objects.get(id=record_id)
-                comments = (Comment.objects.all().filter(record=record)
-                               .order_by('create_date'))
-                # Assuming there is only one coordinator per patient, if the 
-                # record is case-orphan we assign the new case to the first case 
-                # that has professional as a professional or as a coordinator, 
-                # and patient as a patient
-                if record.case is None:
-                    record.case = case.first()
-                    record.save()
+    try:
+        if request.user.is_authenticated:
+            prof = Professional.objects.get(user=request.user)
+            patient = Patient.objects.get(id=patient_id)
+            case = Case.objects.all().filter(Q(professional=prof) | Q(coordinator=prof)
+                                            ,Q(patient=patient))
+            if case:
+                try:
+                    record = Record.objects.get(id=record_id)
+                    comments = (Comment.objects.all().filter(record=record)
+                                   .order_by('create_date'))
+                    # Assuming there is only one coordinator per patient, if the 
+                    # record is case-orphan we assign the new case to the first case 
+                    # that has professional as a professional or as a coordinator, 
+                    # and patient as a patient
+                    if record.case is None:
+                        record.case = case.first()
+                        record.save()
+                    send_notifications()
 
-            except ObjectDoesNotExist:
+                except ObjectDoesNotExist:
+                    return redirect_home()
+
+                except Exception as e:
+                    return HttpResponse(e)
+
+                return render(request, 'records/record_detail.html', {
+                    'record': record,
+                    'comments': comments,
+                    })
+            else:
                 return redirect_home()
-
-            except Exception as e:
-                return HttpResponse(e)
-
-            return render(request, 'records/record_detail.html', {
-                'record': record,
-                'comments': comments,
-                })
         else:
-            return redirect_home()
-    else:
-        return HttpResponseRedirect("/login")
+            return HttpResponseRedirect("/login")
+    except Exception as e:
+        print e
+        return redirect_home()
 
 
 def create_record_from_patient(request, patient_id):
-    if request.user.is_authenticated:
-        professional = Professional.objects.get(user=request.user)
-        patient = Patient.objects.get(id=patient_id)
-        case = Case.objects.all().filter(Q(patient=patient),
-                                         Q(professional=professional) | Q(coordinator=professional))
-        if case:
-            if request.method == "POST":
-                ses_dur_hrs = request.POST.get("session_duration_hours")
-                ses_dur_mins = request.POST.get("session_duration_minutes")
-                session_duration = datetime.strptime(ses_dur_hrs + ":" + ses_dur_mins, '%H:%M')
-                record = Record(session_datetime=request.POST.get("session_datetime"),
-                                session_resume=request.POST.get("session_resume"),
-                                case=case.first(), author=professional,
-                                patient=patient,
-                                session_duration=session_duration)
-                record.save()
-                return redirect_my_patient_records(patient_id)
+    try:
+        if request.user.is_authenticated:
+            professional = Professional.objects.get(user=request.user)
+            patient = Patient.objects.get(id=patient_id)
+            case = Case.objects.all().filter(Q(patient=patient),
+                                             Q(professional=professional) | Q(coordinator=professional))
+            if case:
+                if request.method == "POST":
+                    ses_dur_hrs = request.POST.get("session_duration_hours")
+                    ses_dur_mins = request.POST.get("session_duration_minutes")
+                    session_duration = datetime.strptime(ses_dur_hrs + ":" + ses_dur_mins, '%H:%M')
+                    record = Record(session_datetime=request.POST.get("session_datetime"),
+                                    session_resume=request.POST.get("session_resume"),
+                                    case=case.first(), author=professional,
+                                    patient=patient,
+                                    session_duration=session_duration)
+                    record.save()
+                    notification = Notification(record=record)
+                    notification.save()
+                    return redirect_my_patient_records(patient_id)
+                else:
+                    return render(request, 'records/create_record_from_patient.html', {'patient': patient })
             else:
-                return render(request, 'records/create_record_from_patient.html', {'patient': patient })
+                return redirect_home()
         else:
-            return redirect_home()
-    else:
+            return HttpResponseRedirect("/login")
+    except Exception as e:
+        print e
         return HttpResponseRedirect("/login")
 
 
 def edit_record(request, patient_id, record_id):
-    if request.user.is_authenticated:
-        record = get_object_or_404(Record, id=record_id)
-        if request.user == record.author.user:
-            if request.method == "POST":
-                if request.POST.get("session_datetime"):
-                    record.session_datetime = request.POST.get("session_datetime")
-                if (request.POST.get("session_duration_hours") and
-                    request.POST.get("session_duration_minutes")):
-                    ses_dur_hrs = request.POST.get("session_duration_hours")
-                    ses_dur_mins = request.POST.get("session_duration_minutes")
-                    session_duration = datetime.strptime(ses_dur_hrs + ":" + ses_dur_mins, '%H:%M')
-                    record.session_duration = session_duration
-                if request.POST.get("session_resume"):
-                    record.session_resume = request.POST.get("session_resume")
-                record.save()
-                return redirect_record(patient_id, record_id)
+    try:
+        if request.user.is_authenticated:
+            record = get_object_or_404(Record, id=record_id)
+            if request.user == record.author.user:
+                if request.method == "POST":
+                    if request.POST.get("session_datetime"):
+                        record.session_datetime = request.POST.get("session_datetime")
+                    if (request.POST.get("session_duration_hours") and
+                        request.POST.get("session_duration_minutes")):
+                        ses_dur_hrs = request.POST.get("session_duration_hours")
+                        ses_dur_mins = request.POST.get("session_duration_minutes")
+                        session_duration = datetime.strptime(ses_dur_hrs + ":" + ses_dur_mins, '%H:%M')
+                        record.session_duration = session_duration
+                    if request.POST.get("session_resume"):
+                        record.session_resume = request.POST.get("session_resume")
+                    record.save()
+                    return redirect_record(patient_id, record_id)
+                else:
+                    ses_dur_hrs = record.session_duration.strftime('%H')
+                    ses_dur_mins = record.session_duration.strftime('%M')
+                    return render(request, 'records/edit_record.html',
+                                  {'record': record,
+                                   'session_duration_hours': ses_dur_hrs,
+                                   'session_duration_minutes': ses_dur_mins,
+                                  }
+                                 )
             else:
-                ses_dur_hrs = record.session_duration.strftime('%H')
-                ses_dur_mins = record.session_duration.strftime('%M')
-                return render(request, 'records/edit_record.html',
-                              {'record': record,
-                               'session_duration_hours': ses_dur_hrs,
-                               'session_duration_minutes': ses_dur_mins,
-                              }
-                             )
+                return redirect_home()
         else:
-            return redirect_home()
-    else:
-        return HttpResponseRedirect("/login")
+            return HttpResponseRedirect("/login")
+    except Exception as e:
+        print e
+        return redirect_home()
 
 
 def delete_record(request, patient_id, record_id):

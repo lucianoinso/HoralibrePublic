@@ -136,3 +136,10 @@ class Record(models.Model):
             return (author + " - " + 
                     self.case.patient.__str__() + " - Fecha de la sesion: " +
                     str(self.session_datetime.date()).decode("utf-8"))
+
+
+class Notification(models.Model):
+    record = models.ForeignKey(Record, related_name='notification_record',
+                               on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return 'Registro:%s' % (self.record)
