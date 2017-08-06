@@ -27,5 +27,6 @@ class Command(BaseCommand):
                 send_mail('Novedades de registros', "",
                           settings.EMAIL_HOST_USER, [coord], fail_silently=False,
                           html_message=html_message)
+            notifs.delete()
         except Exception as e:
             print(e)
