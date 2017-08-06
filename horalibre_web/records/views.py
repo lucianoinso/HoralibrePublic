@@ -11,8 +11,6 @@ from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import send_mail
-from django.conf import settings
 
 # Project Imports
 from login.views import redirect_home
@@ -126,7 +124,7 @@ def all_records_list(request, patient_id):
     else:
         return HttpResponseRedirect("/login")
 
-
+"""
 def send_notifications():
     try:
         notifs = Notification.objects.all()
@@ -153,8 +151,7 @@ def send_notifications():
 
     except Exception as e:
         print (e)
-    
-
+"""
 
 def record_detail(request, patient_id, record_id):
     try:
@@ -175,7 +172,6 @@ def record_detail(request, patient_id, record_id):
                     if record.case is None:
                         record.case = case.first()
                         record.save()
-                    send_notifications()
 
                 except ObjectDoesNotExist:
                     return redirect_home()
@@ -275,55 +271,6 @@ def delete_record(request, patient_id, record_id):
     else:
         return HttpResponseRedirect("/login")
 
-
-"""
-def patient_list(request, username):
-    if request.user.is_authenticated:
-        
-        goal = get_object_or_404(Goal, id=goal_id)
-        if request.user == goal.owner:
-            comments = (Comment.objects.all().filter(goal=goal)
-                               .order_by('-create_date'))
-            return render(request, 'goal/detail.html',
-                          {'goal': goal, 'comments': comments})
-    return redirect_home()
-
-
-def new_record(request):
-    if request.user.is_authenticated:
-        try:
-            user = User.objects.get(username=request.user.username)
-        except Exception as e:
-            return HttpResponse("El usuario no existe")
-        if request.method == "POST":
-            finish_date = request.POST.get("finish_date")
-            if finish_date == '':
-                finish_date = timezone.now()
-            record = record.objects.create(record_text=request.POST.get("record_text"),
-                                       finish_date=finish_date,
-                                       create_date=timezone.now(),
-                                       priority=request.POST.get("priority"),
-                                       state=request.POST.get("state"),
-                                       owner=user
-                                       )
-            record.save()
-            return redirect_home()
-        else:
-            return render(request, 'record/new_record.html')
-    else:
-        return HttpResponseRedirect("/login")
-
-
-def detail_record(request, record_id):
-    if request.user.is_authenticated:
-        record = get_object_or_404(record, id=record_id)
-        if request.user == record.owner:
-            comments = (Comment.objects.all().filter(record=record)
-                               .order_by('-create_date'))
-            return render(request, 'record/detail.html',
-                          {'record': record, 'comments': comments})
-    return redirect_home()
-"""
 
 def redirect_patient_list():
     return HttpResponseRedirect("/home/records/patient_list")

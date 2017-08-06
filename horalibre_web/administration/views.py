@@ -102,14 +102,18 @@ def change_pwd_prof(request, prof_id):
                 return HttpResponseRedirect('/administration/')
             else:
                 error_message = "Elija una contraseña valida"
+                prof_username = prof.user.username
                 return render(request, 'administration/prof_change_pwd.html',
                               {'form': form,
                                'prof_id': prof_id,
+                               'prof_username': prof_username,
                                'error_message': error_message})
         else:
+            prof_username = prof.user.username
             form = ChangePasswordForm()
             return render(request, 'administration/prof_change_pwd.html',
-                          {'form': form, 'prof_id': prof.id})
+                          {'form': form, 'prof_id': prof.id,
+                           'prof_username': prof_username,})
     else:
         return render(request, 'login/login.html')
 
@@ -129,15 +133,19 @@ def change_pwd_secr(request, secretary_id):
                 return HttpResponseRedirect('/administration/')
             else:
                 error_message = "Elija una contraseña valida"
+                secr_username = secretary.user.username
                 return render(request, 'administration/secr_change_pwd.html',
                               {'form': form,
                                'secretary_id': secretary_id,
+                               'secr_username': secr_username,
                                'error_message': error_message
                                })
         else:
+            secr_username = secretary.user.username
             form = ChangePasswordForm()
             return render(request, 'administration/secr_change_pwd.html',
-                          {'form': form, 'secretary_id': secretary.id})
+                          {'form': form, 'secretary_id': secretary.id,
+                           'secr_username': secr_username,})
     else:
         return render(request, 'login/login.html')
 
