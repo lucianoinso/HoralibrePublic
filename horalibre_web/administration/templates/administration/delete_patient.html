@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <div id="content">
+            <div class="section-title"><h1>Eliminar paciente</h1></div>
+            <div id="create-user-form" style="margin-top:10px;">
+                {% if error_message %}
+                <div class="error-message" style="color:red;font-size:13px;">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+                <form action="{% url 'administration:delete_patient' %}" method="post"
+                id="create-record-form">
+                <!-- input has class: 'administration-input' -->
+                    {% csrf_token %}
+                    <div class="form-inputs-container">
+                        {{ form.patient }}
+                    </div>
+                    <div class="modify-template-buttons">
+                        <div class = "button-record-inside-user-link">
+                        <a class="button-record-link" href ="{% url 'administration:admin_home' %}">Volver</a>
+                        </div>
+                        <input type="submit" value="Eliminar" style="color:#ee1111; border-color:red;" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+<script type="text/javascript">
+    $(document).on('click', 'input[type="submit"]', function(){
+        if($("#id_patient").val()){
+            return confirm('¿Está seguro que desea eliminar al paciente?');
+        }
+    })
+</script>
+{% endblock %}

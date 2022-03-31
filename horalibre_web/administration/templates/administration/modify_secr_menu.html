@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <div id="content">
+            <div class="section-title"><h1>Modificar profesional de secretaría</h1></div>
+            <div id="create-user-form" style="margin-top:10px;">
+            {% comment %}
+                <!-- {% url 'administration:modify_professional_menu' form.professional.id_for_label %}-->
+            {% endcomment %}
+                <form action="{% url 'administration:modify_secretary_menu' %}" method="post"
+                id="create-record-form">
+                <!-- input has class: 'administration-input' -->
+                    {% csrf_token %}
+                    <div class="form-inputs-container">
+                    {{ form.secretary }}
+                    </div>
+                    <div class="modify-template-buttons">
+                        <div class = "button-record-inside-user-link">
+                        <a class="button-record-link" href ="{% url 'administration:admin_home' %}">Volver</a>
+                        </div>
+                        <input type="submit" value="Seleccionar"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}

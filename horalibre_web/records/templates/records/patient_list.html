@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div id="content">
+  <div class="section-title"><h1>Pacientes</h1></div>
+    <div class="patient-entries">
+
+      {% if case_list %}
+        {% for case in case_list %}
+          <div class="patient-entry">
+            <div class="patient-data" style="font-size:18px;">
+              <a href="{% url 'records:select_records' case.patient.id %}"> {{ case.patient.get_full_name }} (DNI: {{ case.patient.dni }})</a>
+            </div>
+          </div>
+        {% endfor %}
+
+    </div>
+
+      {% else %}
+          <i> No posee pacientes </i>
+    </div>
+      {% endif %}
+</div>
+
+
+{% endblock %}

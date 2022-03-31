@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="content">
+    <div class="section-title"><h1>{{ Novedades }}
+    </div>
+      <div class="patient-entries">
+        <div class="patient-entry">
+          <div class="patient-data">Edad: {{ patient.birthdate|timesince }}</div>
+
+          {% if patient.phone_number %}
+            <div class="patient-data">Tel: {{ patient.phone_number }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class = "records-list">
+        {% if page_records %}
+          {% for record in page_records %}
+            <div class = "record">
+              {% if 'my_records' in request.path %}
+                <a href="{% url 'records:record_detail' record.case.patient.id record.id %}"
+                   title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}}</a>
+              {% else %}
+                <a href="{% url 'records:record_detail' record.case.patient.id record.id %}"
+                   title="{{ record.session_resume |truncatechars:40 }}">Fecha de sesión: {{ record.session_datetime |date:"d-m-Y"}} - Creado por 
+                {% if record.author.user == request.user %}
+                  ud.
+                {% else %}
+                  {{ record.author.get_full_name }}.
+                {% endif %}
+                </a>
+              {% endif %}
+            </div>
+          {% endfor %}
+      </div>
+        <div class="pagination">
+          <span class="step-links">
+            {% if page_records.has_previous %}
+                <a href="?page={{ page_records.previous_page_number }}">&larr;</a>
+            {% endif %}
+
+            {% if page_records.has_previous or page_records.has_next %}
+              <span class="current">
+                  Pag. {{ page_records.number }} de {{ page_records.paginator.num_pages }}
+              </span>
+            {% endif %}
+
+            {% if page_records.has_next %}
+                <a href="?page={{ page_records.next_page_number }}">&rarr;</a>
+            {% endif %}
+          </span>
+        </div>
+        {% else %}
+            <i> No existen registros de este paciente </i>
+      </div>
+        {% endif %}
+
+
+      <div class = "button-record-inside-user-link" style="width:270px; float:right; text-align:left;">
+      <a class="button-record-link" href ="{% url 'records:create_record_from_patient' patient.id %}">Crear registro nuevo para este paciente</a></div>
+
+      <div class = "button-record-inside-user-link" style="width:52px;">
+      <a class="button-record-link" href ="{% url 'records:select_records' patient.id %}" >Volver</a></div>
+  </div>
+{% endblock %}

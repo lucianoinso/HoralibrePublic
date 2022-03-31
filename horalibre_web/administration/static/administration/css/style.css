@@ -1,0 +1,107 @@
+.administration-input{
+}
+
+.edit-record-textarea{
+  margin-top: 5px;
+  resize: none;
+  width: 100%;
+  height: 350px;
+  border:solid 1px #ccc;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding: 5px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+select#id_case{
+  width: 120%;
+}
+
+.menu-section-container{
+  margin-top: 20px;
+  display: inline-block;
+  width: 600px;
+  /*border:1px solid #EEE;*/
+  /*border-radius:10px;*/
+  padding:10px 0px 25px 10px;
+  margin-bottom: 0px;
+}
+
+.menu-section{
+  vertical-align: top;
+  display: inline-block;
+  width: 24%;
+  margin-bottom: 15px;
+}
+
+.menu-section-title {
+  font-size: 20px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.modify-template-buttons{
+  width: 200px;
+}
+
+.modify-template-buttons input {
+    float:left;
+    margin-left:10px;
+    width:auto;
+}
+
+.modify-template-buttons .button-record-inside-user-link {
+    text-align:left;
+    width:auto;
+    float:left;
+    height:23px;
+    font-size:14px;
+    margin-right:0px;
+}
+
+.article-textarea{
+  margin-top: 5px;
+  resize: none;
+  width: 487px;
+  height: 350px;
+  border:solid 1px #ccc;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.article-input-title{
+  float: right;
+  width: 350px;
+}
+
+.restore-password {
+  font-size:13px;
+  margin-bottom:15px;
+}
+
+.restore-password a {
+  color:#E60020;
+  font-weight: 500;
+}
+
+.restore-password a:hover {
+  color:#60babd;
+}

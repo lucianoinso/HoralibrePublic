@@ -1,0 +1,64 @@
+.article-container {
+    width: 90%;
+}
+
+.entry-title a {
+    color: #303030;
+    font-weight: 500;
+}
+
+.feed-entries{
+    padding-top: 10px;
+    width: 80%;
+}
+
+.article-entry{
+    border-bottom: solid 1px #aaa;
+    padding: 10px 0px;
+    margin-bottom: 10px;
+}
+
+.article-entry .entry-text{
+    color: #333;
+}
+
+.article-content{
+    padding: 20px 20px 20px 0px;
+    word-wrap: break-word;
+}
+
+.article-title{
+    font-size: 28px;
+    padding-bottom: 5px;
+}
+
+.article-date{
+    color: #85AD64;
+    font-size: 0.8em;
+}
+.article-author{
+    font-size: 1em;
+    color: #909090;
+    font-style: italic;
+}
+
+input[type="checkbox"]{
+    vertical-align: middle;
+}
+
+
+.article-author .article-author-name{
+
+}
+
+.article-last-modified{
+    color: #909090;
+}
+
+.entry-text{
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+.modify-template-buttons input{
+}

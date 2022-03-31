@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="content">
+    <div class="article-container">
+        <div class="article-title">{{ article.title }}</div>
+        <div class="article-header">
+            <div class="article-date">Fecha : {{ article.creation_date|date:"d/m/Y" }}</div>
+            <div class="article-author" style="font-size:13px; font-style:normal;">Por:
+                {% if article.author %}{{ article.author.get_full_name }}
+                {% else %}Usuario Eliminado
+                {% endif %}
+            </div>
+            <div class="article-last-modified" style="font-size:12px;">Ultima modificación: {{ article.last_modified }}</div>
+        </div>
+
+        <div class = "article-content">
+            {{ article.content|linebreaksbr }}
+        </div>
+
+        {% if request.user.is_staff %}
+          <div class="button-record-inside-user-link" style="width:110px; float:right;">
+            <a class="button-record-link" href ="{% url 'news:modify_article' article.id %}">Editar novedad</a>
+          </div>
+        {% endif %}
+          <div class = "button-record-inside-user-link" style="width:52px;">
+            <a class="button-record-link" href ="{% url 'news:news_home' %}">Volver</a>
+          </div>
+    </div>
+  </div> <!-- end content div -->
+
+{% endblock %}

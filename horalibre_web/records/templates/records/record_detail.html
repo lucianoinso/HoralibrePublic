@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="content">
+    <div class="section-title"><h1>{{ record.patient.get_full_name }} - {{ record.session_datetime|date:"d/m/y" }}</h1></div>
+    <div class="patient-entries">
+      <div class="patient-entry">
+        <div class="patient-data">Fecha y hora de la sesión: {{ record.session_datetime }}</div>
+        <div class="patient-data">
+          Duración de la sesión:
+          {{ record.session_duration|date:'G' }} hora{% if record.session_duration|date:'G' != "1" %}s{% endif %}
+          {% if record.session_duration|date:'i' != "00" %}
+          , {{ record.session_duration|date:'i' }} minutos.
+          {% endif %}
+        </div>
+        <div class="patient-data" style="font-size:14px; margin-top:5px;">Autor: 
+        {% if record.author.get_full_name %}
+            {{ record.author.get_full_name }}
+        {% else %}
+            "Profesional Eliminado"
+        {% endif %}
+
+        </div>
+        <div class="patient-data" style="font-size:14px; margin-bottom:14px;">Coordinador del caso: {{ record.case.coordinator.get_full_name }}</div>
+        <div class="patient-data" style="font-size:12px;">Fecha y hora de creación: {{ record.creation_datetime }}</div>
+        <div class="patient-data" style="font-size:12px;">Ultima modificación: {{ record.last_modified }}</div>
+      </div>
+    </div>
+
+    <div class = "record-log" style="margin-top:10px;">
+        {{ record.session_resume|linebreaksbr }}
+    </div>
+
+    {% if record.author.user == request.user %}
+    <div class="record-detail-edit-and-delete">
+      <div class="button-record-inside-user-link" style="width:100px; float:right; margin-top:0px">
+        <a class="button-record-link" href ="{% url 'records:edit_record' record.patient.id record.id %}">Editar registro</a>
+      </div>
+
+      <div class="button-record-inside-user-link-delete" style="margin-top:0px;">
+        <a class="button-record-link" href ="{% url 'records:delete_record' record.patient.id record.id %}" onclick="return confirm('Esta seguro que quiere eliminar definitivamente el registro?');">Eliminar registro</a>
+      </div>
+
+      <div class = "button-record-inside-user-link" style="width:52px;">
+        <a class="button-record-link" href ="{% url 'records:my_records_list' record.patient.id %}">Volver</a>
+      </div>
+    </div>
+    {% else %}
+      <div class = "button-record-inside-user-link" style="width:52px;">
+        <a class="button-record-link" href ="{% url 'records:all_records_list' record.patient.id %}">Volver</a>
+      </div>
+
+    {% endif %}
+    <div id="comment-section">
+      <h3>Comentarios</h3>
+      {% if comments %}
+        <div class="comment_list">
+        {% for comment in comments %}
+          <div class="comment">
+          <p>{{ comment.text|linebreaksbr }}</p>
+          <span class="comment-subtext">
+          {{ comment.owner.get_full_name }} - {{ comment.create_date }}
+          
+          {% if comment.owner.user == request.user %}
+
+          <div class="comment-edit-delete" >
+            <a href="{% url 'records:edit_comment' record.patient.id record.id comment.id %}">[editar]</a>
+            <a href="{% url 'records:delete_comment' record.patient.id record.id comment.id %}" 
+             onclick="return confirm('¿Estas seguro que queres eliminar el comentario?')">[eliminar]</a>
+          </div>
+          {% endif %}
+
+          </span>
+          </div>
+        {% endfor %}
+        </div>
+      {% else %}
+        <span class="empty-message">Este registro no posee comentarios</span>
+        <br/><br/>
+      {% endif %}
+      <br>
+      <form action="{% url 'records:new_comment' record.patient.id record.id %}" method="post" id="post_comment">{% csrf_token %}
+        <span class="add-comment"><h4>Agregar comentario:</h4></span>
+        <textarea id="comment_text" name="comment_text" maxlength=1000 style="resize: none;" rows="5" cols="36" required></textarea>
+        <div class="comment-button"><input type="submit" value="Comentar" style="width:84px;"></div>
+      </form>
+    </div>
+  </div> <!-- end content div -->
+
+{% endblock %}

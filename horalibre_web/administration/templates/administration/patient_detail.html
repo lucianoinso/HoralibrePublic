@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load administration_extras %}
+{% block content %}
+
+  <div id="content">
+    <div class="section-title"><h1>{{ patient.get_full_name }}</h1>
+    </div>
+      
+      <div class="patient-entries">
+        <div class="patient-entry">
+          <div class="patient-data">Fecha de nacimiento: {{ patient.birthdate|date:"d-m-Y" }}</div>
+          <div class="patient-data">Edad: {{ patient.birthdate|timesince|upto:',' }}</div>
+
+          <div class="patient-data">DNI: {{ patient.dni }}</div>
+          {% if patient.phone_number %}
+          <div class="patient-data">Tel: {{ patient.phone_number }}</div>
+          {% endif %}
+          <div class="patient-data">Obra Social: {{ patient.health_insurance }}</div>
+        </div>
+      </div>
+      <div class="patient-entries">
+        <div class="patient-entry">
+        </div>
+      </div>
+
+      <div class = "button-record-inside-user-link" style="width:52px;">
+      <a class="button-record-link" href ="{% url 'administration:list_patient' %}" >Volver</a></div>
+  </div>
+
+{% endblock %}
